@@ -1,0 +1,24 @@
+# Pinned Sionna RT environment for Ulap Scope.
+#
+#   conda env create -f environment-rt.yml
+#   conda activate ulap-scope-rt
+#   python -m pytest -m rt          # integration smoke (needs an exported scene)
+#
+# Runs on CPU via Mitsuba's llvm backend (no CUDA required). sionna-rt hard-pins
+# mitsuba==3.8.0 and drjit==1.3.1; the rest are pinned to the versions validated
+# on the dev machine for exact reproducibility.
+name: ulap-scope-rt
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12.13
+  - pip
+  - pip:
+      - sionna-rt==2.0.1
+      - mitsuba==3.8.0
+      - drjit==1.3.1
+      - numpy==2.5.1
+      - scipy==1.18.0
+      - matplotlib==3.11.1
+      - pillow==12.3.0
+      - pytest==8.2.2

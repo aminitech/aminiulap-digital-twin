@@ -1,0 +1,19 @@
+# Prep environment for Ulap Scope (data clip / reproject / manifest / basemap tiles).
+#
+#   conda env create -f environment-prep.yml
+#   conda activate ulap-scope-prep
+#
+# GDAL is installed via conda here so the CLI tools (gdalwarp/gdal_translate/
+# gdalinfo) and python bindings are consistent; the geoportal shapefiles are read
+# with geopandas. This env runs the clip/preprocess/basemap stages.
+name: ulap-scope-prep
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - geopandas>=1.0
+  - gdal>=3.9
+  - scipy>=1.11
+  - pyproj>=3.6
+  - pillow>=10
+  - pytest>=8
