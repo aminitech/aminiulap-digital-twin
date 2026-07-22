@@ -6,10 +6,10 @@ coverage, SINR, mmWave and drive-test studies come out — via **BlenderGIS → 
 NVIDIA Sionna RT**, all on CPU. Part of the **Ulap One** project (Amini).
 
 ```
-      ((♥))                                                  ((♥))
+     ((♥))                                                  ((♥))
        |            ~  ♥  ~          ~  ♥  ~                  |
       /|\        ♥              ~♥~              ♥           /|\
-     / | \          ~   ~    signal with love   ~   ~       / | \
+     / | \          ~   ~                       ~   ~       / | \
     /  |  \                                                /  |  \
    /___|___\             _________________                /___|___\
      NEWTON             | .-------------. |              RISING SUN
