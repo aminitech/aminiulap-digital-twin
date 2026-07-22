@@ -1,0 +1,6 @@
+[submodule "BlenderGIS"]
+	path = BlenderGIS
+	url = https://github.com/domlysz/BlenderGIS.git
+[submodule "mitsuba-blender"]
+	path = mitsuba-blender
+	url = https://github.com/mitsuba-renderer/mitsuba-blender.git

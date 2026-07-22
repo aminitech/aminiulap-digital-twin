@@ -1,0 +1,42 @@
+[
+ {
+  "name": "Newton",
+  "x": -191.7,
+  "y": -805.6,
+  "h": 30.0,
+  "ground_z": 69.2,
+  "dist": 828,
+  "structure": "Monopole",
+  "in_scene": true
+ },
+ {
+  "name": "Rising Sun",
+  "x": 970.3,
+  "y": -131.1,
+  "h": 24.0,
+  "ground_z": 99.9,
+  "dist": 979,
+  "structure": "Monopole",
+  "in_scene": true
+ },
+ {
+  "name": "Boarded Hall",
+  "x": -1227.4,
+  "y": 2306.5,
+  "h": 15.0,
+  "ground_z": 110.3,
+  "dist": 2613,
+  "structure": "Cell-on-Wheels",
+  "in_scene": false
+ },
+ {
+  "name": "Oistins",
+  "x": -2136.3,
+  "y": -1901.8,
+  "h": 30.0,
+  "ground_z": 55.7,
+  "dist": 2860,
+  "structure": "Monopole",
+  "in_scene": false
+ }
+]

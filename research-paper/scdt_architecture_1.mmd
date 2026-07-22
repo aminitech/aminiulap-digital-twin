@@ -1,0 +1,120 @@
+flowchart TB
+  %% ===== class styling =====
+  classDef sense fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:1px;
+  classDef cube  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:1px;
+  classDef node  fill:#fff3e0,stroke:#e65100,color:#bf360c,stroke-width:1px;
+  classDef chain fill:#ede7f6,stroke:#4527a0,color:#311b92,stroke-width:2px;
+  classDef trust fill:#fce4ec,stroke:#ad1457,color:#880e4f,stroke-width:1px;
+  classDef lake  fill:#e0f7fa,stroke:#00838f,color:#006064,stroke-width:1px;
+  classDef twin  fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c,stroke-width:1px;
+  classDef ux    fill:#f9fbe7,stroke:#9e9d24,color:#827717,stroke-width:1px;
+  classDef ext   fill:#eceff1,stroke:#455a64,color:#263238,stroke-dasharray:4 3;
+
+  %% ===== 1. Sensing layer =====
+  subgraph SENSE["1 - Sensing Layer: Network as a Sensor (NaaS)"]
+    direction LR
+    ISAC["6G ISAC Cell Towers<br/>Dual-Function Radar-Comm<br/>rainfall / flood / motion / mobility"]
+    EO["Satellite EO / NTN"]
+    IOT["IoT and Ground Telemetry<br/>tide / grid / water"]
+    DEV["Edge Devices and Laptops<br/>opportunistic sensing"]
+  end
+
+  %% ===== 2. Amini GeoPackage =====
+  subgraph CUBE["2 - GeoPackage Transformation (Amini Patent)"]
+    direction LR
+    GP["GeoPackage Engine<br/>ingest / fuse / index"]
+    STC["Spatio-Temporal Data Cubes<br/>X / Y / Z / Time"]
+  end
+
+  %% ===== 3. Amini Cloud =====
+  subgraph NODES["3 - Amini Cloud (Distributed Compute)"]
+    direction LR
+    CT["Cell-Tower<br/>Edge Nodes"]
+    MDC["Modular<br/>Data Centers"]
+    SRV["Distributed<br/>Servers"]
+    LAP["Laptops<br/>and Devices"]
+  end
+
+  CHAIN[("Amini Chain - Blockchain Backbone<br/>content hashing / provenance / node attestation")]
+
+  %% ===== Zero-trust integrity spine =====
+  subgraph TRUST["Zero-Trust and Integrity Spine"]
+    direction TB
+    ATT["Source Attestation<br/>providers untrusted by default"]
+    QUAL["Quality and Integrity<br/>Validation"]
+    PRIV["Privacy Tiers L1 / L2 / L3<br/>+ consent"]
+    MRV["MRV / Climate-Finance Proofs"]
+  end
+
+  %% ===== 4. Amini Origin - Sovereign Data Lake =====
+  subgraph LAKE["4 - Amini Origin - Sovereign Data Lake"]
+    direction LR
+    INGEST["Validated Cube Ingestion"]
+    CATALOG[("Catalog +<br/>Versioned State")]
+    INGEST --> CATALOG
+  end
+
+  %% ===== 5. Amini Sovereign Cognitive Digital Twin =====
+  subgraph SCDT["5 - Amini Sovereign Cognitive Digital Twin"]
+    direction LR
+    SYNC["Synchronization Engine<br/>belief-state / EKF"]
+    SIM["Simulation and ML Surrogates<br/>coastal / hydrology / evacuation"]
+    AIRAN["AI-RAN Cognitive Orchestration<br/>O-RAN RIC / PPO"]
+    SYNC --> SIM
+    SIM <--> AIRAN
+  end
+
+  %% ===== 6. Interaction =====
+  subgraph UX["6 - Interaction and Orchestration"]
+    direction LR
+    RAG["Amini Bridge & GovChat (RAG, AI Platform)"]
+    LLM["Amini Akili (LLM)"]
+    SCOPE["Ulap Scope (Digital Twin Webapp"]
+    MCP["MCPs & APIs"]
+  end
+
+  EXT["External Climate Finance<br/>and Registries"]
+
+  %% ===== data flows =====
+  ISAC --> GP
+  EO --> GP
+  IOT --> GP
+  DEV --> GP
+
+  GP --> STC
+  STC -->|"sharded + distributed"| CT
+  STC --> MDC
+  STC --> SRV
+  STC --> LAP
+
+  CT -.-> CHAIN
+  MDC -.-> CHAIN
+  SRV -.->|"register + content-hash + attest"| CHAIN
+  LAP -.-> CHAIN
+
+  CHAIN === ATT
+  ATT --> QUAL
+  CHAIN -->|"attestation-gated cubes"| QUAL
+  PRIV -.->|"gates capture"| GP
+
+  QUAL -->|"only verified, integrity-checked cubes"| INGEST
+  CATALOG --> SYNC
+
+  SIM --> NLQ
+  SIM --> DASH
+  AIRAN --> CTRL
+  CTRL -.->|"beam + sensing control (closed loop)"| ISAC
+
+  CHAIN -.-> MRV
+  MRV -.-> EXT
+
+  %% ===== apply classes =====
+  class ISAC,EO,IOT,DEV sense;
+  class GP,STC cube;
+  class CT,MDC,SRV,LAP node;
+  class CHAIN chain;
+  class ATT,QUAL,PRIV,MRV trust;
+  class INGEST,CATALOG lake;
+  class SYNC,SIM,AIRAN twin;
+  class RAG, LLM, SCOPE, MCP;
+  class EXT ext;

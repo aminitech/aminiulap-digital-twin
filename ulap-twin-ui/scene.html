@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULAP · Barbados 3D Ray-Trace Scene</title>
+<link rel="icon" href="icon-white.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --space-black:#121212; --marble-white:#FFFFFF; --sunglow:#FFC83C;
+  --charcoal:#202020; --eerie:#1A1A1A;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.06);
+  --muted:rgba(255,255,255,.45);
+  --font-display:"Geist","Aspekta",system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,monospace;
+  --panel:rgba(20,20,20,.74);
+  --glow:0 0 0 1px rgba(255,200,60,.18), 0 8px 40px -8px rgba(255,200,60,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#0c0c0e;color:var(--marble-white);font-family:var(--font-display)}
+#gl{position:fixed;inset:0;display:block}
+.mono{font-family:var(--font-mono);letter-spacing:.04em}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* top bar */
+.topbar{position:fixed;top:0;left:0;right:0;height:44px;z-index:20;display:flex;align-items:center;gap:20px;
+  padding:0 18px;background:linear-gradient(180deg,rgba(12,12,14,.92),rgba(12,12,14,.25));
+  border-bottom:1px solid var(--line-2);backdrop-filter:blur(8px)}
+.topbar .brand{display:flex;align-items:center;gap:10px}
+.topbar .brand img{height:18px;width:18px}
+.topbar .brand b{font-weight:600;font-size:12.5px;letter-spacing:.04em}
+.topbar .brand .accent{color:var(--sunglow)}
+.si{display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.si b{color:#fff;font-weight:500}
+.topbar .spacer{flex:1}
+.navlink{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  text-decoration:none;padding:6px 11px;border:1px solid var(--line);border-radius:8px;transition:.15s}
+.navlink:hover{color:var(--sunglow);border-color:rgba(255,200,60,.4)}
+
+/* compute badge (Sionna-style) */
+.badge{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:15;
+  background:rgba(10,10,12,.82);border:1px solid var(--line);border-radius:9px;
+  padding:8px 14px;font-family:var(--font-mono);font-size:12px;letter-spacing:.03em;
+  backdrop-filter:blur(8px);display:flex;align-items:center;gap:9px;box-shadow:0 8px 30px -10px #000}
+.badge b{color:var(--sunglow);font-weight:600}
+.badge .d{width:7px;height:7px;border-radius:50%;background:var(--sunglow);box-shadow:0 0 8px var(--sunglow)}
+
+/* control panel */
+.panel{position:fixed;top:60px;left:16px;width:290px;z-index:15;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(16px);overflow:hidden;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.7)}
+.panel-head{padding:14px 16px 12px;border-bottom:1px solid var(--line-2)}
+.panel-head h1{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.panel-head .sub{margin-top:5px}
+.panel-body{padding:4px 0 10px}
+.section{padding:12px 16px 2px}
+.section .eyebrow{margin-bottom:9px}
+
+/* mode toggle */
+.modes{display:flex;gap:5px;padding:0 16px 4px}
+.modes button{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--line-2);color:var(--muted);
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  padding:9px 4px;border-radius:8px;cursor:pointer;transition:.15s}
+.modes button:hover{color:#fff}
+.modes button.active{color:#141414;background:var(--sunglow);border-color:var(--sunglow);font-weight:600}
+
+/* tx select */
+.txsel{display:flex;gap:6px;padding:4px 16px 2px}
+.txsel button{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--line-2);color:var(--muted);
+  font-family:var(--font-mono);font-size:11px;padding:9px 4px;border-radius:8px;cursor:pointer;transition:.15s;
+  display:flex;flex-direction:column;gap:3px;align-items:center}
+.txsel button .h{font-size:9px;opacity:.6}
+.txsel button:hover{color:#fff}
+.txsel button.active{border-color:rgba(255,200,60,.55);background:rgba(255,200,60,.08);color:var(--sunglow)}
+
+/* sliders */
+.ctrl{margin:12px 0}
+.ctrl .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.ctrl .row label{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.ctrl .row .val{font-family:var(--font-mono);font-size:12px;color:var(--sunglow);font-weight:500}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--sunglow) var(--fill,50%),rgba(255,255,255,.14) var(--fill,50%));cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+  background:#fff;border:3px solid var(--sunglow);box-shadow:0 2px 8px rgba(0,0,0,.5)}
+
+.hintrow{padding:10px 16px 2px;font-family:var(--font-mono);font-size:10px;line-height:1.7;color:var(--muted)}
+.hintrow b{color:rgba(255,255,255,.7);font-weight:500}
+
+/* legend */
+.legend{position:fixed;bottom:18px;left:16px;z-index:15;background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;backdrop-filter:blur(14px);padding:11px 13px;width:190px}
+.legend .eyebrow{margin-bottom:8px}
+.legend .grad{height:9px;border-radius:3px;background:linear-gradient(90deg,#440154,#3b528b,#21918c,#5ec962,#fde725)}
+.legend .lb{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:9.5px;color:var(--muted);margin-top:5px}
+
+/* readout */
+.readout{position:fixed;top:60px;right:16px;width:210px;z-index:15;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(16px);padding:6px 16px 12px;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.7)}
+.metric{padding:11px 0;border-bottom:1px solid var(--line-2)}
+.metric:last-child{border-bottom:none}
+.metric .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.metric .v{font-size:23px;font-weight:600;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums}
+.metric .v small{font-size:12px;color:var(--muted);font-weight:400;margin-left:3px}
+
+.tip{position:fixed;z-index:30;pointer-events:none;background:rgba(10,10,12,.95);border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px;font-family:var(--font-mono);font-size:11px;opacity:0;transition:opacity .12s;
+  backdrop-filter:blur(8px)}
+.tip.show{opacity:1}
+.tip .tt{color:var(--sunglow);font-weight:600;margin-bottom:4px}
+.tip .tr{color:var(--muted)}.tip .tr b{color:#fff;font-weight:500}
+
+/* loader */
+.loader{position:fixed;inset:0;z-index:50;background:#0c0c0e;display:grid;place-items:center;transition:opacity .7s}
+.loader .box{text-align:center}
+.loader img{height:30px;opacity:.9}
+.loader .l{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.loader .spin{width:26px;height:26px;margin:16px auto 0;border:2px solid rgba(255,255,255,.12);
+  border-top-color:var(--sunglow);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (max-width:900px){.readout{display:none}}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<div class="topbar">
+  <div class="brand"><img src="icon-white.svg" alt="Amini"><b><span class="accent">ULAP</span> · 3D RAY-TRACE SCENE</b></div>
+  <div class="si">SITE <b id="s-site">Rising Sun</b></div>
+  <div class="si">f <b>3.5 GHz</b></div>
+  <div class="si">ENG <b>SIONNA·RT</b></div>
+  <div class="spacer"></div>
+  <div class="si">FPS <b id="s-fps">60</b></div>
+  <a class="navlink" href="index.html">◱ 2D Coverage</a>
+</div>
+
+<div class="badge"><span class="d"></span><span id="badge-txt">Radio map computed in <b>—</b></span></div>
+
+<aside class="panel">
+  <div class="panel-head">
+    <h1>Site-Specific RT</h1>
+    <div class="sub eyebrow">Newton · Barbados</div>
+  </div>
+  <div class="panel-body">
+    <div class="section"><div class="eyebrow">Visualisation</div></div>
+    <div class="modes">
+      <button data-mode="paths">Ray Paths</button>
+      <button data-mode="radio" class="active">Radio Map</button>
+      <button data-mode="both">Both</button>
+    </div>
+
+    <div class="section"><div class="eyebrow">Transmitter</div></div>
+    <div class="txsel">
+      <button data-tx="0"><span>Newton</span><span class="h">30 m monopole</span></button>
+      <button data-tx="1" class="active"><span>Rising Sun</span><span class="h">24 m monopole</span></button>
+    </div>
+
+    <div class="section">
+      <div class="ctrl">
+        <div class="row"><label>Steering angle</label><span class="val" id="v-steer">+0°</span></div>
+        <input type="range" id="s-steer" min="-90" max="90" value="0">
+      </div>
+      <div class="ctrl">
+        <div class="row"><label>TX Power</label><span class="val" id="v-pwr">43 dBm</span></div>
+        <input type="range" id="s-pwr" min="20" max="49" value="43">
+      </div>
+      <div class="ctrl">
+        <div class="row"><label>Max reflections</label><span class="val" id="v-depth">3</span></div>
+        <input type="range" id="s-depth" min="0" max="5" value="3">
+      </div>
+    </div>
+    <div class="hintrow">Drag to orbit · scroll to zoom · <b>click ground</b> to drop a receiver and trace its multipath.</div>
+  </div>
+</aside>
+
+<aside class="readout">
+  <div class="metric"><div class="k">Coverage (LOS+NLOS)</div><div class="v"><span id="m-cov">—</span><small>%</small></div></div>
+  <div class="metric"><div class="k">Rays cast</div><div class="v" id="m-rays">—<small>k</small></div></div>
+  <div class="metric"><div class="k">Buildings</div><div class="v" id="m-bld">576</div></div>
+</aside>
+
+<div class="legend">
+  <div class="eyebrow" id="leg-title">Path gain</div>
+  <div class="grad"></div>
+  <div class="lb"><span>weak</span><span>strong</span></div>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<div class="loader" id="loader">
+  <div class="box">
+    <img src="wordmark-white.svg" alt="Amini">
+    <div class="l">Building 3D scene</div>
+    <div class="spin"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="BufferGeometryUtils.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>

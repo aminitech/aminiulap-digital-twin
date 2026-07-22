@@ -1,0 +1,5 @@
+# Installed INTO Blender's bundled python (4.4 -> python3.11), not a venv:
+#   /Applications/Blender.app/Contents/Resources/4.4/python/bin/python3.11 -m pip install -r blender.txt
+mitsuba==3.5.0          # pinned: the mitsuba-blender addon requires this exact version
+# Plus GDAL bindings (osgeo) built against system GDAL + CPython 3.11 headers -- see README.
+# Requires the mitsuba-blender add-on enabled and setuptools>=77 in Blender's python.

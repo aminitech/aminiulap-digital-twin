@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sovereign Cognitive Digital Twin — Reference Architecture</title>
+<style>
+  :root {
+    --ink:#1a1a2e; --muted:#5a6472; --line:#e2e6ea; --bg:#f7f9fb;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  header {
+    padding:28px 32px 20px; background:#fff; border-bottom:1px solid var(--line);
+  }
+  h1 { margin:0 0 4px; font-size:22px; letter-spacing:-0.2px; }
+  .sub { color:var(--muted); font-size:14px; }
+  .authors { color:var(--muted); font-size:13px; margin-top:8px; }
+  .wrap { padding:22px 32px 40px; }
+  .caption { font-size:14px; color:var(--muted); max-width:900px; margin:0 0 18px; }
+  .legend { display:flex; flex-wrap:wrap; gap:10px 16px; margin:0 0 22px; }
+  .legend span { display:inline-flex; align-items:center; font-size:12.5px; color:var(--ink); }
+  .swatch { width:14px; height:14px; border-radius:3px; margin-right:6px; border:1px solid rgba(0,0,0,.15); }
+  .diagram {
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    padding:16px; overflow:auto; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+  .diagram svg { max-width:none; height:auto; display:block; margin:0 auto; }
+  footer { padding:0 32px 34px; color:var(--muted); font-size:12.5px; max-width:1000px; }
+  code { background:#eef1f4; padding:1px 5px; border-radius:4px; font-size:12px; }
+  .err { color:#b00020; font-family:monospace; white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sovereign Cognitive Digital Twin — Reference Architecture</h1>
+  <div class="sub">Blockchain-anchored, network-as-sensor data platform for climate-resilient island &amp; archipelagic nations</div>
+  <div class="authors">Zoe Aiyanna M. Cayetano &nbsp;·&nbsp; George M. Gichuru &nbsp;—&nbsp; Amini Labs, Nairobi, Kenya</div>
+</header>
+
+<div class="wrap">
+  <p class="caption">
+    Sensing data captured from the network itself (6G ISAC / Network-as-a-Sensor) plus satellite,
+    IoT, and edge devices is turned into <strong>spatio-temporal data cubes</strong> by Amini's GeoPackage
+    engine, sharded and distributed across a network of Amini nodes (cell towers, modular data centers,
+    servers, laptops), and anchored on <strong>Amini Chain</strong> for content-hashing, provenance, and
+    node attestation. A <strong>zero-trust integrity spine</strong> treats every provider as untrusted by
+    default yet enforces source quality — only verified, integrity-checked cubes enter the
+    <strong>national sovereign data lake</strong> that powers the Sovereign Cognitive Digital Twin, whose
+    orchestration closes the loop back to the sensing network.
+  </p>
+
+  <div class="legend">
+    <span><i class="swatch" style="background:#e3f2fd;border-color:#1565c0"></i>1 · Sensing (NaaS)</span>
+    <span><i class="swatch" style="background:#e8f5e9;border-color:#2e7d32"></i>2 · GeoPackage cubes</span>
+    <span><i class="swatch" style="background:#fff3e0;border-color:#e65100"></i>3 · Amini node network</span>
+    <span><i class="swatch" style="background:#ede7f6;border-color:#4527a0"></i>Amini Chain</span>
+    <span><i class="swatch" style="background:#fce4ec;border-color:#ad1457"></i>Zero-trust &amp; integrity</span>
+    <span><i class="swatch" style="background:#e0f7fa;border-color:#00838f"></i>4 · Sovereign data lake</span>
+    <span><i class="swatch" style="background:#f3e5f5;border-color:#6a1b9a"></i>5 · Cognitive twin</span>
+    <span><i class="swatch" style="background:#f9fbe7;border-color:#9e9d24"></i>6 · Interaction</span>
+  </div>
+
+  <div class="diagram" id="diagram">Rendering diagram…</div>
+</div>
+
+<footer>
+  Solid arrows = data flow · dotted arrows = attestation / control / provenance ·
+  double line = trust anchoring. Diagram source is Mermaid; the raw <code>.mmd</code> accompanies this file.
+  Working draft — Amini Labs Digital Twin Programme.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.1/mermaid.min.js"></script>
+<script>
+  const def = `flowchart TB
+  classDef sense fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:1px;
+  classDef cube  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:1px;
+  classDef node  fill:#fff3e0,stroke:#e65100,color:#bf360c,stroke-width:1px;
+  classDef chain fill:#ede7f6,stroke:#4527a0,color:#311b92,stroke-width:2px;
+  classDef trust fill:#fce4ec,stroke:#ad1457,color:#880e4f,stroke-width:1px;
+  classDef lake  fill:#e0f7fa,stroke:#00838f,color:#006064,stroke-width:1px;
+  classDef twin  fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c,stroke-width:1px;
+  classDef ux    fill:#f9fbe7,stroke:#9e9d24,color:#827717,stroke-width:1px;
+  classDef ext   fill:#eceff1,stroke:#455a64,color:#263238,stroke-dasharray:4 3;
+
+  subgraph SENSE["1 - Sensing Layer: Network as a Sensor (NaaS)"]
+    direction LR
+    ISAC["6G ISAC Cell Towers<br/>Dual-Function Radar-Comm<br/>rainfall / flood / motion / mobility"]
+    EO["Satellite EO / NTN"]
+    IOT["IoT and Ground Telemetry<br/>tide / grid / water"]
+    DEV["Edge Devices and Laptops<br/>opportunistic sensing"]
+  end
+
+  subgraph CUBE["2 - GeoPackage Transformation (Amini Patent)"]
+    direction LR
+    GP["GeoPackage Engine<br/>ingest / fuse / index"]
+    STC["Spatio-Temporal Data Cubes<br/>X / Y / Z / Time"]
+  end
+
+  subgraph NODES["3 - Amini Node Network: Distributed Compute"]
+    direction LR
+    CT["Cell-Tower<br/>Edge Nodes"]
+    MDC["Modular<br/>Data Centers"]
+    SRV["Distributed<br/>Servers"]
+    LAP["Laptops<br/>and Devices"]
+  end
+
+  CHAIN[("Amini Chain - Blockchain Backbone<br/>content hashing / provenance / node attestation")]
+
+  subgraph TRUST["Zero-Trust and Integrity Spine"]
+    direction TB
+    ATT["Source Attestation<br/>providers untrusted by default"]
+    QUAL["Quality and Integrity<br/>Validation"]
+    PRIV["Privacy Tiers L1 / L2 / L3<br/>+ consent"]
+    MRV["MRV / Climate-Finance Proofs"]
+  end
+
+  subgraph LAKE["4 - National Sovereign Data Lake"]
+    direction LR
+    INGEST["Validated Cube Ingestion"]
+    CATALOG[("Catalog +<br/>Versioned State")]
+    INGEST --> CATALOG
+  end
+
+  subgraph SCDT["5 - Sovereign Cognitive Digital Twin"]
+    direction LR
+    SYNC["Synchronization Engine<br/>belief-state / EKF"]
+    SIM["Simulation and ML Surrogates<br/>coastal / hydrology / evacuation"]
+    AIRAN["AI-RAN Cognitive Orchestration<br/>O-RAN RIC / PPO"]
+    SYNC --> SIM
+    SIM <--> AIRAN
+  end
+
+  subgraph UX["6 - Interaction and Orchestration"]
+    direction LR
+    NLQ["GenAI NL Query<br/>ChatBB / GovChat"]
+    DASH["Executive Dashboards"]
+    CTRL["Closed-Loop Control APIs"]
+  end
+
+  EXT["External Climate Finance<br/>and Registries"]
+
+  ISAC --> GP
+  EO --> GP
+  IOT --> GP
+  DEV --> GP
+
+  GP --> STC
+  STC -->|"sharded + distributed"| CT
+  STC --> MDC
+  STC --> SRV
+  STC --> LAP
+
+  CT -.-> CHAIN
+  MDC -.-> CHAIN
+  SRV -.->|"register + content-hash + attest"| CHAIN
+  LAP -.-> CHAIN
+
+  CHAIN === ATT
+  ATT --> QUAL
+  CHAIN -->|"attestation-gated cubes"| QUAL
+  PRIV -.->|"gates capture"| GP
+
+  QUAL -->|"only verified, integrity-checked cubes"| INGEST
+  CATALOG --> SYNC
+
+  SIM --> NLQ
+  SIM --> DASH
+  AIRAN --> CTRL
+  CTRL -.->|"beam + sensing control (closed loop)"| ISAC
+
+  CHAIN -.-> MRV
+  MRV -.-> EXT
+
+  class ISAC,EO,IOT,DEV sense;
+  class GP,STC cube;
+  class CT,MDC,SRV,LAP node;
+  class CHAIN chain;
+  class ATT,QUAL,PRIV,MRV trust;
+  class INGEST,CATALOG lake;
+  class SYNC,SIM,AIRAN twin;
+  class NLQ,DASH,CTRL ux;
+  class EXT ext;`;
+
+  mermaid.initialize({ startOnLoad:false, securityLevel:'loose', flowchart:{ htmlLabels:true, curve:'basis' } });
+  mermaid.render('scdt_svg', def)
+    .then(({svg}) => { document.getElementById('diagram').innerHTML = svg; })
+    .catch(err => {
+      document.getElementById('diagram').innerHTML =
+        '<div class="err">Diagram failed to render: ' + (err && err.message ? err.message : err) + '</div>';
+    });
+</script>
+</body>
+</html>

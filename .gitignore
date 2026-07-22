@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Blender working files (keep the primary .blend scenes; drop backups/autosaves)
+*.blend1
+*.blend2
+*_autosave.blend
+*.crash.txt
+
+# Large generated intermediates (recreate with `ulap-scope basemap` / `build`)
+blender/GOOGLE_SAT_WM.tif
+blender/scene_build/_mosaic_3857.png
+blender/*/textures/
+
+# Archives / editor
+*.zip
+.vscode/
+.idea/
+
+# More regenerable intermediates / scratch
+blender/scene_build/*.tif
+blender/sionna_out/*.mov
+blender/Untitled.blend

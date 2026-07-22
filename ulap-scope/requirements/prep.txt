@@ -1,0 +1,7 @@
+# Prep env (data clipping, reprojection, manifest, basemap tiles).
+# Interpreter used on the dev machine: /opt/anaconda3/bin/python (conda base).
+geopandas>=1.0
+scipy>=1.11
+pyproj>=3.6
+pillow>=10
+# GDAL CLI (gdalwarp/gdal_translate/gdalinfo) must be on PATH (brew install gdal).
