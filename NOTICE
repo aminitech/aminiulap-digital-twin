@@ -1,0 +1,98 @@
+Ulap Digital Twin
+Copyright 2026 Amini Labs
+
+This product includes software developed at Amini Labs.
+Licensed under the Apache License, Version 2.0. See the LICENSE file.
+
+
+================================================================================
+1. Bundled submodules
+================================================================================
+
+These are referenced as git submodules. Their source is NOT contained in this
+repository and each remains under its own upstream licence. Cloning with
+--recurse-submodules will fetch them from their upstream remotes.
+
+BlenderGIS
+  https://github.com/domlysz/BlenderGIS
+  GNU General Public License v3.0 (GPL-3.0)
+  Used for georeferenced import and basemap handling inside Blender.
+  NOTE: GPL-3.0. It is referenced, not redistributed here. Do not vendor its
+  source into this tree without a licence-compatibility review.
+
+mitsuba-blender
+  https://github.com/mitsuba-renderer/mitsuba-blender
+  BSD 3-Clause License
+  Used to export Blender scenes to Mitsuba XML.
+
+
+================================================================================
+2. Runtime dependencies (not redistributed)
+================================================================================
+
+Blender                  GPL-3.0        https://www.blender.org
+Mitsuba 3                BSD-3-Clause   https://www.mitsuba-renderer.org
+NVIDIA Sionna            Apache-2.0     https://nvlabs.github.io/sionna
+GDAL / OGR               MIT            https://gdal.org
+NumPy                    BSD-3-Clause   https://numpy.org
+
+
+================================================================================
+3. Tile and imagery services
+================================================================================
+
+ESRI ArcGIS World Imagery
+  https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery
+  Used at runtime by the basemap fetch stage. Subject to the Esri Master
+  Agreement and World Imagery terms of use. Tiles are fetched by the user at
+  run time and are not redistributed in this repository. Users are responsible
+  for complying with Esri's terms for their own use.
+
+
+================================================================================
+4. Geospatial data sources
+================================================================================
+
+No third-party geospatial data is redistributed in this repository. Every layer
+below is fetched or supplied by the user at run time. See DATA.md for the full
+data availability statement, per-layer provenance, and redistribution status.
+
+Barbados Geoportal — Lands and Surveys Department, Government of Barbados
+  Building footprints, telecommunications infrastructure, transport, water and
+  wastewater networks, and vulnerability grids.
+  Attribution required. Redistribution status is under review; see DATA.md.
+
+Copernicus / Sentinel-2 — European Space Agency / European Union
+  https://scihub.copernicus.eu
+  Copernicus Sentinel data. Free, full and open licence.
+
+Copernicus GLO-30 Digital Elevation Model — European Space Agency
+  https://spacedata.copernicus.eu
+  Referenced by the study wizard as a recommended open DEM source.
+
+ESA WorldCover — European Space Agency
+  https://esa-worldcover.org
+  CC BY 4.0.
+
+Global Forest Change (Hansen et al.) — University of Maryland
+  https://glad.earthengine.app/view/global-forest-change
+  CC BY 4.0. Cite: Hansen, M. C., et al. (2013), "High-Resolution Global Maps
+  of 21st-Century Forest Cover Change", Science 342, 850-853.
+
+OpenStreetMap / Geofabrik extracts
+  https://www.openstreetmap.org  |  https://download.geofabrik.de
+  (c) OpenStreetMap contributors, Open Database License (ODbL) 1.0.
+  Any derived database distributed onward must also be ODbL.
+
+OpenCellID
+  https://opencellid.org
+  CC BY-SA 4.0.
+
+TeleGeography submarine cable data
+  https://www.submarinecablemap.com
+  Used for reference context. Subject to TeleGeography's terms; not
+  redistributed here.
+
+PeeringDB
+  https://www.peeringdb.com
+  CC BY 4.0.

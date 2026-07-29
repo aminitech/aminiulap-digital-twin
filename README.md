@@ -22,9 +22,13 @@ NVIDIA Sionna RT**, all on CPU. Part of the **Ulap One** project (Amini).
 
 The pilot study twins the **Newton / Rising Sun** area of south-central Barbados
 (2 km box, 576 LiDAR-height buildings, two towers) and ray-traces 1.8–60 GHz.
-The full write-up lives in the
-[Notion study](https://app.notion.com/p/amini-updates/Digital-Twin-Propagation-Study-for-6G-Deployment-Barbados-Performing-Arts-Centre-3a5fd2e0589a8039b229e564397f3c93)
-and the [research paper](research-paper/).
+The papers this work supports are indexed in
+[`research-paper/README.md`](research-paper/README.md).
+
+> **This repository ships code, not data.** Every geospatial layer is fetched or
+> supplied by you at run time — see [DATA.md](DATA.md). You do not need the
+> Barbados layers to use the pipeline: `ulap-scope init` will set up a study
+> anywhere in the world from open sources.
 
 ---
 
@@ -76,32 +80,72 @@ budget — the harness for validating handover thresholds:
 
 ![Moving RX drive test](docs/renders/moving_rx.gif)
 
-> ⚠️ Before treating numbers as bankable, read the caveats in the
-> [study](https://app.notion.com/p/amini-updates/Digital-Twin-Propagation-Study-for-6G-Deployment-Barbados-Performing-Arts-Centre-3a5fd2e0589a8039b229e564397f3c93):
-> projection distortion (rebuild in a metric UTM CRS), optimistic `itu_` materials
-> (no foliage/rain), flat-top building extrusions, and no field calibration yet.
+> ⚠️ **These numbers are not field-calibrated.** Known limitations, all of which
+> bias results optimistic:
+>
+> - **Projection distortion** — rebuild in a metric UTM CRS before trusting distances
+> - **Optimistic `itu_` materials** — no foliage loss, no rain attenuation
+> - **Flat-top building extrusions** — roof detail and clutter are not modelled
+> - **No field calibration** — nothing here has been validated against drive-test
+>   measurements
+>
+> Treat the outputs as relative comparisons between configurations, not as
+> absolute predicted coverage.
 
 ---
+
+## Try it in 60 seconds (no Blender, no Sionna)
+
+The full pipeline needs three Python environments. **[`examples/`](examples/) needs
+numpy and matplotlib** — and runs against the real pilot data:
+
+```bash
+cd examples
+pip install -r requirements.txt
+jupyter lab notebooks/                              # 4 guided notebooks
+streamlit run apps/coverage_explorer/app.py         # 📡 interactive coverage/SINR
+python apps/drive_test/drive_test.py                # 🚗 handover replay → GIF + CSV
+python apps/twin_viewer/serve.py                    # 🌐 3-D viewer (stdlib only)
+```
+
+They ship a working scene built entirely from **open data** — OpenStreetMap
+footprints and AWS terrain tiles, 585 buildings over 57 m of relief — plus genuine
+Sionna RT output, and swap the ray tracer for a fast analytical model (free space +
+two-ray + knife-edge diffraction). On the pilot's rural LoS radial that model
+recovers the ray tracer's path-loss exponent to within 0.05, and is completely blind
+to the 361 ns delay-spread spike it found — which is exactly the lesson
+[notebook 02](examples/notebooks/02_link_budget.ipynb) is built around.
+
+No licence-restricted layer is committed (see [DATA.md](DATA.md)): point
+`$ULAP_SCENE` at your own `scene_manifest.json`, or build one for anywhere on earth
+with `python examples/data/fetch_open_scene.py --lon <lon> --lat <lat>`.
+
+| | |
+|---|---|
+| [01 · Define a study](examples/notebooks/01_define_a_study.ipynb) | bounding boxes, metric CRS traps, band plans, open-data fallbacks |
+| [02 · Link budget](examples/notebooks/02_link_budget.ipynb) | real ray-traced data vs. 30 lines of physics — and where it breaks |
+| [03 · Scene & terrain](examples/notebooks/03_scene_and_terrain.ipynb) | manifests, footprint rasters, Fresnel clearance, receiver height |
+| [04 · Coverage & SINR](examples/notebooks/04_coverage_and_sinr.ipynb) | area maps, band sweeps, geometry ablation, the third-tower trap |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
   subgraph DATA["📦 Geospatial inputs"]
-    SHP["bbd-geo-portal/\nshapefiles + LiDAR heights"]
+    SHP["bbd-geo-portal/<br/>shapefiles + LiDAR heights"]
     SAT["ESRI satellite tiles"]
     DEM["DEM / terrain grid"]
   end
 
   subgraph PREP["🐍 prep env (geopandas + GDAL)"]
-    CLIP["clip\nstudy-area cut"]
-    PRE["preprocess\nmanifest + terrain"]
-    BASE["basemap\nmosaic + georef"]
+    CLIP["clip<br/>study-area cut"]
+    PRE["preprocess<br/>manifest + terrain"]
+    BASE["basemap<br/>mosaic + georef"]
   end
 
   subgraph BLD["🎨 Blender env (BlenderGIS + mitsuba-blender)"]
-    BUILD["build\nextrude + drape scene"]
-    EXP["export\nMitsuba XML + itu_ materials"]
+    BUILD["build<br/>extrude + drape scene"]
+    EXP["export<br/>Mitsuba XML + itu_ materials"]
   end
 
   subgraph RT["📡 Sionna RT env (mitsuba + drjit)"]
@@ -111,9 +155,9 @@ flowchart LR
     ANIM["drive-test animation"]
   end
 
-  OUT["🗺 sionna_out/\nmaps · CSV · GIF · renders"]
-  UI["ulap-twin-ui\nthree.js viewer"]
-  PAPER["research-paper\nS-CDT / ISAC"]
+  OUT["🗺 sionna_out/<br/>maps · CSV · GIF · renders"]
+  UI["ulap-twin-ui<br/>three.js viewer"]
+  PAPER["research-paper<br/>S-CDT / ISAC"]
 
   SHP --> CLIP --> PRE --> BUILD
   SAT --> BASE --> BUILD
@@ -122,7 +166,7 @@ flowchart LR
   OUT --> UI
   OUT --> PAPER
 
-  WIZ["💻 ulap-scope init\ninteractive study wizard"] -. study.toml .-> CLIP
+  WIZ["💻 ulap-scope init<br/>interactive study wizard"] -.->|study.toml| CLIP
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the component walk-through and
@@ -134,25 +178,59 @@ into the wider **Sovereign Climate Digital Twin (S-CDT)** stack from the paper.
 | Path | What it is |
 |---|---|
 | [`ulap-scope/`](ulap-scope/) | **The pipeline.** Installable Python package + `ulap-scope` CLI: config, geo core, stage runner, interactive study wizard, pytest harness |
-| [`bbd-geo-portal/`](bbd-geo-portal/) | Barbados geoportal source data (shapefiles, study-area clips) |
+| [`examples/`](examples/) | **Start here.** Four notebooks and three local apps that run on numpy + matplotlib, with an open-data sample scene and a builder for your own area |
 | [`blender/`](blender/) | Working dir: Blender scenes, Mitsuba exports, `sionna_out/` results |
-| [`BlenderGIS/`](BlenderGIS/) | Vendored add-on: georeferenced imports/basemaps in Blender |
-| [`mitsuba-blender/`](mitsuba-blender/) | Vendored add-on: Blender → Mitsuba XML export |
+| [`BlenderGIS/`](BlenderGIS/) | Git submodule: georeferenced imports/basemaps in Blender (GPL-3.0, fetched from upstream) |
+| [`mitsuba-blender/`](mitsuba-blender/) | Git submodule: Blender → Mitsuba XML export (BSD-3-Clause, fetched from upstream) |
 | [`ulap-twin-ui/`](ulap-twin-ui/) | three.js web viewer for the twin |
-| [`research-paper/`](research-paper/) | S-CDT / 6G-ISAC paper (LaTeX) + architecture diagrams |
-| [`brandkit/`](brandkit/) | Ulap design system + assets |
+| [`research-paper/`](research-paper/README.md) | Index of published papers with abstracts, DOIs and citations. No paper sources — those live in the papers repository |
+| [`scripts/`](scripts/) | `check_data.sh` — verify your geospatial layers before a run |
 | [`docs/`](docs/) | Architecture notes + curated renders used above |
 | [`openspec/`](openspec/) | OpenSpec specs & change proposals for the pipeline and CLI |
+
+Not in this repository: **geospatial data**. `bbd-geo-portal/` is where the
+pipeline looks for it by default, but nothing under it is committed. See
+[DATA.md](DATA.md).
 
 ## Quickstart
 
 ```bash
-cd ulap-scope
+git clone --recurse-submodules https://github.com/aminitech/amini-ulap-digital-twin.git
+cd amini-ulap-digital-twin/ulap-scope
 pip install -e .        # light install: numpy only
 ulap-scope init         # 💻♥📡 interactive wizard — define a NEW study anywhere
 ulap-scope info         # show resolved config/paths
 ulap-scope all          # clip → preprocess → basemap → build → export → RT stages
 ```
+
+The submodules matter: `--recurse-submodules` fetches BlenderGIS and
+mitsuba-blender from upstream. If you already cloned without it, run
+`git submodule update --init --recursive`.
+
+## Reproduction path
+
+From a clean clone to a figure, with no access to any non-public data:
+
+1. **Clone with submodules** and install the package, as above.
+2. **Define a study area.** `ulap-scope init` walks you through location,
+   bounding box and projection, recommends a UTM zone, and writes `study.toml`.
+   Pick anywhere — the pipeline is not Barbados-specific.
+3. **Point at your data.** `export ULAP_DATA_DIR=/path/to/your/shapefiles`, then
+   run `./scripts/check_data.sh` to confirm the layout. For a new study area the
+   wizard recommends open sources (OSM footprints, Copernicus GLO-30 DEM, ESRI
+   World Imagery) for anything you do not already have.
+4. **Confirm resolved paths** with `ulap-scope info` before spending compute.
+5. **Run the pipeline.** `ulap-scope all` runs clip → preprocess → basemap →
+   build → export → RT. Heavy stages need their own interpreters — see
+   [`ulap-scope/README.md`](ulap-scope/README.md) for the three pinned
+   environments.
+6. **Find your outputs** in `blender/sionna_out/`. These are the same stages that
+   produced the coverage, path-gain and SINR figures in
+   [`docs/renders/`](docs/renders/) above.
+
+To reproduce the **Barbados** figures specifically you additionally need the
+Barbados Geoportal layers, which we cannot redistribute. [DATA.md](DATA.md)
+lists every layer, its source and its status.
 
 `ulap-scope init` asks for the study location, bounding box, projection (with a
 computed UTM recommendation), the signals to model, and the geospatial layers you
@@ -201,11 +279,34 @@ proposals under `openspec/changes/` before implementation.
 Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and our
 [Code of Conduct](CODE_OF_CONDUCT.md).
 
+## Citing
+
+If you use this software, cite it via [`CITATION.cff`](CITATION.cff) — GitHub
+renders a "Cite this repository" button from it. Cite the accompanying papers
+separately; abstracts, DOIs and BibTeX are in
+[`research-paper/README.md`](research-paper/README.md).
+
+## Security
+
+Report vulnerabilities privately — see [SECURITY.md](SECURITY.md). That includes
+reports that something in this repository discloses sensitive infrastructure
+geometry.
+
 ## License
 
-MIT for the `ulap-scope` package. Vendored add-ons
-([BlenderGIS](BlenderGIS/LICENSE), [mitsuba-blender](mitsuba-blender/LICENSE))
-keep their upstream licenses. Geoportal data is subject to its source terms.
+**[Apache-2.0](LICENSE)** for this repository, including the `ulap-scope`
+package. Apache-2.0 was chosen over MIT for its express patent grant and
+defensive-termination clause.
+
+The submodules are **not** covered by that licence and are not redistributed
+here — they are fetched from upstream and keep their own terms:
+[BlenderGIS](https://github.com/domlysz/BlenderGIS) is **GPL-3.0**,
+[mitsuba-blender](https://github.com/mitsuba-renderer/mitsuba-blender) is
+**BSD-3-Clause**.
+
+Geospatial data is not in this repository at all and is subject to its own
+source terms. See [NOTICE](NOTICE) for all third-party attributions and
+[DATA.md](DATA.md) for per-layer provenance.
 
 ---
 

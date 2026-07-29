@@ -1,0 +1,24 @@
+[
+  {
+    "_comment": "PLACEHOLDER SITE LIST — replace every entry with your own. Give each site either offset_m (metres east/north of the study centre) or lon/lat. 'h' is the antenna height above local ground, in metres. Pass this file to fetch_open_scene.py with --towers. Public site data: OpenCellID (CC BY-SA 4.0), or your operator's own registry."
+  },
+  {
+    "name": "Newton",
+    "offset_m": [-190.0, -805.0],
+    "h": 30.0,
+    "structure": "Monopole"
+  },
+  {
+    "name": "Rising Sun",
+    "offset_m": [970.0, -130.0],
+    "h": 24.0,
+    "structure": "Monopole"
+  },
+  {
+    "name": "Example site by coordinate",
+    "lon": -59.5461,
+    "lat": 13.0802,
+    "h": 15.0,
+    "structure": "Cell-on-Wheels"
+  }
+]

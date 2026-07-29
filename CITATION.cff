@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+title: "Ulap Digital Twin: a 6G propagation study pipeline"
+message: "If you use this software, please cite both the software and the paper it accompanies."
+type: software
+authors:
+  - given-names: "Zoe Aiyanna M."
+    family-names: Cayetano
+    affiliation: "Amini Labs"
+  - given-names: "George M."
+    family-names: Gichuru
+    affiliation: "Amini Labs"
+repository-code: "https://github.com/aminitech/amini-ulap-digital-twin"
+abstract: >-
+  An end-to-end pipeline for building geospatially accurate digital twins and
+  running 6G radio propagation studies over them. Clips authoritative
+  geospatial layers to a study area, builds a textured 3D scene in Blender,
+  exports it to Mitsuba, and runs ray-traced coverage, path gain, and SINR
+  analyses in NVIDIA Sionna. Includes an interactive study wizard that lets a
+  user define a new study area anywhere in the world from open data sources.
+keywords:
+  - digital twin
+  - 6G
+  - ISAC
+  - radio propagation
+  - ray tracing
+  - Sionna
+  - Mitsuba
+  - geospatial
+  - small island developing states
+license: Apache-2.0
+version: 0.1.0
+
+# The accompanying paper is not yet announced on arXiv. Once it is, replace the
+# placeholder below with the real eprint id and DOI, and mirror the change in
+# research-paper/README.md.
+#
+# references:
+#   - type: article
+#     title: "Sovereign Cognitive Digital Twins: Fusing 6G ISAC, AI-RAN, and Zero-Trust Edge Grids"
+#     authors:
+#       - given-names: "Zoe Aiyanna M."
+#         family-names: Cayetano
+#       - given-names: Taijuo
+#         family-names: Morris
+#       - given-names: "George M."
+#         family-names: Gichuru
+#     year: 2026
+#     identifiers:
+#       - type: other
+#         value: "arXiv:TODO"
