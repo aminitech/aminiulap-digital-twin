@@ -1,0 +1,72 @@
+name: "New study area"
+description: "You twinned somewhere new, or you want help doing it"
+title: "[study] "
+labels: ["study-area", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This pipeline is not Barbados-specific. If you have built — or want to
+        build — a twin of somewhere else, we want to hear about it.
+
+        `examples/data/fetch_open_scene.py` builds a scene for **any coordinate
+        on earth** from OpenStreetMap footprints and open elevation tiles, with
+        no API key and no GPU:
+
+        ```bash
+        python examples/data/fetch_open_scene.py --lon <lon> --lat <lat> --name <study>
+        ```
+
+        Reports of it working — and especially of it *not* working — somewhere
+        we have never tested are among the most valuable contributions to this
+        project.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this?
+      options:
+        - "I built a scene and it worked — sharing it"
+        - "I built a scene and the geometry looks wrong"
+        - "fetch_open_scene.py failed for my area"
+        - "I want to twin somewhere but need guidance"
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Where?
+      description: "Place name, and the --lon/--lat you used."
+      placeholder: "Suva, Fiji — --lon 178.4419 --lat -18.1416"
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What happened?
+      description: |
+        Helpful details: the building count and terrain relief the script
+        reported, whether OSM had height tags for your area, and whether the
+        towers landed inside the study box.
+      placeholder: |
+        1008 footprints (heights: default=924, osm=84)
+        70x70 grid, 1650.6-1721.6 m (71 m of relief)
+
+  - type: textarea
+    id: data
+    attributes:
+      label: Data notes
+      description: |
+        How good is OpenStreetMap coverage where you are? Do you have access to
+        national building footprints or LiDAR, and can they be shared? Please do
+        **not** attach restricted data — see [DATA.md](../../DATA.md).
+
+  - type: checkboxes
+    id: sharing
+    attributes:
+      label: Sharing
+      options:
+        - label: "I would be happy for this study area to be referenced as a community example"
+          required: false

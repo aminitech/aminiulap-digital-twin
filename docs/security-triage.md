@@ -24,9 +24,16 @@ Because no credential was ever committed, there is nothing to rotate on the
 ## SAST — semgrep
 
 Config: `p/security-audit` and `p/secrets`. Submodules, and geospatial data are
-excluded. **4 findings, all LOW confidence, across 2 distinct rules.** Each is
-duplicated because `blender/` and `ulap-scope/ulap_scope/stages/` hold parallel
+excluded. **4 findings, all LOW confidence, across 2 distinct rules.** Each was
+duplicated because `blender/` and `ulap-scope/ulap_scope/stages/` held parallel
 copies of the same two scripts.
+
+> **Update.** The `blender/` copies are no longer tracked — they were stale
+> pre-refactor duplicates whose only difference was a hard-coded developer home
+> directory, and `blender/` is a working directory rather than source (see
+> [DATA.md](../DATA.md)). The packaged copies under
+> `ulap-scope/ulap_scope/stages/` are authoritative, so each finding below now
+> has **one** occurrence rather than two. The rationale is unchanged.
 
 All 4 are **accepted, not fixed**. Rationale below.
 

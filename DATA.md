@@ -105,24 +105,32 @@ subject to the same disclosure review:
 | Artefact | What it contains | Status |
 |---|---|---|
 | `examples/data/newton_scene_manifest.json` | 576 building footprint polygons (`ring`) with LiDAR-derived heights (`h`) and DTM samples, for the 2 km pilot box | **Removed from the working tree.** Geometry originated from the geoportal `BuildingFootprints` layer, not from OpenStreetMap. Still present in the history of commit `b97ab41` — see below. |
-| `blender/scene_build/scene_manifest.json` | The same 576 rings, `"epsg": 21292` (Barbados National Grid), no `provenance` block | ⚠️ **Still tracked.** This is the source the examples copy was made from. |
-| `blender/scene_build/towers_near.json` | Tower registry for the pilot | ⚠️ **Still tracked.** |
-| `blender/mitsuba_scene/meshes/Buildings.ply`, `blender/mitsuba_scene_terrain/meshes/Buildings.ply` | The building footprints as extruded 3-D meshes — the same geometry in another format | ⚠️ **Still tracked.** |
-| `blender/ulap-bbd-memorial-twin*.blend` (3 files) | Full Blender scenes containing the extruded twin | ⚠️ **Still tracked.** |
-| `blender/sionna_out/*`, `docs/renders/*` | Rendered coverage, SINR, path-gain and drive-test figures over the pilot area | **Under review.** Building geometry is visible in the renders. |
+| `blender/scene_build/scene_manifest.json` | The same 576 rings, `"epsg": 21292` (Barbados National Grid), no `provenance` block | **Untracked.** Regenerate with `ulap-scope preprocess`. |
+| `blender/scene_build/towers_near.json` | Tower registry for the pilot | **Untracked.** Regenerate with `ulap-scope preprocess`. |
+| `blender/mitsuba_scene*/meshes/*.ply` | The building footprints as extruded 3-D meshes — the same geometry in another format | **Untracked.** Regenerate with `ulap-scope export`. |
+| `blender/ulap-bbd-memorial-twin*.blend` (3 files) | Full Blender scenes containing the extruded twin | **Untracked.** Regenerate with `ulap-scope build`. |
+| `blender/sionna_out/*` | The ray-traced figure set, duplicated in `docs/renders/` | **Untracked.** Regenerate with `ulap-scope coverage` / `analysis`. |
+| `docs/renders/*` | Curated copies of the same figures, referenced by the README | **Under review.** Building geometry is visible in the renders; these remain tracked because the README depends on them. |
+| `ulap-twin-ui/data.js` | The same 576 footprints as lon/lat rings with LiDAR heights, plus both towers with their operator codes (147 kB) | **Retained by decision.** Kept tracked deliberately — the three.js viewer is inert without it. Same review scope as `docs/renders/`. |
 
-> ⚠️ **Open gap.** Removing the geoportal-derived scene from `examples/` does not
-> remove it from the repository — the same geometry is still tracked under
-> `blender/` in four different forms. The `test_no_geoportal_derived_scene_is_committed`
-> guard only scans `examples/data/`, so it does not catch these. Whether they may
-> be published is part of the same disclosure review, and it must be settled
-> before this repository is made public.
->
-> Separately, eight tracked files embed absolute local paths of the form
-> `/Users/<name>/...`, including `blender/scene_build/scene_manifest.json`, three
-> `.blend` files and two PNGs. Those disclose a developer's username and directory
-> layout and should be scrubbed before publication regardless of the geospatial
-> question.
+**Closed.** `blender/` is a working directory, not source: everything the
+pipeline writes there is regenerable *and* geoportal-derived, so none of it is
+tracked any more. Only the pipeline notes and two `__file__`-relative render
+helpers remain. `.gitignore` carries the rule under the public-release guard, so
+a stray `git add` cannot put them back.
+
+The tracked tree no longer contains **any** absolute developer path. The two
+leaking scripts (`blender/preprocess_scene.py`, `blender/fetch_basemap.py`) were
+stale duplicates of the portable copies in `ulap-scope/ulap_scope/stages/` and
+are gone; the one leaking image (`docs/renders/blender_perspective.png`, which
+carried the `.blend` path in a PNG `tEXt` chunk written by Blender) was re-saved
+with all metadata stripped and pixels unchanged.
+
+> ⚠️ **Still open: history.** Untracking removes these from the *tip*, not from
+> past commits. `blender/scene_build/scene_manifest.json` and the rest have been
+> in the repository since the initial commit `14fd043` and are on several pushed
+> branches. If the review requires them to be unrecoverable, the history must be
+> rewritten and force-pushed — see the history note below.
 
 The open-data replacement path is now the **default**. The examples ship
 `examples/data/newton-open_scene_manifest.json`, built by
@@ -166,14 +174,46 @@ suite enforces the boundary: `test_no_geoportal_derived_scene_is_committed` fail
 if any scene in the Barbados National Grid (EPSG:21292) reappears under
 `examples/data/`.
 
-> **History note.** `examples/data/newton_scene_manifest.json` and
-> `newton_towers.json` were committed in `b97ab41` and pushed before the open-data
-> replacement landed. Deleting them from the tree does not remove them from that
-> commit. If the disclosure review requires them to be unrecoverable, the history
-> needs rewriting (`git filter-repo --path examples/data/newton_scene_manifest.json
-> --path examples/data/newton_towers.json --invert-paths`) followed by a
-> coordinated force-push — a destructive, shared-branch operation that is a
-> maintainer decision, not an automatic one.
+> **History note.** Untracking a file removes it from the tip, not from the
+> commits that already contain it. Two separate exposures exist:
+>
+> - `examples/data/newton_scene_manifest.json` and `newton_towers.json` —
+>   committed in `b97ab41` and pushed, before the open-data replacement landed;
+> - everything under `blender/` listed above — present since the **initial
+>   commit `14fd043`**, so it is on the tip of **every** remote branch:
+>   `main`, `publish/squashed`, `feat/scdt-paper-release`,
+>   `feat/contributing-guidelines`, `andersonext/dso-66-security-scan` and
+>   `update-dependabot-config`. PR #4 merged it to `main` on 2026-07-29.
+>
+> ⚠️ **Squashing does not fix this, and `publish/squashed` proves it.** That
+> branch is already a single fresh commit with no prior history, and it still
+> contains `blender/scene_build/scene_manifest.json`, `towers_near.json`,
+> `mitsuba_scene/meshes/Buildings.ply`, the three `.blend` scenes, **and all
+> eight developer-path leaks**. Rewriting history only removes what is *in the
+> past*; these files are in the **working tree**, so they survive any squash. The
+> untracking described above is the fix — a squash or rewrite is only needed
+> afterwards, to reach the copies already in past commits.
+>
+> The second exposure is the harder one: because it reaches back to the root
+> commit, a rewrite touches the entire history, not a recent slice. If the
+> disclosure review requires these to be unrecoverable:
+>
+> ```bash
+> git filter-repo --invert-paths \
+>   --path examples/data/newton_scene_manifest.json \
+>   --path examples/data/newton_towers.json \
+>   --path blender/scene_build --path blender/mitsuba_scene \
+>   --path blender/mitsuba_scene_terrain --path blender/sionna_out \
+>   --path-glob 'blender/*.blend'
+> ```
+>
+> followed by a coordinated force-push and a re-clone by every collaborator.
+> That is destructive and shared-branch, so it is a maintainer decision, not an
+> automatic one.
+>
+> **Order matters:** untrack first (done), then rebuild `publish/squashed` from
+> the cleaned tree. A squash taken before the untracking — which is what the
+> current `publish/squashed` is — carries the problem forward intact.
 
 > **Wider than `examples/`.** The same pilot geometry is tracked in more places,
 > and has been since the **initial commit `14fd043`** (present on

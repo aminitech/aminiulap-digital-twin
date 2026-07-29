@@ -1,4 +1,13 @@
+<div align="center">
+
+<img src="docs/brand/logo/wordmark-white@2x.png#gh-dark-mode-only" alt="Amini" width="180">
+<img src="docs/brand/logo/wordmark-black@2x.png#gh-light-mode-only" alt="Amini" width="180">
+
 # Ulap Digital Twin — 6G Propagation Studies
+
+`ULAP ONE` · `RF SCENE TWIN` · `CPU-ONLY`
+
+</div>
 
 Reproducible **radio-frequency digital twins** for 6G deployment planning. National
 geoportal shapefiles + satellite imagery + LiDAR building heights go in; ray-traced
@@ -130,32 +139,33 @@ with `python examples/data/fetch_open_scene.py --lon <lon> --lat <lat>`.
 ## Architecture
 
 ```mermaid
+%%{init: {'theme':'base','themeVariables':{'darkMode':true,'background':'#121212','primaryColor':'#202020','primaryTextColor':'#FFFFFF','primaryBorderColor':'#3A3A3A','lineColor':'#8A8A8A','textColor':'#FFFFFF','mainBkg':'#202020','nodeBorder':'#3A3A3A','clusterBkg':'#1A1A1A','clusterBorder':'#2E2E2E','edgeLabelBackground':'#1A1A1A','fontSize':'14px'}}}%%
 flowchart LR
-  subgraph DATA["📦 Geospatial inputs"]
+  subgraph DATA["GEOSPATIAL INPUTS"]
     SHP["bbd-geo-portal/<br/>shapefiles + LiDAR heights"]
     SAT["ESRI satellite tiles"]
     DEM["DEM / terrain grid"]
   end
 
-  subgraph PREP["🐍 prep env (geopandas + GDAL)"]
+  subgraph PREP["PREP ENV (geopandas + GDAL)"]
     CLIP["clip<br/>study-area cut"]
     PRE["preprocess<br/>manifest + terrain"]
     BASE["basemap<br/>mosaic + georef"]
   end
 
-  subgraph BLD["🎨 Blender env (BlenderGIS + mitsuba-blender)"]
+  subgraph BLD["BLENDER ENV (BlenderGIS + mitsuba-blender)"]
     BUILD["build<br/>extrude + drape scene"]
     EXP["export<br/>Mitsuba XML + itu_ materials"]
   end
 
-  subgraph RT["📡 Sionna RT env (mitsuba + drjit)"]
+  subgraph RT["SIONNA RT ENV (mitsuba + drjit)"]
     COV["coverage / SINR"]
     SWEEP["frequency sweep + mmWave"]
     LINK["link metrics + CIR"]
     ANIM["drive-test animation"]
   end
 
-  OUT["🗺 sionna_out/<br/>maps · CSV · GIF · renders"]
+  OUT["sionna_out/<br/>maps · CSV · GIF · renders"]
   UI["ulap-twin-ui<br/>three.js viewer"]
   PAPER["research-paper<br/>S-CDT / ISAC"]
 
@@ -166,12 +176,29 @@ flowchart LR
   OUT --> UI
   OUT --> PAPER
 
-  WIZ["💻 ulap-scope init<br/>interactive study wizard"] -.->|study.toml| CLIP
+  WIZ["ulap-scope init<br/>interactive study wizard"] -.->|study.toml| CLIP
+
+  classDef hero fill:#202020,stroke:#FFC83C,stroke-width:2.5px,color:#FFC83C
+  class OUT hero
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the component walk-through and
 [docs/scdt-architecture.png](docs/scdt-architecture.png) for how this pipeline slots
-into the wider **Sovereign Climate Digital Twin (S-CDT)** stack from the paper.
+into the wider **Sovereign Cognitive Digital Twin (S-CDT)** stack from the paper.
+That figure is generated from [`docs/diagrams/`](docs/diagrams/README.md) — edit the
+Mermaid source and re-run `render.sh`; never hand-edit the PNG.
+
+## Concepts
+
+Nine hand-drawn explainers for the ideas behind the twin, one per cognitive
+anchor in the paper — from the perception gap through to the
+built-versus-specified boundary. Full index and placement notes in
+[`docs/illustrations/`](docs/illustrations/README.md).
+
+| | |
+|---|---|
+| ![Don't build a second sensing estate — the waveform already carrying the traffic can also be listened to](docs/illustrations/02-network-as-a-sensor.png) | ![What runs in Ulap SCOPE today versus what is specified but never evaluated](docs/illustrations/08-built-vs-specified.png) |
+| **Network as a sensor.** Stop erecting a second mast — the pipe already carrying the traffic can be listened to. | **Built vs. specified.** What runs today, and what is not built yet. Read this before going looking for an ISAC feed. |
 
 ## Repository layout
 
@@ -179,7 +206,7 @@ into the wider **Sovereign Climate Digital Twin (S-CDT)** stack from the paper.
 |---|---|
 | [`ulap-scope/`](ulap-scope/) | **The pipeline.** Installable Python package + `ulap-scope` CLI: config, geo core, stage runner, interactive study wizard, pytest harness |
 | [`examples/`](examples/) | **Start here.** Four notebooks and three local apps that run on numpy + matplotlib, with an open-data sample scene and a builder for your own area |
-| [`blender/`](blender/) | Working dir: Blender scenes, Mitsuba exports, `sionna_out/` results |
+| [`blender/`](blender/) | **Working directory** — the pipeline writes Blender scenes, Mitsuba exports and `sionna_out/` results here at run time. Its contents are regenerable and geoportal-derived, so they are not committed ([DATA.md](DATA.md)) |
 | [`BlenderGIS/`](BlenderGIS/) | Git submodule: georeferenced imports/basemaps in Blender (GPL-3.0, fetched from upstream) |
 | [`mitsuba-blender/`](mitsuba-blender/) | Git submodule: Blender → Mitsuba XML export (BSD-3-Clause, fetched from upstream) |
 | [`ulap-twin-ui/`](ulap-twin-ui/) | three.js web viewer for the twin |
@@ -251,6 +278,14 @@ imagery) for anything you don't — then writes a versioned `study.toml`:
   ♥ recommended projection: EPSG:32621 (UTM zone 21N) — true metres for link budgets
   ♥ no DEM? we recommend Copernicus GLO-30 (30 m, global, free)
 ```
+
+> ⚠️ **`study.toml` does not drive the pipeline stages yet.** The wizard writes
+> it, and it is the intended scientific record, but the stages still read their
+> parameters from `ulap_scope/config.py` and their solver settings from hard-coded
+> values inside each stage script. Connecting the two is the proposed change
+> `apply-study-config` (`openspec/changes/`). Until it lands, treat
+> [`docs/renders/README.md`](docs/renders/README.md) as the authoritative record
+> of what produced a given figure.
 
 Heavy stages need their own interpreters (no single env can host GDAL, bpy *and*
 Sionna). See [`ulap-scope/README.md`](ulap-scope/README.md) for the three pinned

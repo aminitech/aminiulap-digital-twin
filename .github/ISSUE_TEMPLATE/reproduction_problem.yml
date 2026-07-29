@@ -1,0 +1,90 @@
+name: "Reproduction problem"
+description: "You ran a stage and did not get the result you expected"
+title: "[repro] "
+labels: ["reproduction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time — a reproduction report is the most useful
+        kind of issue this project can receive.
+
+        **Before you file:** the ray-traced stages currently run **unseeded**
+        Monte Carlo (see [figure provenance](../../docs/renders/README.md)), so
+        two runs of the same command will not be bit-identical. If your numbers
+        differ by a small amount, that may be expected — we have not yet
+        measured the variance. Tell us how large the difference is and we will
+        treat it as evidence either way.
+
+  - type: textarea
+    id: command
+    attributes:
+      label: What command did you run?
+      description: The exact command, including any `--mode` flag.
+      placeholder: "ulap-scope coverage --mode terrain"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_actual
+    attributes:
+      label: What did you expect, and what did you get?
+      description: |
+        Numbers where you have them. Attach or link the figure if it is visual.
+        If you are comparing against a figure in `docs/renders/`, say which one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: info
+    attributes:
+      label: Output of `ulap-scope info`
+      description: This resolves every path and interpreter the pipeline will use.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scene
+    attributes:
+      label: Which scene were you using?
+      options:
+        - "Bundled open-data sample (examples/data/newton-open_scene_manifest.json)"
+        - "A scene I built with fetch_open_scene.py"
+        - "My own pipeline output (ulap-scope preprocess)"
+        - "The Barbados Geoportal study"
+        - "Other / not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: study
+    attributes:
+      label: Your `study.toml`, if you have one
+      description: |
+        Note that `study.toml` does not yet drive the pipeline stages — the
+        follow-up change `apply-study-config` is not implemented. Include it
+        anyway; it tells us what you intended.
+      render: toml
+
+  - type: textarea
+    id: modifications
+    attributes:
+      label: Did you modify any code or configuration?
+      description: |
+        Including solver parameters inside the stage scripts. These are currently
+        hard-coded per stage rather than read from `config.py`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        OS and CPU; Python version; and the versions of `sionna-rt`, `mitsuba`
+        and `drjit` in the environment you ran the stage from. Which of the
+        three environments (prep / Blender / RT) was it?
+      render: shell
+    validations:
+      required: true

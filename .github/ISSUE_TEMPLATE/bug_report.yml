@@ -1,0 +1,63 @@
+name: "Bug report"
+description: "Something is broken or errors out"
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If a stage *ran* but gave results you did not expect, please use
+        **Reproduction problem** instead — it asks the right questions.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part?
+      options:
+        - "examples/ — notebooks"
+        - "examples/ — apps (coverage explorer, drive test, twin viewer)"
+        - "examples/data/fetch_open_scene.py — building a scene from open data"
+        - "ulap-scope CLI / study wizard"
+        - "Pipeline: clip / preprocess / basemap (prep env)"
+        - "Pipeline: build / export (Blender env)"
+        - "Pipeline: coverage / analysis / mmwave / animate (Sionna RT env)"
+        - "Documentation"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you ran, what you expected, what occurred instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. cd examples
+        2. pip install -r requirements.txt
+        3. python -m pytest -q
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full error output
+      render: shell
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: |
+        OS, Python version, and how you installed. For pipeline issues, paste
+        `ulap-scope info`. For `examples/` issues, the numpy and matplotlib
+        versions are usually enough.
+      render: shell
+    validations:
+      required: true

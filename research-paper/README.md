@@ -73,7 +73,11 @@ announced, this table and `CITATION.cff` are updated with the arXiv ID and DOI.
 | Paper | Relevant code |
 |---|---|
 | #1 SIDSense | Not in this repository — TVWS sensing stack lives separately |
-| #2 S-CDT / 6G-ISAC | This repository: [`ulap-scope/`](../ulap-scope/) pipeline, [`blender/`](../blender/) scene build, [`docs/renders/`](../docs/renders/) result figures |
+| #2 S-CDT / 6G-ISAC | This repository: [`ulap-scope/`](../ulap-scope/) pipeline (including the Blender/Mitsuba scene-build and Sionna RT stages under [`ulap-scope/ulap_scope/stages/`](../ulap-scope/ulap_scope/stages/)), and [`docs/renders/`](../docs/renders/) result figures — each mapped to the command that produced it in [`docs/renders/README.md`](../docs/renders/README.md) |
+
+> `blender/` is a *working directory*, not source: the pipeline writes scenes and
+> results into it at run time and its contents are not tracked (see
+> [DATA.md](../DATA.md)). The code that backs the paper lives in `ulap-scope/`.
 
 ## Citing this software
 

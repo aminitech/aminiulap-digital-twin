@@ -317,7 +317,14 @@ class PropagationModel:
         """Multi-tower coverage: per-tower path gain, best server, RSRP, SINR."""
         towers = list(towers) if towers is not None else scene.towers_in_scene()
         if not towers:
-            raise ValueError("no towers to serve the scene")
+            known = ", ".join(f"{t.name} at ({t.x:.0f}, {t.y:.0f})" for t in scene.towers)
+            raise ValueError(
+                "no towers to serve the scene. "
+                + (f"The scene lists {len(scene.towers)} site(s) but none fall inside "
+                   f"the study box: {known}. Pass towers=... explicitly, or rebuild the "
+                   "scene with sites inside the box."
+                   if scene.towers else
+                   "The scene manifest has no 'antennas' entries at all."))
         X, Y, extent = scene.grid(cell_m)
         pg = np.stack([self.path_gain_db(scene, t, X, Y) for t in towers])
         rsrp = self.eirp_dbm + self.rx_gain_dbi + pg

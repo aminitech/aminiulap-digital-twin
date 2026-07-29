@@ -22,11 +22,6 @@ dist/
 .vscode/
 .idea/
 
-# More regenerable intermediates / scratch
-blender/scene_build/*.tif
-blender/sionna_out/*.mov
-blender/Untitled.blend
-
 # ---------------------------------------------------------------------------
 # Public-release guards. Do not remove without a disclosure review.
 # ---------------------------------------------------------------------------
@@ -34,6 +29,31 @@ blender/Untitled.blend
 # Geospatial data is never committed. You supply it at run time — see DATA.md.
 # The Barbados Geoportal layers are not ours to redistribute.
 bbd-geo-portal/
+
+# `blender/` is a WORKING DIRECTORY, not source. Everything the pipeline writes
+# into it is (a) regenerable with `ulap-scope preprocess / build / export /
+# coverage` and (b) derived from the geoportal layers above — the manifest and
+# the meshes carry the same 576 building footprints and LiDAR heights as the
+# shapefiles do. Committing them would route around the guard, so they stay
+# local. Tracked here: the pipeline notes and the two render helpers only.
+blender/scene_build/
+blender/mitsuba_scene/
+blender/mitsuba_scene_terrain/
+blender/sionna_out/
+blender/*.tif
+blender/*.wld
+# Superseded by ulap-scope/ulap_scope/stages/ — the packaged copies are portable
+# (env-var driven); these local ones hard-coded a developer's home directory.
+blender/build_scene.py
+blender/clip_study_area.py
+blender/export_mitsuba.py
+blender/fetch_basemap.py
+blender/preprocess_scene.py
+blender/sionna_analysis.py
+blender/sionna_animate_rx.py
+blender/sionna_coverage.py
+blender/sionna_mmwave_sinr.py
+blender/sionna_terrain_ground.py
 
 # Internal brand, positioning, and go-to-market material. Not for public release.
 brandkit/

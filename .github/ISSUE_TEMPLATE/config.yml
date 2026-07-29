@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "Security vulnerability"
+    url: https://github.com/aminitech/amini-ulap-digital-twin/security/policy
+    about: "Please report privately — do not open a public issue. See SECURITY.md."
+  - name: "Data licensing or redistribution question"
+    url: https://github.com/aminitech/amini-ulap-digital-twin/blob/main/DATA.md
+    about: "DATA.md documents every layer, its licence, and what may be redistributed."
+  - name: "Behaviour change proposal"
+    url: https://github.com/aminitech/amini-ulap-digital-twin/blob/main/CONTRIBUTING.md
+    about: "Changes to pipeline behaviour start as an OpenSpec proposal — see CONTRIBUTING.md."

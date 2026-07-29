@@ -7,11 +7,29 @@ name: examples CI
 # Nothing here needs Blender, GDAL or Sionna -- that is the whole point of
 # examples/.
 
+# The suite also carries the repo-hygiene guards (no developer paths in tracked
+# files, nothing but notes and render helpers tracked under blender/ -- see
+# DATA.md). Those protect the whole tree, not just examples/, so the trigger has
+# to cover the paths they police: a guard that does not run is not a guard.
+# (Listed twice rather than via a YAML anchor: GitHub Actions does not reliably
+# expand anchors in workflow files.)
 on:
   push:
-    paths: ["examples/**", ".github/workflows/examples.yml"]
+    paths:
+      - "examples/**"
+      - "blender/**"
+      - "docs/**"
+      - ".gitignore"
+      - "DATA.md"
+      - ".github/workflows/examples.yml"
   pull_request:
-    paths: ["examples/**", ".github/workflows/examples.yml"]
+    paths:
+      - "examples/**"
+      - "blender/**"
+      - "docs/**"
+      - ".gitignore"
+      - "DATA.md"
+      - ".github/workflows/examples.yml"
   workflow_dispatch:
 
 defaults:

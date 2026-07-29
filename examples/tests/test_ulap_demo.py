@@ -233,6 +233,75 @@ def test_no_geoportal_derived_scene_is_committed():
             "geoportal-derived and must not be committed; see DATA.md")
 
 
+# ------------------------------------------------------- repository hygiene
+def _tracked_files():
+    """Every file git tracks, or None when we are not in a git checkout."""
+    try:
+        out = subprocess.run(["git", "ls-files", "-z"], cwd=REPO, capture_output=True,
+                             text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return [REPO / f for f in out.stdout.split("\0") if f]
+
+
+def test_no_developer_paths_in_tracked_files():
+    """No tracked file may embed an absolute home directory.
+
+    This has bitten twice: two `blender/` scripts hard-coded a developer's
+    project path, and Blender wrote the same path into a PNG `tEXt` chunk in
+    `docs/renders/`. Both disclose a username; neither is visible in a diff of a
+    binary. This test reads bytes, so it catches the metadata case too."""
+    tracked = _tracked_files()
+    if tracked is None:
+        pytest.skip("not a git checkout")
+
+    # This file legitimately contains the literal string while documenting the rule.
+    allowed = {Path(__file__).resolve()}
+    markers = (b"/Users/", b"/home/", b"C:\\\\Users")
+    # Documentation *about* the rule writes the path with a placeholder segment
+    # (`/Users/<name>/...`, `/home/$USER/...`). A real leak has an actual
+    # username there, so key on the character right after the prefix rather than
+    # maintaining an allowlist of every doc that mentions the pattern.
+    placeholders = (b"<", b"$", b"{", b"~", b".", b"*")
+    offenders = []
+    for path in tracked:
+        if path in allowed or not path.is_file():
+            continue
+        blob = path.read_bytes()
+        for marker in markers:
+            start = 0
+            while (idx := blob.find(marker, start)) != -1:
+                nxt = blob[idx + len(marker):idx + len(marker) + 1]
+                if nxt and nxt not in placeholders:
+                    offenders.append(f"{path.relative_to(REPO)} :: "
+                                     f"{blob[idx:idx + 60].decode('latin-1')!r}")
+                    break
+                start = idx + len(marker)
+            else:
+                continue
+            break
+    assert not offenders, "developer path leaked into tracked files:\n  " + "\n  ".join(offenders)
+
+
+def test_blender_working_dir_is_not_tracked():
+    """`blender/` is a working directory: the pipeline's outputs there are both
+    regenerable and geoportal-derived, so only notes and render helpers belong
+    in git. See DATA.md."""
+    tracked = _tracked_files()
+    if tracked is None:
+        pytest.skip("not a git checkout")
+
+    under_blender = {p.relative_to(REPO).as_posix() for p in tracked
+                     if p.relative_to(REPO).as_posix().startswith("blender/")}
+    assert under_blender == {
+        "blender/barbados_blender_sionna_pipeline.md",
+        "blender/render_perspective.py",
+        "blender/render_sionna_perspective.py",
+    }, f"unexpected tracked files under blender/: {sorted(under_blender)}"
+
+
 # -------------------------------------------------------------------- scene
 def test_scene_loads(scene):
     assert len(scene.buildings) == 585
@@ -451,8 +520,13 @@ def test_adding_a_site_raises_rsrp(scene):
 
 
 def test_coverage_requires_a_tower(scene):
-    with pytest.raises(ValueError):
+    """And the error has to say what to do about it -- this is the failure a
+    user hits after building a scene whose sites fell outside the study box."""
+    with pytest.raises(ValueError) as exc:
         PropagationModel().coverage(scene, towers=[], cell_m=100.0)
+    msg = str(exc.value)
+    assert "no towers to serve the scene" in msg
+    assert "inside the study box" in msg or "no 'antennas' entries" in msg
 
 
 # ----------------------------------------------------- open-data scene builder
@@ -521,6 +595,67 @@ def test_tile_math_matches_the_known_slippy_map_formula():
     x, y = fos._tile_xy(-180.0, 85.0511, 3)
     assert float(x) == pytest.approx(0.0, abs=1e-6)
     assert float(y) == pytest.approx(0.0, abs=1e-4)
+
+
+def test_tower_template_scales_with_the_study_box():
+    """Fixed metre offsets fall outside a smaller study area, leaving the scene
+    with no serving site. The template is expressed as a fraction of the
+    half-width so it lands inside the box at any size."""
+    for entry in fos.TOWER_TEMPLATE:
+        fx, fy = entry["offset_frac"]
+        assert abs(fx) <= 1.0 and abs(fy) <= 1.0, entry["name"]
+
+
+def test_tower_placement_accepts_all_three_position_forms():
+    """offset_frac scales, offset_m is absolute, lon/lat is projected."""
+    import io
+    from contextlib import redirect_stdout
+
+    osm = {"elements": [{"id": 1, "geometry": [
+        {"lon": -59.5340, "lat": 13.0880}, {"lon": -59.5339, "lat": 13.0880},
+        {"lon": -59.5339, "lat": 13.0881}, {"lon": -59.5340, "lat": 13.0881}],
+        "tags": {"building": "house"}}]}
+    with open(tmp := (Path(subprocess.os.environ.get("TMPDIR", "/tmp")) / "_ulap_osm.json"),
+              "w") as fh:
+        json.dump(osm, fh)
+
+    # Only the tower maths is under test; monkeypatch the network away.
+    real_terrain = fos.fetch_terrain_grid
+    fos.fetch_terrain_grid = lambda bbox, nx, ny, zoom=13: np.zeros((ny, nx))
+    towers = Path(subprocess.os.environ.get("TMPDIR", "/tmp")) / "_ulap_towers.json"
+    towers.write_text(json.dumps([
+        {"_comment": "should be skipped"},
+        {"name": "frac", "offset_frac": [0.5, -0.5], "h": 20.0},
+        {"name": "metres", "offset_m": [100.0, 200.0], "h": 20.0},
+        {"name": "lonlat", "lon": -59.533908, "lat": 13.088121, "h": 20.0},
+    ]))
+    try:
+        with redirect_stdout(io.StringIO()):
+            m = fos.build_manifest("t", -59.533908, 13.088121, 500.0, 13,
+                                   str(towers), 8, str(tmp))
+    finally:
+        fos.fetch_terrain_grid = real_terrain
+
+    by_name = {a["name"]: a for a in m["antennas"]}
+    assert set(by_name) == {"frac", "metres", "lonlat"}      # _comment skipped
+    assert by_name["frac"]["x"] == pytest.approx(250.0)      # 0.5 * 500 m
+    assert by_name["frac"]["y"] == pytest.approx(-250.0)
+    assert by_name["metres"]["x"] == pytest.approx(100.0)
+    assert by_name["lonlat"]["x"] == pytest.approx(0.0, abs=0.5)   # the centre
+    assert by_name["lonlat"]["y"] == pytest.approx(0.0, abs=0.5)
+    assert all(a["in_scene"] for a in m["antennas"])
+
+
+def test_bundled_sample_sites_are_inside_the_box(scene):
+    """Whatever else changes, the shipped scene must be servable."""
+    assert scene.towers_in_scene(), "no in-scene tower: coverage() would raise"
+
+
+def test_ssl_advice_is_actionable():
+    """A local trust-store failure must not be reported as a rate limit."""
+    assert issubclass(fos.CertificateError, RuntimeError)
+    for hint in ("Install Certificates", "pip install certifi", "--osm-json"):
+        assert hint in fos._SSL_ADVICE
 
 
 def test_tile_math_is_vectorised():

@@ -1,0 +1,102 @@
+flowchart TB
+
+  subgraph L1["1 &nbsp;·&nbsp; SENSING &nbsp;—&nbsp; NETWORK AS A SENSOR"]
+    ISAC["6G ISAC Cell Towers<br/>dual-function radar-comm<br/>rainfall · flood · motion · mobility"]
+    EO["Satellite EO / NTN"]
+    IOT["IoT and Ground Telemetry<br/>tide · grid · water"]
+    EDGE["Edge Devices and Laptops<br/>opportunistic sensing"]
+    PRIV["Privacy Tiers<br/>L1 / L2 / L3 + consent"]
+  end
+
+  subgraph L2["2 &nbsp;·&nbsp; GEOPACKAGE TRANSFORMATION"]
+    GP["GeoPackage Engine<br/>ingest · fuse · index"]
+    CUBE["Spatio-Temporal Data Cubes<br/>X / Y / Z / Time"]
+  end
+
+  subgraph L3["3 &nbsp;·&nbsp; AMINI CLOUD &nbsp;—&nbsp; DISTRIBUTED COMPUTE"]
+    LAP["Laptops<br/>and Devices"]
+    SRV["Distributed<br/>Servers"]
+    MDC["Modular<br/>Data Centers"]
+    CELL["Cell-Tower<br/>Edge Nodes"]
+  end
+
+  subgraph GATE["ZERO-TRUST INTEGRITY GATE"]
+    CHAIN[("Amini Chain<br/>content hashing · provenance<br/>node attestation")]
+    ATT["Source Attestation<br/>providers untrusted by default"]
+    QUAL["Quality and Integrity<br/>Validation"]
+    MRV["MRV / Climate-Finance Proofs"]
+  end
+
+  subgraph L4["4 &nbsp;·&nbsp; AMINI ORIGIN &nbsp;—&nbsp; SOVEREIGN DATA LAKE"]
+    INGEST["Validated Cube Ingestion"]
+    CATALOG[("Catalog +<br/>Versioned State")]
+  end
+
+  subgraph L5["5 &nbsp;·&nbsp; SOVEREIGN COGNITIVE DIGITAL TWIN"]
+    SYNC["Synchronization Engine<br/>belief-state · EKF"]
+    SIM["Simulation and ML Surrogates<br/>Sionna RT · coastal · hydrology · evacuation"]
+    AIRAN["AI-RAN Cognitive Orchestration<br/>O-RAN RIC · PPO"]
+  end
+
+  subgraph L6["6 &nbsp;·&nbsp; INTERACTION AND ORCHESTRATION"]
+    BRIDGE["Amini Bridge / GovChat<br/>RAG · AI platform"]
+    AKILI["Amini Akili<br/>LLM assistant"]
+    MCP["MCPs and APIs"]
+    SCOPE["Ulap SCOPE<br/>digital-twin webapp"]
+  end
+
+  EXT["External Climate Finance<br/>and Registries"]
+
+  ISAC --> GP
+  EO --> GP
+  IOT --> GP
+  EDGE --> GP
+  PRIV -. "gates capture" .-> GP
+
+  GP --> CUBE
+  CUBE -- "sharded + distributed" --> LAP
+  CUBE --> SRV
+  CUBE --> MDC
+  CUBE --> CELL
+
+  LAP -. "register + hash + attest" .-> CHAIN
+  SRV -.-> CHAIN
+  MDC -.-> CHAIN
+  CELL -.-> CHAIN
+
+  CHAIN --> ATT
+  CHAIN --> MRV
+  ATT --> QUAL
+  MRV -.-> EXT
+
+  QUAL -- "only verified, integrity-checked cubes" --> INGEST
+  INGEST --> CATALOG
+  CATALOG --> SYNC
+
+  SYNC --> SIM
+  SIM --> AIRAN
+  SIM --> BRIDGE
+  SIM --> SCOPE
+  AIRAN --> MCP
+  BRIDGE --> AKILI
+  AKILI --> SCOPE
+  MCP --> SCOPE
+
+  AIRAN -. "beam + sensing control · closed loop" .-> ISAC
+
+  L1 ~~~ L2
+  L2 ~~~ L3
+  L3 ~~~ GATE
+  GATE ~~~ L4
+  L4 ~~~ L5
+  L5 ~~~ L6
+
+  class EO,IOT,EDGE,GP,CATALOG,INGEST,LAP,SRV,MDC,CELL,SIM,SCOPE,AKILI,BRIDGE,MCP built
+  class ISAC,PRIV,CHAIN,ATT,QUAL,MRV,SYNC,AIRAN designed
+  class CUBE hero
+  class EXT ext
+
+  classDef built stroke-width:1px
+  classDef designed stroke-width:1px,stroke-dasharray:4 3
+  classDef hero stroke-width:2.5px
+  classDef ext stroke-width:1px,stroke-dasharray:4 3

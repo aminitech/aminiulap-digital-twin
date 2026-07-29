@@ -1,0 +1,43 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "darkMode": false,
+    "background": "#FFFFFF",
+    "fontFamily": "Aspekta, Geist, 'Helvetica Now Display', -apple-system, Helvetica, Arial, sans-serif",
+    "fontSize": "15px",
+
+    "primaryColor": "#FFFFFF",
+    "primaryTextColor": "#121212",
+    "primaryBorderColor": "#C8C8C8",
+
+    "secondaryColor": "#ECECEC",
+    "secondaryTextColor": "#121212",
+    "secondaryBorderColor": "#C8C8C8",
+
+    "tertiaryColor": "#ECECEC",
+    "tertiaryTextColor": "#121212",
+    "tertiaryBorderColor": "#C8C8C8",
+
+    "lineColor": "#6E6E6E",
+    "textColor": "#121212",
+    "mainBkg": "#FFFFFF",
+    "nodeBorder": "#C8C8C8",
+    "nodeTextColor": "#121212",
+
+    "clusterBkg": "#F7F7F7",
+    "clusterBorder": "#E1E1E1",
+
+    "edgeLabelBackground": "#FFFFFF",
+    "labelBackground": "#FFFFFF",
+    "titleColor": "#121212"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "nodeSpacing": 45,
+    "rankSpacing": 60,
+    "padding": 14,
+    "useMaxWidth": false,
+    "htmlLabels": true
+  },
+  "themeCSS": ".cluster-label text, .cluster-label span, .cluster-label p { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, monospace !important; font-size: 12.5px !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; fill: #121212 !important; color: #121212 !important; } .cluster rect { fill: #F7F7F7 !important; stroke: #E1E1E1 !important; stroke-width: 1px !important; rx: 4px; } .built rect, .built circle, .built ellipse, .built polygon, .built path { fill: #FFFFFF !important; stroke: #C8C8C8 !important; stroke-width: 1px !important; } .built tspan, .built span, .built p { fill: #121212 !important; color: #121212 !important; } .designed rect, .designed circle, .designed ellipse, .designed polygon, .designed path { fill: #FAFAFA !important; stroke: #9A9A9A !important; stroke-width: 1px !important; stroke-dasharray: 4 3 !important; } .designed tspan, .designed span, .designed p { fill: #5A5A5A !important; color: #5A5A5A !important; } .hero rect, .hero circle, .hero ellipse, .hero polygon, .hero path { fill: #FFFFFF !important; stroke: #FFC83C !important; stroke-width: 2.5px !important; } .hero tspan, .hero span, .hero p { fill: #121212 !important; color: #121212 !important; } .ext rect, .ext circle, .ext ellipse, .ext polygon, .ext path { fill: #F4F4F4 !important; stroke: #C8C8C8 !important; stroke-width: 1px !important; stroke-dasharray: 4 3 !important; } .ext tspan, .ext span, .ext p { fill: #6E6E6E !important; color: #6E6E6E !important; } .edgeLabel, .edgeLabel p, .edgeLabel rect { background-color: #FFFFFF !important; fill: #FFFFFF !important; } .edgeLabel span, .edgeLabel p, .edgeLabel tspan { color: #5A5A5A !important; fill: #5A5A5A !important; font-family: 'Geist Mono', ui-monospace, SFMono-Regular, monospace !important; font-size: 12px !important; }"
+}

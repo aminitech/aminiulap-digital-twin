@@ -33,6 +33,7 @@ import argparse
 import io
 import json
 import math
+import ssl
 import sys
 import time
 import urllib.error
@@ -112,10 +113,44 @@ def bbox_deg(lon: float, lat: float, half_width_m: float):
 
 
 # ------------------------------------------------------------------ buildings
+class CertificateError(RuntimeError):
+    """Raised with actionable advice when TLS verification fails locally."""
+
+
+def _ssl_context():
+    """An SSL context that can actually verify certificates.
+
+    A python.org install on macOS ships no CA bundle until you run
+    ``Install Certificates.command``, so plain ``urlopen`` fails on every HTTPS
+    request with CERTIFICATE_VERIFY_FAILED. If ``certifi`` is importable we use
+    its bundle, which fixes it without the user touching anything."""
+    try:
+        import certifi
+    except ImportError:
+        return None                      # fall back to the system default
+    return ssl.create_default_context(cafile=certifi.where())
+
+
+_SSL_ADVICE = (
+    "TLS certificate verification failed, which is a local trust-store problem, "
+    "not a problem with the server.\n"
+    "  macOS + python.org Python: run "
+    "'/Applications/Python 3.x/Install Certificates.command'\n"
+    "  any platform:              pip install certifi   (this script will then use it)\n"
+    "  or skip the network entirely: export the area from https://overpass-turbo.eu "
+    "and pass it with --osm-json"
+)
+
+
 def _http(url: str, data: bytes | None = None, timeout: int = 180) -> bytes:
     req = urllib.request.Request(url, data=data, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as r:
+            return r.read()
+    except urllib.error.URLError as exc:
+        if isinstance(getattr(exc, "reason", None), ssl.SSLCertVerificationError):
+            raise CertificateError(_SSL_ADVICE) from exc
+        raise
 
 
 def fetch_osm_buildings(bbox, timeout: int = 180, attempts: int = 3) -> list[dict]:
@@ -136,6 +171,8 @@ def fetch_osm_buildings(bbox, timeout: int = 180, attempts: int = 3) -> list[dic
                 print(f"  querying {url} (attempt {attempt}/{attempts}) ...")
                 raw = _http(url, data=query.encode(), timeout=timeout + 30)
                 return json.loads(raw).get("elements", [])
+            except CertificateError:
+                raise            # retrying a local trust-store problem is pointless
             except (urllib.error.URLError, TimeoutError, json.JSONDecodeError,
                     ConnectionError) as exc:
                 print(f"  ! {type(exc).__name__}: {exc}")
@@ -215,11 +252,17 @@ def fetch_terrain_grid(bbox, nx: int, ny: int, zoom: int = 13):
 #: PLACEHOLDER, not data. A real tower registry is per-study information you
 #: supply (your own sites, or a public source such as OpenCellID, CC BY-SA 4.0).
 #: These two are an editable template roughly matching the pilot's geometry -- a
-#: 30 m and a 24 m monopole about 1.3 km apart. Override with --towers, or edit
+#: 30 m and a 24 m monopole, diagonally opposed. Override with --towers, or edit
 #: towers.template.json.
+#:
+#: Positions are given as ``offset_frac``, a fraction of the study half-width,
+#: so the template lands sensibly inside the box at *any* --half-width. (Fixed
+#: metre offsets would fall outside a smaller study area and leave the scene with
+#: no serving site at all.) At the default half-width of 1000 m these reproduce
+#: the pilot's two sites exactly.
 TOWER_TEMPLATE = [
-    {"name": "Newton", "offset_m": [-190.0, -805.0], "h": 30.0, "structure": "Monopole"},
-    {"name": "Rising Sun", "offset_m": [970.0, -130.0], "h": 24.0, "structure": "Monopole"},
+    {"name": "Newton", "offset_frac": [-0.19, -0.81], "h": 30.0, "structure": "Monopole"},
+    {"name": "Rising Sun", "offset_frac": [0.97, -0.13], "h": 24.0, "structure": "Monopole"},
 ]
 
 
@@ -287,9 +330,12 @@ def build_manifest(name, lon, lat, half_width_m, zoom, towers_file=None,
     for t in template:
         if "name" not in t or "h" not in t:      # skip _comment / doc entries
             continue
-        if "offset_m" in t:
+        if "offset_frac" in t:                   # fraction of the half-width
+            tx = float(t["offset_frac"][0]) * half_width_m
+            ty = float(t["offset_frac"][1]) * half_width_m
+        elif "offset_m" in t:                    # absolute metres from the centre
             tx, ty = float(t["offset_m"][0]), float(t["offset_m"][1])
-        else:                                   # explicit lon/lat
+        else:                                    # explicit lon/lat
             ex, ey = to_local(np.array([t["lon"]]), np.array([t["lat"]]))
             tx, ty = float(ex[0]), float(ey[0])
         fx = (tx - minx) / (maxx - minx) * (terrain_n - 1)
@@ -300,8 +346,14 @@ def build_manifest(name, lon, lat, half_width_m, zoom, towers_file=None,
                          "ground_z": round(gz, 2),
                          "structure": t.get("structure", "Monopole"),
                          "in_scene": bool(minx <= tx <= maxx and miny <= ty <= maxy)})
-    listed = ", ".join("{name} ({h:.0f} m)".format(**a) for a in antennas)
+    listed = ", ".join(
+        "{name} ({h:.0f} m{outside})".format(outside="" if a["in_scene"] else ", OUTSIDE box", **a)
+        for a in antennas)
     print(f"\ntowers   : {listed}")
+    if not any(a["in_scene"] for a in antennas):
+        print("  ! WARNING: every site is outside the study box, so the scene has no\n"
+              "    serving transmitter. Move them inside with --towers (offset_frac is a\n"
+              "    fraction of the half-width), or widen the box with --half-width.")
 
     return {
         "epsg": epsg,
@@ -365,8 +417,12 @@ def main(argv=None) -> int:
                     help="default: <name>_scene_manifest.json next to this script")
     args = ap.parse_args(argv)
 
-    manifest = build_manifest(args.name, args.lon, args.lat, args.half_width,
-                              args.zoom, args.towers, args.terrain_n, args.osm_json)
+    try:
+        manifest = build_manifest(args.name, args.lon, args.lat, args.half_width,
+                                  args.zoom, args.towers, args.terrain_n, args.osm_json)
+    except CertificateError as exc:
+        print(f"\nerror: {exc}", file=sys.stderr)
+        return 2
 
     out = Path(args.output) if args.output else Path(__file__).parent / \
         f"{args.name}_scene_manifest.json"

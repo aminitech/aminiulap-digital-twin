@@ -133,14 +133,14 @@ with tab_cov:
         fig, ax = plt.subplots(figsize=(7.5, 7))
         plot_coverage(ax, cov, scene=scene,
                       title=f"Best-server RSRP @ {freq_ghz:g} GHz")
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig)
     with right:
         fig, ax = plt.subplots(figsize=(6, 6.4))
         served = np.where(cov.best_rsrp_dbm >= rsrp_thr, 1.0, 0.0)
         plot_map(ax, served, cov.extent, scene=scene, cmap="cividis", vmin=0, vmax=1,
                  title=f"Served at ≥ {rsrp_thr} dBm", cbar_label="served",
                  label_towers=False)
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig)
         st.write(f"**{cov.served_area_km2(rsrp_thr):.2f} km²** of "
                  f"{cov.cell_area_km2 * cov.best_rsrp_dbm.size:.2f} km² served.")
 
@@ -148,7 +148,7 @@ with tab_sinr:
     fig, ax = plt.subplots(figsize=(8, 7))
     plot_sinr(ax, cov, scene=scene,
               title=f"SINR — {len(towers)} site(s), {bw_mhz} MHz")
-    st.pyplot(fig, use_container_width=True)
+    st.pyplot(fig)
     st.info(
         "Red seams are cell edges, not coverage holes. Adding a site usually raises RSRP "
         "and *lowers* median SINR — the fix for an interference-limited edge is tilt, "
@@ -157,7 +157,7 @@ with tab_sinr:
 with tab_srv:
     fig, ax = plt.subplots(figsize=(8, 7))
     plot_best_server(ax, cov, scene=scene)
-    st.pyplot(fig, use_container_width=True)
+    st.pyplot(fig)
     st.write("**Best-server share of area**")
     st.table({name: [f"{100 * frac:.1f} %"] for name, frac in cov.server_share().items()})
 
@@ -178,7 +178,7 @@ with tab_stats:
     axes[1].set_ylabel("% of area below")
     axes[1].set_title("SINR CDF")
     axes[1].grid(alpha=0.25)
-    st.pyplot(fig, use_container_width=True)
+    st.pyplot(fig)
 
     st.text(cov.summary(rsrp_threshold_dbm=rsrp_thr, sinr_threshold_db=sinr_thr))
     st.download_button(

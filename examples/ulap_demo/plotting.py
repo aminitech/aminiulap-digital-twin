@@ -31,7 +31,9 @@ def use_ulap_style():
         "axes.labelcolor": MARBLE_WHITE,
         "axes.edgecolor": "#3A3A3A",
         "axes.titlecolor": MARBLE_WHITE,
-        "axes.titleweight": "semibold",
+        # "semibold" makes matplotlib's font manager warn on a clean install --
+        # the bundled DejaVu Sans has no semibold face, so it silently falls back.
+        "axes.titleweight": "bold",
         "xtick.color": MUTED,
         "ytick.color": MUTED,
         "grid.color": "#2E2E2E",
