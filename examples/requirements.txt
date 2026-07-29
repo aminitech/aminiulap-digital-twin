@@ -1,0 +1,18 @@
+# Dependencies for the Ulap examples (notebooks + local demo apps).
+#
+#   pip install -r examples/requirements.txt
+#
+# None of the heavy pipeline stack (GDAL / bpy / sionna-rt) is needed here --
+# see ulap-scope/requirements/ for those. Notebook 01 and the twin viewer app
+# need nothing at all beyond the Python standard library.
+
+numpy>=1.26
+matplotlib>=3.8          # every figure, and the drive-test GIF
+pillow>=10               # GIF writing + decoding elevation tiles (a matplotlib dep)
+jupyterlab>=4.0          # to run the notebooks
+streamlit>=1.28          # apps/coverage_explorer only
+pytest>=8                # examples/tests
+
+# data/fetch_open_scene.py builds a scene for any location from OpenStreetMap and
+# open elevation tiles. It needs only numpy + pillow from this list, and the
+# standard library for everything else — no GDAL, no pyproj.

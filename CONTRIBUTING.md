@@ -15,7 +15,11 @@ Thanks for helping build reproducible RF digital twins! ((♥))
 ## Where things live
 
 Code contributions land in [`ulap-scope/`](ulap-scope/) — the installable
-package. `BlenderGIS/` and `mitsuba-blender/` are vendored upstream add-ons:
+package. Community-facing demos live in [`examples/`](examples/): four notebooks,
+three local apps, and an open-data scene builder, all runnable on numpy +
+matplotlib. New examples are very welcome — see
+[`examples/README.md`](examples/README.md) for the two house rules (commit
+notebooks with outputs stripped; never let the prose outrun what the code prints). `BlenderGIS/` and `mitsuba-blender/` are vendored upstream add-ons:
 don't patch them here; upstream your fix and bump the vendored copy.
 
 ## Dev setup

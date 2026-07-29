@@ -1,0 +1,85 @@
+name: examples CI
+
+# Keeps the community-facing demos runnable: the physics helpers are checked
+# against closed-form values, the shipped sample data is checked against the
+# claims the notebooks make about it, and the local apps are smoke-run.
+#
+# Nothing here needs Blender, GDAL or Sionna -- that is the whole point of
+# examples/.
+
+on:
+  push:
+    paths: ["examples/**", ".github/workflows/examples.yml"]
+  pull_request:
+    paths: ["examples/**", ".github/workflows/examples.yml"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: examples
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ../ulap-scope
+          python -m pip install numpy matplotlib pytest
+
+      - name: Test suite
+        run: python -m pytest -q
+
+  notebooks:
+    # Executing all four notebooks end to end is the only way to know a reader's
+    # first experience still works. Slower, so it runs once rather than per version.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ../ulap-scope
+          python -m pip install numpy matplotlib nbclient nbformat ipykernel
+
+      - name: Execute every notebook
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python - <<'PY'
+          import glob, sys
+          import nbformat
+          from nbclient import NotebookClient
+
+          failed = []
+          for path in sorted(glob.glob("notebooks/*.ipynb")):
+              nb = nbformat.read(path, as_version=4)
+              client = NotebookClient(nb, timeout=900, kernel_name="python3",
+                                      resources={"metadata": {"path": "notebooks"}})
+              try:
+                  client.execute()
+                  print(f"PASS {path}")
+              except Exception as exc:
+                  failed.append(path)
+                  print(f"FAIL {path}\n{exc}")
+          sys.exit(1 if failed else 0)
+          PY

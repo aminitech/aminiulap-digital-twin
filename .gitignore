@@ -30,3 +30,33 @@ blender/*/textures/
 blender/scene_build/*.tif
 blender/sionna_out/*.mov
 blender/Untitled.blend
+
+# ---------------------------------------------------------------------------
+# Public-release guards. Do not remove without a disclosure review.
+# ---------------------------------------------------------------------------
+
+# Geospatial data is never committed. You supply it at run time — see DATA.md.
+# The Barbados Geoportal layers are not ours to redistribute.
+bbd-geo-portal/
+
+# Internal brand, positioning, and go-to-market material. Not for public release.
+brandkit/
+
+# Paper sources live in the separate papers repository. This tree keeps only
+# research-paper/README.md, the published-papers index.
+research-paper/*
+!research-paper/README.md
+
+# Credentials — belt and braces. Nothing of the sort has ever been committed
+# (verified with gitleaks over full history); keep it that way.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+*service-account*.json
+credentials*.json
+secrets.yaml
+secrets.yml
