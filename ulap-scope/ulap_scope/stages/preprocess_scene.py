@@ -4,7 +4,7 @@ preprocess_scene.py -- turn the clipped shapefiles + basemap into a Blender-read
 manifest, in scene-local metres relative to the .blend's EPSG:21292 origin.
 
 Run with the geopandas python (conda base):
-    /opt/anaconda3/bin/python blender/preprocess_scene.py
+    ulap-scope preprocess          # or: $ULAP_PREP_PY -m ulap_scope.cli preprocess
 
 Produces blender/scene_build/scene_manifest.json and GOOGLE_SAT_BNG.tif.
 Includes a terrain grid interpolated from the building AVG_DTM (geoportal ground

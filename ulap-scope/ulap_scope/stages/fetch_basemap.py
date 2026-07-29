@@ -8,7 +8,7 @@ mosaics them, and reprojects to EPSG:21292 so the ground plane can be textured
 edge-to-edge.
 
 Run with conda base python (pyproj + PIL):
-    /opt/anaconda3/bin/python blender/fetch_basemap.py
+    ulap-scope basemap             # or: $ULAP_PREP_PY -m ulap_scope.cli basemap
 
 Output: blender/scene_build/GOOGLE_SAT_BNG.tif (overwrites, full extent) and
 updates basemap bounds in scene_manifest.json.

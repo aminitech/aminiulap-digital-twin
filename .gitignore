@@ -10,16 +10,12 @@ build/
 dist/
 .venv/
 
-# Blender working files (keep the primary .blend scenes; drop backups/autosaves)
+# Blender working files
+*.blend
 *.blend1
 *.blend2
 *_autosave.blend
 *.crash.txt
-
-# Large generated intermediates (recreate with `ulap-scope basemap` / `build`)
-blender/GOOGLE_SAT_WM.tif
-blender/scene_build/_mosaic_3857.png
-blender/*/textures/
 
 # Archives / editor
 *.zip
