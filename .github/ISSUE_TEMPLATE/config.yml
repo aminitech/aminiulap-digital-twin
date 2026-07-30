@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: "Community chat (Slack)"
+    url: https://join.slack.com/t/aminicommunity/shared_invite/zt-2sdupq9i9-6c_0shJng6YkEVKmGt~V8A
+    about: "Questions, study-area help, or just saying hello — often faster than an issue."
   - name: "Security vulnerability"
     url: https://github.com/aminitech/amini-ulap-digital-twin/security/policy
     about: "Please report privately — do not open a public issue. See SECURITY.md."

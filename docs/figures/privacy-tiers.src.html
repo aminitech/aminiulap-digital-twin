@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Privacy tiers — three tiers, gated at the door</title>
+<style>
+/* Amini design system — tokens from brandkit/DESIGN.md */
+:root{
+  --space-black:#121212;
+  --marble-white:#FFFFFF;
+  --sunglow:#FFC83C;
+  --slate-grey:#E1E1E1;
+  --charcoal:#202020;
+  --bordeaux:#861D2C;
+
+  --font-display:"Helvetica Now Display","Geist","Aspekta",system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,monospace;
+}
+
+/* LIGHT (default) — print, paper, arXiv */
+:root[data-theme="light"]{
+  --bg:var(--marble-white);
+  --fg:var(--space-black);
+  --muted:rgba(18,18,18,.62);     /* Space Black @62% = 5.1:1 on white, passes AA */
+  --divider:var(--slate-grey);
+  --chip-bg:var(--space-black);
+  --chip-fg:var(--marble-white);
+  --eyebrow:var(--bordeaux);      /* Bordeaux is light-backgrounds-only */
+  --footrule:var(--space-black);
+}
+
+/* DARK — brand default for web and decks */
+:root[data-theme="dark"]{
+  --bg:var(--space-black);
+  --fg:var(--marble-white);
+  --muted:rgba(255,255,255,.64);  /* Marble White @64% = 8.9:1 on Space Black */
+  --divider:rgba(255,255,255,.14);
+  --chip-bg:var(--marble-white);
+  --chip-fg:var(--space-black);
+  --eyebrow:var(--sunglow);       /* Bordeaux is banned on dark; Sunglow carries the eyebrow */
+  --footrule:var(--marble-white);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{background:var(--bg)}
+
+body{
+  font-family:var(--font-display);
+  color:var(--fg);
+  width:1120px;
+  padding:64px 68px 56px;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","ss02","ss05","ss07";
+}
+
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.06em;              /* eyebrow tracking 6% */
+  text-transform:uppercase;
+  color:var(--eyebrow);
+}
+
+h1{
+  font-size:40px;
+  font-weight:700;
+  letter-spacing:-.02em;
+  line-height:1.1;
+  margin-top:14px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:38px;
+  table-layout:fixed;
+}
+
+thead th{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-align:left;
+  padding:0 0 12px;
+  vertical-align:bottom;
+}
+
+/* Sunglow is the single accent — one rule, under the header row */
+thead tr{border-bottom:3px solid var(--sunglow)}
+
+col.c-tier{width:30%}
+col.c-covers{width:30%}
+col.c-treated{width:40%}
+
+tbody td{
+  padding:26px 28px 26px 0;
+  border-bottom:1px solid var(--divider);
+  vertical-align:top;
+  font-size:17px;
+  line-height:1.5;                   /* body line-height 150% */
+  letter-spacing:.01em;
+}
+tbody tr:last-child td{border-bottom:2px solid var(--footrule)}
+
+.tier{display:flex;align-items:center;gap:14px}
+
+.chip{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.04em;              /* UI label tracking 4% */
+  background:var(--chip-bg);
+  color:var(--chip-fg);
+  padding:5px 9px 4px;
+  border-radius:2px;
+  line-height:1;
+  flex:none;
+}
+
+.tier-name{font-size:27px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+
+footer{
+  margin-top:30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.note{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.wordmark{height:19px;opacity:.9;flex:none}
+:root[data-theme="light"] .wm-dark{display:none}
+:root[data-theme="dark"]  .wm-light{display:none}
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">Privacy by design</div>
+  <h1>Three tiers, gated at the door</h1>
+
+  <table>
+    <colgroup>
+      <col class="c-tier"><col class="c-covers"><col class="c-treated">
+    </colgroup>
+    <thead>
+      <tr><th>Tier</th><th>What it covers</th><th>How it is treated</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="tier"><span class="chip">L1</span><span class="tier-name">Environmental</span></div></td>
+        <td>Terrain, hydrology, weather</td>
+        <td>Passes freely</td>
+      </tr>
+      <tr>
+        <td><div class="tier"><span class="chip">L2</span><span class="tier-name">Behavioural</span></div></td>
+        <td>Aggregate mobility and presence</td>
+        <td>Requires consent</td>
+      </tr>
+      <tr>
+        <td><div class="tier"><span class="chip">L3</span><span class="tier-name">Physiological</span></div></td>
+        <td>Micro-Doppler, so respiration and gait</td>
+        <td>Deliberately degraded with calibrated noise so it cannot be recovered</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer>
+    <div class="note">Günlü et al. taxonomy · S-CDT §VI.D</div>
+    <img class="wordmark wm-light" alt="Amini" src="WORDMARK_BLACK">
+    <img class="wordmark wm-dark"  alt="Amini" src="WORDMARK_WHITE">
+  </footer>
+
+<script>
+  var t = new URLSearchParams(location.search).get('theme');
+  if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+</script>
+</body>
+</html>

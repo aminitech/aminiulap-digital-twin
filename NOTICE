@@ -38,7 +38,23 @@ NumPy                    BSD-3-Clause   https://numpy.org
 
 
 ================================================================================
-3. Tile and imagery services
+3. Redistributed assets
+================================================================================
+
+Unlike every other entry in this file, these third-party files ARE contained in
+this repository.
+
+Geist and Geist Mono (variable)
+  docs/figures/fonts/Geist-Variable.woff2
+  docs/figures/fonts/GeistMono-Variable.woff2
+  SIL Open Font License 1.1 — full text at docs/figures/fonts/LICENSE-Geist-OFL.txt
+  Copyright (c) Vercel. Used to render figures reproducibly, so a figure rebuild
+  does not depend on fonts installed on the machine. The OFL permits
+  redistribution provided the licence travels with the files, which it does.
+
+
+================================================================================
+4. Tile and imagery services
 ================================================================================
 
 ESRI ArcGIS World Imagery
@@ -50,7 +66,7 @@ ESRI ArcGIS World Imagery
 
 
 ================================================================================
-4. Geospatial data sources
+5. Geospatial data sources
 ================================================================================
 
 No third-party geospatial data is redistributed in this repository. Every layer
@@ -87,6 +103,13 @@ OpenStreetMap / Geofabrik extracts
 OpenCellID
   https://opencellid.org
   CC BY-SA 4.0.
+
+Terrain Tiles on AWS Open Data
+  https://registry.opendata.aws/terrain-tiles/
+  Elevation tiles ("terrarium" encoding) fetched at run time by
+  examples/data/fetch_open_scene.py. Open data; the underlying SRTM, GMTED and
+  3DEP sources are public domain. No API key is required and no tile is
+  redistributed here.
 
 TeleGeography submarine cable data
   https://www.submarinecablemap.com

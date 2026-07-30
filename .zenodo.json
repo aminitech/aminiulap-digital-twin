@@ -1,0 +1,36 @@
+{
+  "title": "Ulap Digital Twin: a 6G propagation study pipeline",
+  "description": "<p>Reproducible radio-frequency digital twins for 6G deployment planning. National geoportal shapefiles, satellite imagery and LiDAR building heights go in; ray-traced coverage, SINR, mmWave and drive-test studies come out, via BlenderGIS to Mitsuba to NVIDIA Sionna RT. Everything runs on CPU: no CUDA required.</p><p>The pilot study twins the Newton / Rising Sun area of south-central Barbados and ray-traces 1.8 to 60 GHz. The pipeline is not Barbados-specific: <code>ulap-scope init</code> defines a study anywhere in the world, and <code>examples/data/fetch_open_scene.py</code> builds a scene for any coordinate from OpenStreetMap footprints and open elevation tiles.</p><p><strong>This archive ships code, not data.</strong> No Barbados Geoportal layer, and no artefact derived from one, is included; every geospatial layer is fetched or supplied by the user at run time. See DATA.md in the archive for the per-layer data availability statement.</p>",
+  "upload_type": "software",
+  "license": "Apache-2.0",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Cayetano, Zoe Aiyanna M.",
+      "affiliation": "Amini Labs"
+    },
+    {
+      "name": "Gichuru, George M.",
+      "affiliation": "Amini Labs"
+    }
+  ],
+  "keywords": [
+    "digital twin",
+    "6G",
+    "ISAC",
+    "radio propagation",
+    "ray tracing",
+    "Sionna",
+    "Mitsuba",
+    "geospatial",
+    "small island developing states",
+    "reproducible research"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/aminitech/amini-ulap-digital-twin",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

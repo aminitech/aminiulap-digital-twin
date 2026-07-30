@@ -7,6 +7,31 @@
 
 `ULAP ONE` · `RF SCENE TWIN` · `CPU-ONLY`
 
+[Quick start](#try-it-in-60-seconds-no-blender-no-sionna) •
+[Examples](examples/) •
+[Demos](examples/README.md#apps) •
+[Docs](docs/) •
+[Community](https://join.slack.com/t/aminicommunity/shared_invite/zt-2sdupq9i9-6c_0shJng6YkEVKmGt~V8A) •
+[Paper](research-paper/README.md)
+
+<!-- CI status badges: re-enable the two lines below when this repository becomes
+     public. GitHub serves actions/workflows/<file>/badge.svg only to viewers who
+     can read the repo, and README images are fetched anonymously through GitHub's
+     camo proxy — so on a private/internal repo they render as broken images for
+     everyone, including org members. shields.io is no better: its GitHub Actions
+     endpoint reports "repo or workflow not found" for the same reason. Both URLs
+     below are already correct and point at live workflows; nothing needs editing
+     except removing these comment markers.
+
+[![examples CI](https://github.com/aminitech/amini-ulap-digital-twin/actions/workflows/examples.yml/badge.svg)](https://github.com/aminitech/amini-ulap-digital-twin/actions/workflows/examples.yml)
+[![ulap-scope CI](https://github.com/aminitech/amini-ulap-digital-twin/actions/workflows/ci.yml/badge.svg)](https://github.com/aminitech/amini-ulap-digital-twin/actions/workflows/ci.yml)
+-->
+[![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](ulap-scope/pyproject.toml)
+[![hardware](https://img.shields.io/badge/hardware-CPU--only-success)](ulap-scope/README.md)
+[![license](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![community](https://img.shields.io/badge/community-Slack-4A154B?logo=slack&logoColor=white)](https://join.slack.com/t/aminicommunity/shared_invite/zt-2sdupq9i9-6c_0shJng6YkEVKmGt~V8A)
+[![arXiv](https://img.shields.io/badge/arXiv-not%20yet%20announced-lightgrey)](research-paper/README.md)
+
 </div>
 
 Reproducible **radio-frequency digital twins** for 6G deployment planning. National
@@ -233,6 +258,41 @@ ulap-scope all          # clip → preprocess → basemap → build → export �
 The submodules matter: `--recurse-submodules` fetches BlenderGIS and
 mitsuba-blender from upstream. If you already cloned without it, run
 `git submodule update --init --recursive`.
+
+## Reproducing the paper
+
+**Cite and clone a tag, never `main`.** `main` moves; a paper's results do not.
+Every figure and number in the paper corresponds to one tagged release, archived
+on Zenodo with its own DOI.
+
+```bash
+# replace <TAG> with the release named in the paper's code availability statement
+git clone --recurse-submodules --branch <TAG> \
+  https://github.com/aminitech/amini-ulap-digital-twin.git
+```
+
+| | |
+|---|---|
+| **Release tag** | *not yet tagged — see [ULAP-15](https://linear.app/aminitech/issue/ULAP-15)* |
+| **Version DOI** | *not yet minted (Zenodo requires a public repository)* |
+| **Which figure came from which command** | [`docs/renders/README.md`](docs/renders/README.md) |
+| **What the numbers depend on** | [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md) |
+
+> ⚠️ **Read this before attempting to reproduce a figure.** Seven of the eight
+> Sionna RT solver invocations are **unseeded** Monte Carlo at 10⁶–10⁷ samples per
+> transmitter, so re-running a stage produces a statistically similar but **not
+> identical** map, and the run-to-run variance has not yet been measured. Until
+> that is fixed, [`docs/renders/README.md`](docs/renders/README.md) tells you the
+> command that *produced* each figure; it is not yet a promise that the command
+> *reproduces* it to a stated tolerance. The one number currently guarded by a
+> test is the log-distance fit on the Rising Sun transect (`n = 1.73 ± 0.02`,
+> RMS < 0.3 dB — `examples/tests/test_ulap_demo.py`).
+
+To reproduce the **Barbados** figures you additionally need the Barbados
+Geoportal layers, which we cannot redistribute — [DATA.md](DATA.md) lists every
+layer, its source and its status. To reproduce the *method* on data you can
+obtain freely, use the open-data path below or
+`examples/data/fetch_open_scene.py`.
 
 ## Reproduction path
 

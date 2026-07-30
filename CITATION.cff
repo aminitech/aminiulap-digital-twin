@@ -30,6 +30,24 @@ keywords:
 license: Apache-2.0
 version: 0.1.0
 
+# ---------------------------------------------------------------------------
+# Release archiving (ULAP-15)
+# ---------------------------------------------------------------------------
+# Zenodo mints a DOI when a GitHub *release* is published, and it can only see
+# PUBLIC repositories — so this stays commented until the repo is public and a
+# release is tagged. Two DOIs come back: a version DOI for that specific release
+# and a concept DOI that always resolves to the newest version. Cite the version
+# DOI in a paper; a reader must be able to get the exact tree the numbers came
+# from.
+#
+# Uncomment and fill from the Zenodo record:
+#
+# doi: 10.5281/zenodo.XXXXXXX        # version DOI for this release
+# identifiers:
+#   - type: doi
+#     value: 10.5281/zenodo.XXXXXXX  # concept DOI — resolves to latest version
+#     description: "Concept DOI (all versions)"
+#
 # The accompanying paper is not yet announced on arXiv. Once it is, replace the
 # placeholder below with the real eprint id and DOI, and mirror the change in
 # research-paper/README.md.
