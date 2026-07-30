@@ -12,7 +12,7 @@
     "node": "spark-5804",
     "machine": "aarch64",
     "python": "3.12.3",
-    "executable": "/home/ulap01/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
   },
   "config": {
     "freq_hz": 3500000000.0,
@@ -26,7 +26,7 @@
       43,
       44
     ],
-    "ulap_work_dir": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork",
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork",
     "note": "all three variants solved on ONE common grid (same centre, size and cell size) so cells compare one-to-one. Since 2026-07-30 the shipped stages agree: sionna_coverage.py moved 5 m -> 8 m and both read ULAP_RM_CELL_M / ULAP_RM_SAMPLES_PER_TX, so nothing is harmonised away here. samples_per_tx was 1e7 in the superseded run of this study.",
     "timing_caveat": "Dr.Jit persists compiled kernels in an on-disk cache, so 'cold' here means first solve in a fresh interpreter, NOT first solve ever. On a machine with an empty Dr.Jit cache the same cells took 0.16 s (flat), 0.16 s (terrain_plane) and 1.41 s (terrain_ground, 9 solves). Timing here is indicative; benchmarks/ owns the authoritative harness.",
     "k_planes": 57,
@@ -35,9 +35,9 @@
   },
   "failures": [],
   "inputs": {
-    "scene_flat": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene/scene.xml",
-    "scene_terrain": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
-    "manifest": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
+    "scene_flat": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene/scene.xml",
+    "scene_terrain": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
+    "manifest": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
     "manifest_md5": "419b775af0d975ffd6ecfaa5861e1f0f",
     "towers": [
       "Newton",

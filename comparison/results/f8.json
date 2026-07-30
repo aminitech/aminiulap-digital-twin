@@ -17,7 +17,7 @@
     "node": "spark-5804",
     "machine": "aarch64",
     "python": "3.12.3",
-    "executable": "/home/ulap01/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
   },
   "config": {
     "freq_hz": 3500000000.0,
@@ -30,14 +30,14 @@
     "seed": 42,
     "noise_floor_seed": 43,
     "los_ray_samples": 192,
-    "ulap_work_dir": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork",
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork",
     "note": "K_BEFORE=9 planes are an exact subset of the K_AFTER=57 stack (56 = 8*7), so before and after are read off the SAME solves; none of the delta is re-solve noise. samples_per_tx matches the shipped stage default, raised 1e6 -> 1e8 on 2026-07-30, and c3_ablation.py tracks the same value. The superseded run of this study used 1e7.",
     "mitsuba_variant": "cuda_ad_mono_polarized"
   },
   "failures": [],
   "inputs": {
-    "scene_terrain": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
-    "manifest": "/home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
+    "scene_terrain": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
+    "manifest": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
     "manifest_md5": "419b775af0d975ffd6ecfaa5861e1f0f",
     "towers": [
       "Newton",
@@ -343,7 +343,7 @@
         "no-coverage fraction: 0.00395  (samples_per_tx=1e+08, 8 m cells)",
         "NOTE: this map converges to 0.24 % dark at samples_per_tx=1e9 on this scene, so about 39 % of the 0.39 % blank area above is still sample starvation, not shadow. The 1e8 default is a cost bound (CPU/LLVM: 262 s vs 2383 s at 1e9), not convergence. Run ULAP_GF_SAMPLES_PER_TX=1e9 before claiming a shadow area.",
         "colour scale: vmin=-160.0 vmax=-80.0 dB  (shared 'terrain' scale, set by coverage_pathgain_db_terrain.png; own p99 -82.3 dB; 0.57 % of cells saturate at the top, 0.01 % clip at the bottom)",
-        "wrote /home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
+        "wrote /home/$USER/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
         "DONE"
       ]
     },
@@ -359,7 +359,7 @@
         "no-coverage fraction: 0.01161  (samples_per_tx=1e+08, 8 m cells)",
         "NOTE: this map converges to 0.24 % dark at samples_per_tx=1e9 on this scene, so about 79 % of the 1.16 % blank area above is still sample starvation, not shadow. The 1e8 default is a cost bound (CPU/LLVM: 262 s vs 2383 s at 1e9), not convergence. Run ULAP_GF_SAMPLES_PER_TX=1e9 before claiming a shadow area.",
         "colour scale: vmin=-160.0 vmax=-80.0 dB  (shared 'terrain' scale, set by coverage_pathgain_db_terrain.png; own p99 -82.3 dB; 0.56 % of cells saturate at the top, 0.09 % clip at the bottom)",
-        "wrote /home/ulap01/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
+        "wrote /home/$USER/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
         "DONE"
       ]
     },
@@ -419,7 +419,7 @@
     "note": "Stated whichever way the numbers fall. If the surviving extra shadow is small or is not corroborated by an independent DTM line-of-sight test, the abstract's ridge-shadowing claim is not supported and must be dropped."
   },
   "figures": [
-    "/home/ulap01/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_plane_stack.png",
-    "/home/ulap01/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_ridge_shadow.png"
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_plane_stack.png",
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_ridge_shadow.png"
   ]
 }
