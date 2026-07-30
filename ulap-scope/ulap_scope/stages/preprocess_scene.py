@@ -10,7 +10,7 @@ Produces blender/scene_build/scene_manifest.json and GOOGLE_SAT_BNG.tif.
 Includes a terrain grid interpolated from the building AVG_DTM (geoportal ground
 elevation) so the scene can be built flat OR draped over real terrain.
 """
-import json, os, subprocess
+import json, os, shutil, subprocess
 import numpy as np
 import geopandas as gpd
 from shapely.geometry import MultiPolygon
@@ -19,8 +19,18 @@ from scipy.interpolate import griddata
 ROOT = os.environ.get("ULAP_PROJECT_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SA   = f"{ROOT}/bbd-geo-portal/study_area"
 BUILD= f"{ROOT}/blender/scene_build"
-GBIN = "/opt/homebrew/bin"
 os.makedirs(BUILD, exist_ok=True)
+
+def _gdal(tool):
+    """Resolve a GDAL CLI tool from $ULAP_GDAL_BIN or PATH (portable across OSes)."""
+    override = os.environ.get("ULAP_GDAL_BIN")
+    path = os.path.join(override, tool) if override else shutil.which(tool)
+    if not path:
+        raise SystemExit(
+            f"{tool} not found. Install GDAL (on PATH) or set ULAP_GDAL_BIN to "
+            "the directory containing the GDAL binaries."
+        )
+    return path
 
 OX, OY = 32735.32016057213, 64854.73663833553   # scene origin in EPSG:21292 (from .blend)
 EPSG = 21292
@@ -29,10 +39,10 @@ EPSG = 21292
 src_tif = f"{ROOT}/blender/GOOGLE_SAT_WM.tif"
 tmp_tif = f"{BUILD}/_basemap_3857.tif"
 out_tif = f"{BUILD}/GOOGLE_SAT_BNG.tif"
-subprocess.run([f"{GBIN}/gdal_translate","-a_srs","EPSG:3857","-q",src_tif,tmp_tif],check=True)
-subprocess.run([f"{GBIN}/gdalwarp","-t_srs","EPSG:21292","-r","cubic","-overwrite","-q",
+subprocess.run([_gdal("gdal_translate"),"-a_srs","EPSG:3857","-q",src_tif,tmp_tif],check=True)
+subprocess.run([_gdal("gdalwarp"),"-t_srs","EPSG:21292","-r","cubic","-overwrite","-q",
                 "-dstalpha",tmp_tif,out_tif],check=True)
-info = json.loads(subprocess.check_output([f"{GBIN}/gdalinfo","-json",out_tif]))
+info = json.loads(subprocess.check_output([_gdal("gdalinfo"),"-json",out_tif]))
 cc = info["cornerCoordinates"]; W,H = info["size"]
 xs = [cc["upperLeft"][0],cc["lowerRight"][0]]; ys=[cc["upperLeft"][1],cc["lowerRight"][1]]
 basemap = {"tif":out_tif,"px_w":W,"px_h":H,
@@ -82,9 +92,9 @@ for _,row in a.iterrows():
                      "ground_z":round(float(gz),2),
                      "structure":str(row.get("Structure",""))})
 
-json.dump({"epsg":EPSG,"origin":[OX,OY],"basemap":basemap,"terrain":terrain,
-           "buildings":buildings,"antennas":antennas},
-          open(f"{BUILD}/scene_manifest.json","w"))
+with open(f"{BUILD}/scene_manifest.json","w") as _mf:
+    json.dump({"epsg":EPSG,"origin":[OX,OY],"basemap":basemap,"terrain":terrain,
+               "buildings":buildings,"antennas":antennas}, _mf)
 print(f"buildings:{len(buildings)}  terrain DTM {terrain['zmin']}..{terrain['zmax']} m  "
       f"({terrain['zmax']-terrain['zmin']:.1f} m relief)")
 for an in antennas:

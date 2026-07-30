@@ -10,12 +10,15 @@ Env overrides (all optional):
   ULAP_PROJECT_ROOT   repo root that contains bbd-geo-portal/ and blender/
   ULAP_DATA_DIR       geoportal shapefiles root (default <root>/bbd-geo-portal)
   ULAP_WORK_DIR       working/output dir      (default <root>/blender)
-  ULAP_BLENDER_BIN    Blender executable
+  ULAP_BLENDER_BIN    Blender executable      (default: `blender` on PATH)
   ULAP_PREP_PY        python w/ geopandas+scipy+pyproj+pillow (prep stages)
   ULAP_RT_PY          python w/ sionna-rt (RT stages)
+  ULAP_GDAL_BIN       dir with the GDAL CLIs  (default: resolved from PATH)
 """
 from __future__ import annotations
 import os
+import shutil
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -44,11 +47,16 @@ class Config:
     max_depth: int = 5
     samples_per_tx: int = 10**6
 
-    # --- interpreters (override per machine) ---
-    blender_bin: str = os.environ.get(
-        "ULAP_BLENDER_BIN", "/Applications/Blender.app/Contents/MacOS/Blender")
-    prep_py: str = os.environ.get("ULAP_PREP_PY", "/opt/anaconda3/bin/python")
-    rt_py: str = os.environ.get("ULAP_RT_PY", "/opt/anaconda3/envs/sionna/bin/python")
+    # --- interpreters (override per machine via env; cross-platform defaults so
+    #     a fresh clone runs without editing code) ---
+    blender_bin: str = (os.environ.get("ULAP_BLENDER_BIN")
+                        or shutil.which("blender")
+                        or "/Applications/Blender.app/Contents/MacOS/Blender")
+    # The prep and RT stages need different dependency sets (geopandas vs
+    # sionna-rt); point them at separate interpreters via env. Both default to
+    # the current interpreter so a single all-deps env also works out of the box.
+    prep_py: str = os.environ.get("ULAP_PREP_PY") or sys.executable
+    rt_py: str = os.environ.get("ULAP_RT_PY") or sys.executable
 
     # --- derived paths ---
     @property

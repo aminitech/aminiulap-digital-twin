@@ -13,19 +13,30 @@ Run with conda base python (pyproj + PIL):
 Output: blender/scene_build/GOOGLE_SAT_BNG.tif (overwrites, full extent) and
 updates basemap bounds in scene_manifest.json.
 """
-import os, json, math, io, time, urllib.request, subprocess
+import os, json, math, io, time, shutil, urllib.request, subprocess
 from PIL import Image
 from pyproj import Transformer
 
 ROOT = os.environ.get("ULAP_PROJECT_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BUILD = f"{ROOT}/blender/scene_build"
-GBIN  = "/opt/homebrew/bin"
 ZOOM  = 18
 TILE_URL = ("https://server.arcgisonline.com/ArcGIS/rest/services/"
             "World_Imagery/MapServer/tile/{z}/{y}/{x}")
 MERC = 20037508.342789244
 
-mani = json.load(open(f"{BUILD}/scene_manifest.json"))
+def _gdal(tool):
+    """Resolve a GDAL CLI tool from $ULAP_GDAL_BIN or PATH (portable across OSes)."""
+    override = os.environ.get("ULAP_GDAL_BIN")
+    path = os.path.join(override, tool) if override else shutil.which(tool)
+    if not path:
+        raise SystemExit(
+            f"{tool} not found. Install GDAL (on PATH) or set ULAP_GDAL_BIN to "
+            "the directory containing the GDAL binaries."
+        )
+    return path
+
+with open(f"{BUILD}/scene_manifest.json") as _mf:
+    mani = json.load(_mf)
 OX, OY = mani["origin"]
 
 # ---- 1. full extent in local metres -> absolute 21292 -> lon/lat ----
@@ -80,17 +91,18 @@ lrx = tile_merc_x(xt1+1, ZOOM); lry = tile_merc_y(yt1+1, ZOOM)
 # ---- 4. georeference (3857) then warp to 21292 ----
 tif3857 = f"{BUILD}/_mosaic_3857.tif"
 out_tif = f"{BUILD}/GOOGLE_SAT_BNG.tif"
-subprocess.run([f"{GBIN}/gdal_translate","-q","-a_srs","EPSG:3857",
+subprocess.run([_gdal("gdal_translate"),"-q","-a_srs","EPSG:3857",
                 "-a_ullr",str(ulx),str(uly),str(lrx),str(lry),mos_png,tif3857],check=True)
-subprocess.run([f"{GBIN}/gdalwarp","-q","-t_srs","EPSG:21292","-r","cubic",
+subprocess.run([_gdal("gdalwarp"),"-q","-t_srs","EPSG:21292","-r","cubic",
                 "-overwrite","-dstalpha",tif3857,out_tif],check=True)
-info = json.loads(subprocess.check_output([f"{GBIN}/gdalinfo","-json",out_tif]))
+info = json.loads(subprocess.check_output([_gdal("gdalinfo"),"-json",out_tif]))
 cc = info["cornerCoordinates"]; W,H = info["size"]
 bxs=[cc["upperLeft"][0],cc["lowerRight"][0]]; bys=[cc["upperLeft"][1],cc["lowerRight"][1]]
 mani["basemap"] = {"tif":out_tif,"px_w":W,"px_h":H,
                    "minx":min(bxs)-OX,"maxx":max(bxs)-OX,
                    "miny":min(bys)-OY,"maxy":max(bys)-OY,"full_extent":True}
-json.dump(mani, open(f"{BUILD}/scene_manifest.json","w"))
+with open(f"{BUILD}/scene_manifest.json","w") as _mf:
+    json.dump(mani, _mf)
 print(f"wrote {out_tif}  ({W}x{H})  local bounds "
       f"x[{mani['basemap']['minx']:.0f},{mani['basemap']['maxx']:.0f}] "
       f"y[{mani['basemap']['miny']:.0f},{mani['basemap']['maxy']:.0f}]")
