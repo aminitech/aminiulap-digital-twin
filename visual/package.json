@@ -1,0 +1,14 @@
+{
+  "name": "ulap-twin-visual-evidence",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Reproducible fixed-viewport screenshots of the Ulap digital-twin viewer and the Sionna-RT render outputs.",
+  "type": "commonjs",
+  "scripts": {
+    "capture": "bash run.sh",
+    "check-determinism": "bash check-determinism.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.0"
+  }
+}

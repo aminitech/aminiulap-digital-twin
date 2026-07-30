@@ -1,0 +1,425 @@
+{
+  "study": "F8",
+  "question": "Does the ground-following plane stack put the receiver where it claims (1.5 m above ground), and does ground-following still show ridge shadowing the horizontal plane misses once it does?",
+  "metrics": [
+    "underground_cell_fraction",
+    "underground_gt_1m_fraction",
+    "median_abs_height_offset_m",
+    "max_abs_height_offset_m",
+    "no_coverage_fraction",
+    "extra_shadow_vs_terrain_plane",
+    "extra_shadow_terrain_los_blocked_fraction",
+    "runtime_s",
+    "peak_rss_mb"
+  ],
+  "generated_utc": "2026-07-30T13:34:30+00:00",
+  "host": {
+    "node": "spark-5804",
+    "machine": "aarch64",
+    "python": "3.12.3",
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+  },
+  "config": {
+    "freq_hz": 3500000000.0,
+    "cell_m": 8.0,
+    "samples_per_tx": 100000000,
+    "max_depth": 5,
+    "rx_agl_m": 1.5,
+    "k_before": 9,
+    "k_after": 57,
+    "seed": 42,
+    "noise_floor_seed": 43,
+    "los_ray_samples": 192,
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork",
+    "note": "K_BEFORE=9 planes are an exact subset of the K_AFTER=57 stack (56 = 8*7), so before and after are read off the SAME solves; none of the delta is re-solve noise. samples_per_tx matches the shipped stage default, raised 1e6 -> 1e8 on 2026-07-30, and c3_ablation.py tracks the same value. The superseded run of this study used 1e7.",
+    "mitsuba_variant": "cuda_ad_mono_polarized"
+  },
+  "failures": [],
+  "inputs": {
+    "scene_terrain": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
+    "manifest": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
+    "manifest_md5": "419b775af0d975ffd6ecfaa5861e1f0f",
+    "towers": [
+      "Newton",
+      "Rising Sun"
+    ],
+    "terrain_relief_m": 55.52,
+    "terrain_zmin_m": 54.74,
+    "terrain_zmax_m": 110.26,
+    "dtm_posting_m": [
+      30.58,
+      29.82
+    ],
+    "scene": "Newton, Barbados \u2014 the government scene the ray tracer was run on (576 footprints)."
+  },
+  "grid": {
+    "H": 311,
+    "W": 295,
+    "cells": 91745,
+    "cell_m": 8.0
+  },
+  "solve_cost": {
+    "per_plane_wall_s_median": 0.108,
+    "k_after_total_wall_s": 6.154,
+    "k_before_total_wall_s_implied": 0.972,
+    "stack_bytes_per_plane_float32": 366980,
+    "stack_mb_k_before": 3.3,
+    "stack_mb_k_after": 20.92
+  },
+  "terrain_plane": {
+    "plane_z_m": 115.26,
+    "wall_s": 0.104,
+    "median_db": -112.297,
+    "p10_db": -125.708,
+    "p90_db": -94.158,
+    "finite_cells": 91623,
+    "total_cells": 91745,
+    "no_coverage_fraction": 0.00133,
+    "height_above_local_ground_m": {
+      "median": 22.56,
+      "min": 5.0,
+      "max": 60.52
+    },
+    "monte_carlo_noise_floor_best_server_change_fraction": 0.00258,
+    "note": "the single horizontal plane the ground-following map is printed next to; the noise floor is a same-configuration re-solve at a different seed"
+  },
+  "geometric_los": {
+    "building_raster": {
+      "res_m": 2.0,
+      "grid_shape": [
+        1032,
+        1008
+      ],
+      "n_footprints": 576,
+      "roof_cells": 43278
+    },
+    "terrain_only": {
+      "blocked_from_all_towers_at_1p5m_agl": 0.00753,
+      "blocked_from_at_least_one_tower_at_1p5m_agl": 0.18063,
+      "blocked_from_all_towers_on_horizontal_plane": 0.0,
+      "ridge_shadow_fraction_of_map": 0.00753
+    },
+    "terrain_plus_buildings": {
+      "blocked_from_all_towers_at_1p5m_agl": 0.08142,
+      "blocked_from_all_towers_on_horizontal_plane": 0.0,
+      "shadow_fraction_of_map_agl_but_not_plane": 0.08142
+    },
+    "receiver_inside_a_building_footprint_fraction": 0.02948,
+    "method": "straight-line ray march over a height field, 192 samples per link, blocked = surface above the line to EVERY tower. Computed from the DTM and the building footprints, NOT from the ray tracer, so it is an independent corroboration. 'ridge shadow' uses terrain only, so it isolates the claim the abstract makes."
+  },
+  "variants": {
+    "K9_nearest__shipped": {
+      "k_planes": 9,
+      "rule": "nearest",
+      "plane_spacing_m": 6.94,
+      "underground_cell_fraction": 0.28968,
+      "underground_gt_1m_fraction": 0.10437,
+      "height_offset_m": {
+        "median_abs": 1.815,
+        "max_abs": 3.47,
+        "median_signed": 0.14,
+        "min_signed": -3.47,
+        "max_signed": 3.47,
+        "fraction_within_1m_of_target": 0.24541
+      },
+      "median_db": -115.411,
+      "p10_db": -130.224,
+      "p90_db": -93.782,
+      "finite_cells": 74534,
+      "total_cells": 91745,
+      "no_coverage_fraction": 0.1876,
+      "no_coverage_fraction_excluding_underground": 0.00822,
+      "vs_terrain_plane": {
+        "extra_shadow_cells": 17155,
+        "extra_shadow_fraction_of_map": 0.18699,
+        "extra_shadow_terrain_los_blocked_fraction": 0.00775,
+        "extra_shadow_genuine_ridge_shadow_cells": 21,
+        "extra_shadow_genuine_ridge_shadow_fraction": 0.00122,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.00122,
+          "building_shadow": 0.00635,
+          "underground_discretisation_artefact": 0.97068,
+          "unexplained_by_geometry": 0.02174
+        },
+        "cells_covered_here_but_not_on_plane": 66,
+        "median_delta_db": -0.446,
+        "p10_delta_db": -17.726,
+        "p90_delta_db": 2.907,
+        "rms_delta_db": 11.18,
+        "fraction_cells_over_10db": 0.23934,
+        "best_server_change_fraction": 0.2146,
+        "n_cells_compared": 74468
+      }
+    },
+    "K9_ceiling": {
+      "k_planes": 9,
+      "rule": "ceiling",
+      "plane_spacing_m": 6.94,
+      "underground_cell_fraction": 0.0,
+      "underground_gt_1m_fraction": 0.0,
+      "height_offset_m": {
+        "median_abs": 3.214,
+        "max_abs": 6.94,
+        "median_signed": 3.214,
+        "min_signed": -0.0,
+        "max_signed": 6.94,
+        "fraction_within_1m_of_target": 0.1197
+      },
+      "median_db": -114.689,
+      "p10_db": -127.113,
+      "p90_db": -93.732,
+      "finite_cells": 91383,
+      "total_cells": 91745,
+      "no_coverage_fraction": 0.00395,
+      "no_coverage_fraction_excluding_underground": 0.00395,
+      "vs_terrain_plane": {
+        "extra_shadow_cells": 328,
+        "extra_shadow_fraction_of_map": 0.00358,
+        "extra_shadow_terrain_los_blocked_fraction": 0.04268,
+        "extra_shadow_genuine_ridge_shadow_cells": 14,
+        "extra_shadow_genuine_ridge_shadow_fraction": 0.04268,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.04268,
+          "building_shadow": 0.15549,
+          "underground_discretisation_artefact": 0.0,
+          "unexplained_by_geometry": 0.80183
+        },
+        "cells_covered_here_but_not_on_plane": 88,
+        "median_delta_db": 0.001,
+        "p10_delta_db": -8.945,
+        "p90_delta_db": 3.215,
+        "rms_delta_db": 5.845,
+        "fraction_cells_over_10db": 0.09993,
+        "best_server_change_fraction": 0.1634,
+        "n_cells_compared": 91295
+      }
+    },
+    "K57_nearest": {
+      "k_planes": 57,
+      "rule": "nearest",
+      "plane_spacing_m": 0.991,
+      "underground_cell_fraction": 0.0,
+      "underground_gt_1m_fraction": 0.0,
+      "height_offset_m": {
+        "median_abs": 0.249,
+        "max_abs": 0.496,
+        "median_signed": 0.027,
+        "min_signed": -0.496,
+        "max_signed": 0.496,
+        "fraction_within_1m_of_target": 1.0
+      },
+      "median_db": -116.871,
+      "p10_db": -128.305,
+      "p90_db": -93.781,
+      "finite_cells": 90536,
+      "total_cells": 91745,
+      "no_coverage_fraction": 0.01318,
+      "no_coverage_fraction_excluding_underground": 0.01318,
+      "vs_terrain_plane": {
+        "extra_shadow_cells": 1176,
+        "extra_shadow_fraction_of_map": 0.01282,
+        "extra_shadow_terrain_los_blocked_fraction": 0.28401,
+        "extra_shadow_genuine_ridge_shadow_cells": 334,
+        "extra_shadow_genuine_ridge_shadow_fraction": 0.28401,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.28401,
+          "building_shadow": 0.23299,
+          "underground_discretisation_artefact": 0.0,
+          "unexplained_by_geometry": 0.48299
+        },
+        "cells_covered_here_but_not_on_plane": 89,
+        "median_delta_db": -0.247,
+        "p10_delta_db": -13.083,
+        "p90_delta_db": 3.147,
+        "rms_delta_db": 8.408,
+        "fraction_cells_over_10db": 0.17737,
+        "best_server_change_fraction": 0.23576,
+        "n_cells_compared": 90447
+      }
+    },
+    "K57_ceiling__fixed": {
+      "k_planes": 57,
+      "rule": "ceiling",
+      "plane_spacing_m": 0.991,
+      "underground_cell_fraction": 0.0,
+      "underground_gt_1m_fraction": 0.0,
+      "height_offset_m": {
+        "median_abs": 0.453,
+        "max_abs": 0.991,
+        "median_signed": 0.453,
+        "min_signed": -0.0,
+        "max_signed": 0.991,
+        "fraction_within_1m_of_target": 1.0
+      },
+      "median_db": -116.51,
+      "p10_db": -128.143,
+      "p90_db": -93.863,
+      "finite_cells": 90680,
+      "total_cells": 91745,
+      "no_coverage_fraction": 0.01161,
+      "no_coverage_fraction_excluding_underground": 0.01161,
+      "vs_terrain_plane": {
+        "extra_shadow_cells": 1032,
+        "extra_shadow_fraction_of_map": 0.01125,
+        "extra_shadow_terrain_los_blocked_fraction": 0.26357,
+        "extra_shadow_genuine_ridge_shadow_cells": 272,
+        "extra_shadow_genuine_ridge_shadow_fraction": 0.26357,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.26357,
+          "building_shadow": 0.2219,
+          "underground_discretisation_artefact": 0.0,
+          "unexplained_by_geometry": 0.51453
+        },
+        "cells_covered_here_but_not_on_plane": 89,
+        "median_delta_db": -0.218,
+        "p10_delta_db": -12.564,
+        "p90_delta_db": 3.142,
+        "rms_delta_db": 7.984,
+        "fraction_cells_over_10db": 0.16253,
+        "best_server_change_fraction": 0.2227,
+        "n_cells_compared": 90591
+      }
+    }
+  },
+  "sample_convergence": {
+    "by_samples_per_tx": {
+      "1e+06": {
+        "terrain_plane_no_coverage_fraction": 0.44336,
+        "ground_following_no_coverage_fraction": 0.47004,
+        "extra_shadow_fraction_of_map": 0.1584,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.0139,
+          "building_shadow": 0.13549,
+          "unexplained_by_geometry": 0.85061
+        },
+        "wall_s": 0.3
+      },
+      "1e+07": {
+        "terrain_plane_no_coverage_fraction": 0.06988,
+        "ground_following_no_coverage_fraction": 0.1099,
+        "extra_shadow_fraction_of_map": 0.07673,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.05412,
+          "building_shadow": 0.13636,
+          "unexplained_by_geometry": 0.80952
+        },
+        "wall_s": 0.82
+      },
+      "1e+08": {
+        "terrain_plane_no_coverage_fraction": 0.00133,
+        "ground_following_no_coverage_fraction": 0.01161,
+        "extra_shadow_fraction_of_map": 0.01125,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.26357,
+          "building_shadow": 0.2219,
+          "unexplained_by_geometry": 0.51453
+        },
+        "wall_s": 5.92
+      },
+      "1e+09": {
+        "terrain_plane_no_coverage_fraction": 0.0,
+        "ground_following_no_coverage_fraction": 0.00238,
+        "extra_shadow_fraction_of_map": 0.00238,
+        "extra_shadow_attribution_fraction": {
+          "ridge_shadow_terrain_only": 0.81193,
+          "building_shadow": 0.1422,
+          "unexplained_by_geometry": 0.04587
+        },
+        "wall_s": 67.41
+      }
+    },
+    "note": "K=57 ceiling ground-following vs the single horizontal terrain plane, same seed, only samples_per_tx varies. If no-coverage falls with more samples the 'shadow' was an unsampled cell, not a dark one."
+  },
+  "stage_cost": {
+    "K9": {
+      "returncode": 0,
+      "wall_s": 5.59,
+      "reported_elapsed_s": 5.58,
+      "peak_rss_mb": 568.5,
+      "stdout_tail": [
+        "stack (9, 311, 295) float32, 3.3 MB",
+        "receiver height above target (1.5 m AGL): median 3.214 m, p90 6.111 m, max 6.940 m",
+        "cells with the selected plane below local ground: 0 (0.0000 %)",
+        "no-coverage fraction: 0.00395  (samples_per_tx=1e+08, 8 m cells)",
+        "NOTE: this map converges to 0.24 % dark at samples_per_tx=1e9 on this scene, so about 39 % of the 0.39 % blank area above is still sample starvation, not shadow. The 1e8 default is a cost bound (CPU/LLVM: 262 s vs 2383 s at 1e9), not convergence. Run ULAP_GF_SAMPLES_PER_TX=1e9 before claiming a shadow area.",
+        "colour scale: vmin=-160.0 vmax=-80.0 dB  (shared 'terrain' scale, set by coverage_pathgain_db_terrain.png; own p99 -82.3 dB; 0.57 % of cells saturate at the top, 0.01 % clip at the bottom)",
+        "wrote /home/$USER/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
+        "DONE"
+      ]
+    },
+    "K57_default": {
+      "returncode": 0,
+      "wall_s": 16.0,
+      "reported_elapsed_s": 15.99,
+      "peak_rss_mb": 640.2,
+      "stdout_tail": [
+        "stack (57, 311, 295) float32, 20.9 MB",
+        "receiver height above target (1.5 m AGL): median 0.453 m, p90 0.862 m, max 0.991 m",
+        "cells with the selected plane below local ground: 0 (0.0000 %)",
+        "no-coverage fraction: 0.01161  (samples_per_tx=1e+08, 8 m cells)",
+        "NOTE: this map converges to 0.24 % dark at samples_per_tx=1e9 on this scene, so about 79 % of the 1.16 % blank area above is still sample starvation, not shadow. The 1e8 default is a cost bound (CPU/LLVM: 262 s vs 2383 s at 1e9), not convergence. Run ULAP_GF_SAMPLES_PER_TX=1e9 before claiming a shadow area.",
+        "colour scale: vmin=-160.0 vmax=-80.0 dB  (shared 'terrain' scale, set by coverage_pathgain_db_terrain.png; own p99 -82.3 dB; 0.56 % of cells saturate at the top, 0.09 % clip at the bottom)",
+        "wrote /home/$USER/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
+        "DONE"
+      ]
+    },
+    "wall_multiplier_K57_over_K9": 2.86
+  },
+  "verdict": {
+    "underground_cell_fraction": {
+      "before": 0.28968,
+      "after": 0.0
+    },
+    "underground_gt_1m_fraction": {
+      "before": 0.10437,
+      "after": 0.0
+    },
+    "median_abs_height_offset_m": {
+      "before": 1.815,
+      "after": 0.453
+    },
+    "max_abs_height_offset_m": {
+      "before": 3.47,
+      "after": 0.991
+    },
+    "no_coverage_fraction": {
+      "terrain_plane": 0.00133,
+      "before": 0.1876,
+      "before_excluding_underground_cells": 0.00822,
+      "after": 0.01161
+    },
+    "extra_shadow_fraction_of_map": {
+      "before": 0.18699,
+      "after": 0.01125
+    },
+    "extra_shadow_attribution_fraction": {
+      "before": {
+        "ridge_shadow_terrain_only": 0.00122,
+        "building_shadow": 0.00635,
+        "underground_discretisation_artefact": 0.97068,
+        "unexplained_by_geometry": 0.02174
+      },
+      "after": {
+        "ridge_shadow_terrain_only": 0.26357,
+        "building_shadow": 0.2219,
+        "underground_discretisation_artefact": 0.0,
+        "unexplained_by_geometry": 0.51453
+      }
+    },
+    "ridge_shadow_fraction_of_map_from_dtm_geometry": 0.00753,
+    "best_server_change_fraction_vs_terrain_plane": {
+      "before": 0.2146,
+      "after": 0.2227,
+      "monte_carlo_noise_floor": 0.00258
+    },
+    "median_delta_db_vs_terrain_plane": {
+      "before": -0.446,
+      "after": -0.218
+    },
+    "note": "Stated whichever way the numbers fall. If the surviving extra shadow is small or is not corroborated by an independent DTM line-of-sight test, the abstract's ridge-shadowing claim is not supported and must be dropped."
+  },
+  "figures": [
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_plane_stack.png",
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_ridge_shadow.png"
+  ]
+}

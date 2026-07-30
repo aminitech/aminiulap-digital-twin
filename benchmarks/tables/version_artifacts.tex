@@ -1,0 +1,25 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Solver version sensitivity, sionna-rt 1.2.2/? to 2.0.1: whether the artefact checksum survives the version change.}
+  \label{tab:versionart}
+  \begin{tabular}{llcccccc}
+    \toprule
+    Artifact & Stage & spark-5804 CPU & spark-5804 CUDA & spark-5804 CPU & spark-5804 CUDA & bgi-ran-01 CPU & bgi-ran-01 CUDA \\
+    \midrule
+    coverage\_map.png & sionna\_coverage (flat) & $=$ & $\neq$ & $\neq$ & $\neq$ & $=$ & $\neq$ \\
+    coverage\_pathgain\_db.png & sionna\_coverage (flat) & $\neq$ & $\neq$ & $?$ & $\neq$ & $\neq$ & $\neq$ \\
+    scene\_render.png & sionna\_coverage (flat) & $=$ & $\neq$ & $?$ & $\neq$ & $=$ & $=$ \\
+    coverage\_map\_terrain.png & sionna\_coverage (terrain) & $=$ & $\neq$ & $\neq$ & $\neq$ & $=$ & $\neq$ \\
+    coverage\_pathgain\_db\_terrain.png & sionna\_coverage (terrain) & $\neq$ & $\neq$ & $?$ & $\neq$ & $\neq$ & $\neq$ \\
+    scene\_render\_terrain.png & sionna\_coverage (terrain) & $=$ & $\neq$ & $?$ & $\neq$ & $=$ & $\neq$ \\
+    link\_metrics.csv & sionna\_analysis & $=$ & $=$ & $?$ & $?$ & $=$ & $=$ \\
+    link\_metrics.png & sionna\_analysis & $\neq$ & $\neq$ & $?$ & $\neq$ & $\neq$ & $\neq$ \\
+    multitower\_bestserver\_handover.png & sionna\_analysis & $\neq$ & $\neq$ & $?$ & $=$ & $\neq$ & $\neq$ \\
+    sweep\_frequency.png & sionna\_analysis & $\neq$ & $\neq$ & $?$ & $\neq$ & $\neq$ & $\neq$ \\
+    mmwave\_concrete\_coverage.png & sionna\_mmwave\_sinr & $\neq$ & $\neq$ & $?$ & $=$ & $\neq$ & $\neq$ \\
+    sinr\_map.png & sionna\_mmwave\_sinr & $\neq$ & $\neq$ & $?$ & $=$ & $\neq$ & $\neq$ \\
+    coverage\_pathgain\_db\_terrain\_groundfollow.png & sionna\_terrain\_ground & $\neq$ & $\neq$ & $\neq$ & $\neq$ & $\neq$ & $\neq$ \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

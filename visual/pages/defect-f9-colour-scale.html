@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F9 — the two coverage figures were on different colour scales</title>
+<!--
+  F9 evidence page.  Self-contained: NO external resources, no fonts, no CDN.
+  Served from the repo root so it can reach /blender/sionna_out/*.png.
+
+  WHAT IS SHOWN, AND WHY IT IS HONEST
+  -----------------------------------
+  The two published figures use the SAME viridis LUT over the SAME 80 dB span and
+  their colourbars occupy the IDENTICAL pixel rows (92..1051) in both PNGs. Only
+  the tick LABELS differ. So the whole of F9 is visible without touching a pixel:
+
+    left panel   the two colourbars cropped straight out of the committed PNGs at
+                 their published position. Same bar, same height on screen — and
+                 the dB labels beside them disagree.
+    right panel  the same two crops, with panel B shifted up 34 source pixels so
+                 the two dB axes line up. Now the LABELS agree and the BARS are
+                 visibly offset. That offset is the defect.
+
+  Nothing is recoloured, resampled, or re-rendered. The crops are CSS windows onto
+  the unmodified PNGs (object-position / negative offsets), drawn at natural size
+  inside a single uniform transform: scale().
+
+  The 34 px / 2.83 dB figure is a measurement of the committed PNGs, not a quote
+  from the audit — see visual/README.md for the exact method and command.
+-->
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#151518; --line:#26262b; --ink:#f2f2f4;
+    --muted:#9a9aa4; --accent:#FFC83C; --warn:#ff8f5a; --good:#7ad4a0;
+    --mono: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  body{display:flex;flex-direction:column;padding:14px 18px 10px;overflow:hidden}
+
+  header{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:15px;font-weight:600}
+  header .sub{font-family:var(--mono);font-size:10px;color:var(--muted);
+    letter-spacing:.06em;text-transform:uppercase}
+  header .spacer{flex:1}
+  header .tag{font-family:var(--mono);font-size:9.5px;color:var(--accent);
+    border:1px solid #3a3320;background:#201c10;padding:3px 8px;border-radius:4px;letter-spacing:.07em}
+
+  .grid{flex:1 1 auto;display:grid;grid-template-columns:352px 352px 1fr;gap:14px;
+    padding:12px 0 0;min-height:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    display:flex;flex-direction:column;overflow:hidden;min-height:0}
+  .card > h2{font-size:11.5px;font-weight:600;padding:9px 11px 2px;letter-spacing:.01em}
+  .card > h2 .n{font-family:var(--mono);color:var(--muted);font-weight:400;font-size:10px}
+  .card > .lede{font-size:10.5px;line-height:1.4;color:#b9b9c2;padding:2px 11px 8px}
+  .card > .lede b{color:var(--ink)}
+
+  /* --- colourbar crop windows -------------------------------------------- */
+  /* Source crop box in the committed PNGs: x 1210..1350, y 60..1090 (140 x 1030),
+     which is the colourbar rectangle plus its tick marks and tick labels. */
+  /* bars right-aligned so the dashed-rule labels have the left gutter to
+     themselves — an overlaid label must never sit on top of a colourbar */
+  .bars{flex:1 1 auto;display:flex;justify-content:flex-end;align-items:flex-start;
+    gap:8px;padding:2px 8px 0 0;overflow:hidden;position:relative}
+  .barcol{display:flex;flex-direction:column;align-items:center;width:82px;flex:0 0 auto}
+  .barcol .who{font-family:var(--mono);font-size:9.5px;color:var(--muted);
+    letter-spacing:.06em;padding-bottom:3px}
+  .scaler{transform:scale(0.55);transform-origin:top center;
+    width:140px;height:1080px;flex:0 0 auto}
+  .crop{position:relative;width:140px;height:1080px;overflow:hidden;background:#fff}
+  .crop img{position:absolute;image-rendering:auto}
+  .crop .fail{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:#2a1410;color:var(--warn);font-family:var(--mono);font-size:11px;text-align:center;padding:8px}
+  .barwrap{height:598px;position:relative}       /* 1080 * 0.55 = 594 */
+  .rule{position:absolute;left:0;right:0;border-top:1px dashed #FFC83C55;pointer-events:none}
+  .rule span{position:absolute;left:2px;top:-12px;font-family:var(--mono);
+    font-size:9px;color:var(--accent);white-space:nowrap}
+  .verdict{font-size:10.5px;line-height:1.4;padding:8px 11px 10px;color:#cfcfd6;border-top:1px solid var(--line)}
+  .verdict b{color:var(--ink)}
+  .verdict .bad{color:var(--warn);font-weight:600}
+  .verdict .ok{color:var(--good);font-weight:600}
+
+  /* --- right-hand column -------------------------------------------------- */
+  .right{display:flex;flex-direction:column;gap:12px;min-height:0}
+  .thumbs{display:flex;gap:10px;padding:0 11px 10px}
+  .thumb{flex:1 1 0;min-width:0}
+  .thumb .box{width:100%;height:186px;background:#fff;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .thumb .box img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  .thumb .box .fail{color:#a11;font-family:var(--mono);font-size:10px;text-align:center;padding:8px}
+  .thumb .cap{font-family:var(--mono);font-size:9px;color:var(--muted);padding-top:4px;
+    line-height:1.35;word-break:break-all}
+  .thumb .cap b{color:var(--ink);font-family:var(--sans);font-size:10px}
+
+  table{width:100%;border-collapse:collapse;font-size:10.5px}
+  th,td{text-align:left;padding:4px 11px;border-top:1px solid #1e1e22}
+  th{color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:400}
+  td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+  td.src{font-family:var(--mono);font-size:8.5px;color:#6f6f79;word-break:break-all}
+
+  .afterbox{margin:0 0 8px;padding:8px 10px;border:1px solid #2c4436;background:#111814;
+    border-radius:6px;font-size:10.5px;line-height:1.5;color:#c7d8cd}
+  .afterbox b{color:var(--good)}
+  .afterbox code{display:block;font-family:var(--mono);font-size:9.5px;color:#8fe0b4;
+    padding:5px 0 3px;word-break:break-word}
+  .prose{padding:9px 11px 10px;font-size:10.5px;line-height:1.5;color:#b9b9c2;overflow:hidden}
+  .prose p{padding-bottom:7px}
+  .prose b{color:var(--ink)}
+  .prose code{font-family:var(--mono);font-size:9.5px;color:var(--accent)}
+
+  footer{flex:0 0 auto;padding-top:8px;border-top:1px solid var(--line);margin-top:10px;
+    font-family:var(--mono);font-size:9px;color:var(--muted);display:flex;gap:16px;
+    letter-spacing:.03em;flex-wrap:wrap}
+  footer .k{color:#6f6f79}
+</style>
+</head>
+<body>
+  <header>
+    <h1>F9 — the two figures the paper places side by side computed their own colour scale</h1>
+    <span class="sub">same LUT · same 80 dB span · different zero</span>
+    <span class="spacer"></span>
+    <span class="tag">DEFECT F9 · BEFORE / AFTER</span>
+  </header>
+
+  <div class="grid">
+
+    <!-- ============ 1. as published ============ -->
+    <div class="card">
+      <h2>1 · As published <span class="n">— bars aligned, dB disagrees</span></h2>
+      <div class="lede">
+        The colourbar rectangle occupies the <b>identical pixel rows</b> (92–1051) in both
+        committed PNGs. Cropped out and stood side by side at their published position, the
+        two ramps are the same ramp — and the numbers beside them do not match.
+      </div>
+      <div class="bars" id="bars-published"></div>
+      <div class="verdict">
+        Read across any dashed line: the <b>same colour</b> is labelled
+        <span class="bad" id="v-pub">—</span>. A reader comparing the two published figures by
+        hue is comparing two different quantities.
+      </div>
+    </div>
+
+    <!-- ============ 2. aligned ============ -->
+    <div class="card">
+      <h2>2 · Aligned on one dB axis <span class="n">— dB agrees, bars offset</span></h2>
+      <div class="lede">
+        The same two crops, with <b>B shifted up 34 source pixels</b> so the two dB axes
+        coincide. The labels now agree; the ramps no longer do. That displacement
+        <b>is</b> F9 — nothing was recoloured to produce it.
+      </div>
+      <div class="bars" id="bars-aligned"></div>
+      <div class="verdict">
+        Offset <span class="bad" id="v-off">—</span>. After the fix both figures resolve a
+        <b>shared scale per figure group</b>, quantised to a 5 dB grid:
+        <span class="ok">v<sub>min</sub> = −160, v<sub>max</sub> = −80</span> (audit § F9,
+        "verified live … in a single pipeline pass").
+      </div>
+    </div>
+
+    <!-- ============ 3. context ============ -->
+    <div class="card right">
+      <h2>3 · The two figures, and where every number here comes from</h2>
+      <div class="thumbs">
+        <div class="thumb">
+          <div class="box" id="t-l"></div>
+          <div class="cap"><b>A · terrain drape</b><br>blender/sionna_out/<wbr>coverage_pathgain_db_terrain.png</div>
+        </div>
+        <div class="thumb">
+          <div class="box" id="t-r"></div>
+          <div class="cap"><b>B · ground-following 1.5 m AGL</b><br>blender/sionna_out/<wbr>coverage_pathgain_db_terrain_groundfollow.png</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>quantity</th><th style="text-align:right">value</th><th>source</th></tr></thead>
+        <tbody id="tbl"></tbody>
+      </table>
+      <div class="prose">
+        <p><b>Why this mattered.</b> The paper places these two figures adjacent with a caption
+        inviting the reader to compare them. Both were rendered with the same colourmap over the
+        same 80&nbsp;dB span, but each stage picked its own <code>vmax</code> from the 99th
+        percentile of <i>its own</i> data and set <code>vmin&nbsp;=&nbsp;vmax&nbsp;−&nbsp;80</code>.
+        So the ramps are interchangeable to the eye and are not interchangeable in dB. Every
+        by-eye comparison of hue between these two panels was off by the offset shown on the left.</p>
+        <p><b>What is fixed, and what is not.</b> Both stages now resolve a shared scale per
+        figure group, quantised to a 5&nbsp;dB grid, first-writer-wins, with
+        <code>ULAP_PG_VMIN</code> / <code>ULAP_PG_VMAX</code> overrides; each figure prints the
+        scale it is on and its saturation fraction. Colour is now comparable. <b>Spatial
+        resolution still is not</b> — these two figures are on 5&nbsp;m and 8&nbsp;m grids
+        (audit § Outstanding, item&nbsp;3).</p>
+        <div id="afterbox" class="afterbox">—</div>
+        <p><b>The “after” image is not in this evidence set.</b> No shared-scale rendering exists in
+        <code>blender/sionna_out/</code>; the fix landed in the stages and this harness does not
+        run them. That absence is photographed, not asserted, in
+        <code>failure-f9-shared-scale-absent.png</code> from the same run.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span id="f-crop"><span class="k">crop</span> —</span>
+    <span><span class="k">no pixel is recoloured, resampled or re-rendered</span></span>
+    <span><span class="k">after-state</span> not photographable — see failure-f9-shared-scale-absent.png in the same run</span>
+  </footer>
+
+<script>
+// ---------------------------------------------------------------------------
+// Deterministic by construction: no timers, no animation, no Math.random, no
+// wall-clock. Everything is either a static crop of a committed PNG or a value
+// read out of comparison/results/f8.json over loopback.
+// ---------------------------------------------------------------------------
+
+// Source geometry, MEASURED off the two committed PNGs (method in visual/README.md).
+// Both PNGs share these: colourbar rows 92..1051, tick pitch 120 px per 10 dB.
+var GEO = {
+  cropX: 1210, cropY: 30, cropW: 140, cropH: 1080,
+  scale: 0.55,
+  pxPerDb: 12.0,           // 120 px between consecutive 10 dB ticks, both figures
+  shiftPx: 34,             // B's -90 tick sits 34 px below A's -90 tick
+  A: { file: 'blender/sionna_out/coverage_pathgain_db_terrain.png',
+       vmax: -82.8, vmin: -162.8, topTickRow: 179, topTickDb: -90 },
+  B: { file: 'blender/sionna_out/coverage_pathgain_db_terrain_groundfollow.png',
+       vmax: -80.0, vmin: -160.0, topTickRow: 93,  topTickDb: -80 }
+};
+GEO.offsetDb = GEO.shiftPx / GEO.pxPerDb;   // 34 / 12 = 2.833 dB
+
+var pending = 0, done = 0, failed = 0;
+
+function img(src, extraTopPx) {
+  var i = document.createElement('img');
+  i.style.left = (-GEO.cropX) + 'px';
+  i.style.top  = (-GEO.cropY - (extraTopPx || 0)) + 'px';
+  pending++;
+  i.addEventListener('load', function () { done++; check(); });
+  i.addEventListener('error', function () {
+    failed++;
+    var f = document.createElement('div');
+    f.className = 'fail';
+    f.textContent = 'IMAGE FAILED TO LOAD — ' + src;
+    i.parentNode.appendChild(f);
+    i.remove();
+    done++; check();
+  });
+  i.src = '/' + src;
+  i.alt = '';
+  return i;
+}
+
+/** One cropped colourbar column. `shift` shifts the source image UP by N px. */
+function barColumn(label, spec, shift) {
+  var col = document.createElement('div'); col.className = 'barcol';
+  var who = document.createElement('div'); who.className = 'who'; who.textContent = label;
+  var wrap = document.createElement('div'); wrap.className = 'barwrap';
+  var sc = document.createElement('div'); sc.className = 'scaler';
+  var crop = document.createElement('div'); crop.className = 'crop';
+  crop.appendChild(img(spec.file, shift || 0));
+  sc.appendChild(crop); wrap.appendChild(sc);
+  col.appendChild(who); col.appendChild(wrap);
+  return col;
+}
+
+/**
+ * Dashed rules across a pair of columns. `rows` are SOURCE pixel rows in panel A's
+ * frame; the label states what each scale calls that row.
+ */
+function addRules(container, rows, labelFor) {
+  rows.forEach(function (row) {
+    var r = document.createElement('div');
+    r.className = 'rule';
+    r.style.top = Math.round((row - GEO.cropY) * GEO.scale) + 'px';
+    var s = document.createElement('span');
+    s.textContent = labelFor(row);
+    r.appendChild(s);
+    container.appendChild(r);
+  });
+}
+
+function dbAt(spec, row) {                       // source row -> dB on that figure
+  return spec.topTickDb - (row - spec.topTickRow) / GEO.pxPerDb;
+}
+function f1(x) { return (x < 0 ? '−' : '') + Math.abs(x).toFixed(1); }
+
+(function build() {
+  // --- panel 1: as published (no shift) ---
+  var p = document.getElementById('bars-published');
+  p.appendChild(barColumn('A · terrain drape', GEO.A, 0));
+  p.appendChild(barColumn('B · ground-follow', GEO.B, 0));
+  p.style.position = 'relative';
+  addRules(p, [299, 659, 1020], function (row) {
+    return 'A ' + f1(dbAt(GEO.A, row)) + '   B ' + f1(dbAt(GEO.B, row)) + ' dB';
+  });
+
+  // --- panel 2: aligned (B shifted up so its dB axis matches A's) ---
+  var a = document.getElementById('bars-aligned');
+  a.appendChild(barColumn('A · terrain drape', GEO.A, 0));
+  a.appendChild(barColumn('B · shifted up ' + GEO.shiftPx + ' px', GEO.B, GEO.shiftPx));
+  a.style.position = 'relative';
+  addRules(a, [299, 659, 1020], function (row) {
+    return 'both ' + f1(dbAt(GEO.A, row)) + ' dB';
+  });
+
+  document.getElementById('v-pub').textContent =
+    f1(dbAt(GEO.A, 659)) + ' dB on A and ' + f1(dbAt(GEO.B, 659)) + ' dB on B';
+  document.getElementById('v-off').textContent =
+    GEO.shiftPx + ' px = ' + GEO.offsetDb.toFixed(2) + ' dB';
+
+  // keep the footer honest about the exact crop geometry actually used
+  document.getElementById('f-crop').innerHTML =
+    '<span class="k">crop</span> x ' + GEO.cropX + '–' + (GEO.cropX + GEO.cropW) +
+    ', y ' + GEO.cropY + '–' + (GEO.cropY + GEO.cropH) +
+    ' of each committed PNG · CSS window, natural size, single scale(' + GEO.scale + ')';
+
+  // --- thumbnails of the two figures, whole and unmodified ---
+  ['t-l', 't-r'].forEach(function (id, k) {
+    var spec = k === 0 ? GEO.A : GEO.B;
+    var box = document.getElementById(id);
+    var i = document.createElement('img');
+    pending++;
+    i.addEventListener('load', function () { done++; check(); });
+    i.addEventListener('error', function () {
+      failed++;
+      box.innerHTML = '<div class="fail">IMAGE FAILED TO LOAD<br>' + spec.file + '</div>';
+      done++; check();
+    });
+    i.src = '/' + spec.file; i.alt = '';
+    box.appendChild(i);
+  });
+
+  // --- the numbers table, filled from comparison/results/f8.json over loopback ---
+  var rows = [
+    ['A · colourbar range (measured)', f1(GEO.A.vmin) + ' … ' + f1(GEO.A.vmax) + ' dB',
+     'tick geometry of the committed PNG'],
+    ['B · colourbar range (measured)', f1(GEO.B.vmin) + ' … ' + f1(GEO.B.vmax) + ' dB',
+     'tick geometry of the committed PNG'],
+    ['same-hue disagreement', f1(-GEO.offsetDb) + ' dB (A reads lower)',
+     'derived: ' + GEO.shiftPx + ' px ÷ ' + GEO.pxPerDb + ' px/dB'],
+    ['shared scale after the fix', '−160 … −80 dB, 5 dB grid',
+     'docs/audits/2026-07-29-… § F9']
+  ];
+
+  fetch('/comparison/results/f8.json')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      rows.push(['scene the figures render', String(d.inputs.scene).split(' — ')[0],
+                 'f8.json ‣ inputs.scene']);
+      rows.push(['carrier', (d.config.freq_hz / 1e9).toFixed(1) + ' GHz',
+                 'f8.json ‣ config.freq_hz']);
+      rows.push(['still not comparable', 'grids differ: 5 m vs 8 m cells',
+                 'audit § Outstanding, item 3']);
+      rows.push(['f8.json generation read', d.generated_utc, 'f8.json ‣ generated_utc']);
+
+      // The fix is not photographable, but it IS captured in text: the stage now
+      // prints the scale it resolved, and f8.json carries that stdout verbatim.
+      var lines = [];
+      ['K9', 'K57_default'].forEach(function (k) {
+        (d.stage_cost[k].stdout_tail || []).forEach(function (l) {
+          if (l.indexOf('colour scale:') === 0 && lines.indexOf(l) === -1) lines.push(l);
+        });
+      });
+      var box = document.getElementById('afterbox');
+      if (lines.length) {
+        box.innerHTML = '<b>The “after”, in the stage’s own words.</b> f8.json captured the ' +
+          'stage stdout after the fix — the figure now prints the scale it resolved and its ' +
+          'saturation fraction:';
+        lines.forEach(function (l) {
+          var c = document.createElement('code'); c.textContent = l; box.appendChild(c);
+        });
+        var t = document.createElement('div');
+        t.style.cssText = 'padding-top:4px;color:#9a9aa4;font-size:9.5px';
+        t.textContent = 'f8.json ‣ stage_cost.{K9,K57_default}.stdout_tail. Note this is the ' +
+          'ground-following figure; the audit reports both terrain figures landing on the ' +
+          'same scale in one pipeline pass, which this artifact does not itself contain.';
+        box.appendChild(t);
+      } else {
+        box.innerHTML = '<b>No “colour scale:” line in the captured stage stdout.</b> ' +
+          'f8.json ‣ stage_cost.*.stdout_tail carries no evidence of the shared scale in this ' +
+          'generation of the results file.';
+      }
+    })
+    .catch(function (e) {
+      rows.push(['f8.json', 'FETCH FAILED: ' + e, '—']);
+      failed++;
+    })
+    .then(function () {
+      var tb = document.getElementById('tbl');
+      rows.forEach(function (r) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + r[0] + '</td><td class="n">' + r[1] +
+                       '</td><td class="src">' + r[2] + '</td>';
+        tb.appendChild(tr);
+      });
+      dataDone = true; check();
+    });
+})();
+
+var dataDone = false;
+function check() {
+  if (!dataDone || done < pending) return;
+  window.__PAGE_FAILURES__ = failed;
+  window.__PAGE_READY__ = true;
+  document.documentElement.setAttribute('data-ready', '1');
+}
+</script>
+</body>
+</html>

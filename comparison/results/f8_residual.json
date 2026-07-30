@@ -1,0 +1,231 @@
+{
+  "study": "F8-residual",
+  "question": "What are the 51.5 % of 1e8 extra-shadow cells that the DTM+building LOS march cannot explain (S1 criterion miss)?",
+  "generated_utc": "2026-07-30T07:48:47+00:00",
+  "host": {
+    "node": "spark-5804",
+    "machine": "aarch64",
+    "python": "3.12.3",
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+  },
+  "config": {
+    "freq_hz": 3500000000.0,
+    "cell_m": 8.0,
+    "samples_per_tx": 100000000,
+    "samples_per_tx_hi": 1000000000,
+    "max_depth": 5,
+    "rx_agl_m": 1.5,
+    "k_planes": 57,
+    "seed": 42,
+    "seed_alt": 202607,
+    "rng_seed": 20260730,
+    "pathsolver_samples_per_src": 10000000,
+    "fine_march_samples": 1024,
+    "s1_march_samples": 192,
+    "fresnel_lambda_m": 0.08565,
+    "e_hits_low_bar": 10.0,
+    "n_control": 320,
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork",
+    "mitsuba_variant": "cuda_ad_mono_polarized"
+  },
+  "criteria_pre_stated": {
+    "H0_estimator_starvation": "PASS if >= 60 % of the 531 residual cells are covered at 1e9 samples/tx, same seed, same K=57 ceiling configuration.",
+    "H1_grazing_subfresnel": "PASS if >= 30 % of residual cells are reachable (lit at 1e9, or lit at the alternate 1e8 seed, or PathSolver finds >= 1 path) AND have best-tower minimum LOS clearance below 1 Fresnel radius at the pinch point; AND the residual population's median clearance ratio (clearance / Fresnel radius) is < 0.5x the lit-control median with Mann-Whitney p < 0.01.",
+    "H2_multibounce_only": "PASS if >= 20 % of residual cells have >= 1 valid PathSolver path but zero line-of-sight paths (reachable only via interactions).",
+    "H3_test_artefact": "PASS if >= 20 % of residual cells are misjudged by the S1 test itself: blocked to ALL towers by a 1024-sample march where the 192-sample march said clear, OR receiver under a roof / below the terrain mesh per actual-mesh upward ray_test, OR mesh-LOS-blocked to all towers per ray_test.",
+    "H4_plane_transition": "PASS if the fraction of residual cells lying on a kbest transition boundary (4-neighbour plane index differs) is >= 2x the lit-control fraction and the difference exceeds 3 binomial sigma.",
+    "classification": "Every residual cell gets exactly one class by declared precedence: march_undersampled > below_terrain_mesh > under_roof_mesh > mesh_los_blocked > grazing_subfresnel > reflection_only > low_hit_expectation (E[direct hits at 1e8] < 10) > plain_starved > unreachable_depth5 > unknown. The E-family requires reachability evidence (1e9 / alt-seed / PathSolver)."
+  },
+  "failures": [],
+  "reproduction_vs_f8_json": {
+    "extra_shadow_cells": {
+      "ref": 1032,
+      "here": 1032
+    },
+    "ridge_cells": {
+      "ref": 272,
+      "here": 272
+    },
+    "building_cells": {
+      "ref": 229,
+      "here": 229
+    },
+    "unexplained_cells": {
+      "ref": 531,
+      "here": 531
+    },
+    "gf_no_coverage_fraction": {
+      "ref": 0.01161,
+      "here": 0.01161
+    },
+    "tp_no_coverage_fraction": {
+      "ref": 0.00133,
+      "here": 0.00133
+    },
+    "exact": true
+  },
+  "populations": {
+    "residual": 531,
+    "explained_dark": 320,
+    "lit": 320,
+    "explained_dark_total": 501
+  },
+  "class_breakdown_of_residual": {
+    "counts": {
+      "march_undersampled": 41,
+      "below_terrain_mesh": 0,
+      "under_roof_mesh": 0,
+      "mesh_los_blocked": 10,
+      "grazing_subfresnel": 236,
+      "reflection_only": 0,
+      "low_hit_expectation": 244,
+      "plain_starved": 0,
+      "unreachable_depth5": 0,
+      "unknown": 0
+    },
+    "fractions_of_residual": {
+      "march_undersampled": 0.07721,
+      "below_terrain_mesh": 0.0,
+      "under_roof_mesh": 0.0,
+      "mesh_los_blocked": 0.01883,
+      "grazing_subfresnel": 0.44444,
+      "reflection_only": 0.0,
+      "low_hit_expectation": 0.45951,
+      "plain_starved": 0.0,
+      "unreachable_depth5": 0.0,
+      "unknown": 0.0
+    },
+    "fractions_of_extra_shadow": {
+      "march_undersampled": 0.03973,
+      "below_terrain_mesh": 0.0,
+      "under_roof_mesh": 0.0,
+      "mesh_los_blocked": 0.00969,
+      "grazing_subfresnel": 0.22868,
+      "reflection_only": 0.0,
+      "low_hit_expectation": 0.23643,
+      "plain_starved": 0.0,
+      "unreachable_depth5": 0.0,
+      "unknown": 0.0
+    },
+    "precedence": [
+      "march_undersampled",
+      "below_terrain_mesh",
+      "under_roof_mesh",
+      "mesh_los_blocked",
+      "grazing_subfresnel",
+      "reflection_only",
+      "low_hit_expectation",
+      "plain_starved",
+      "unreachable_depth5",
+      "unknown"
+    ]
+  },
+  "residual_facts": {
+    "lit_at_1e9_same_seed": 0.98305,
+    "lit_at_1e8_alt_seed": 0.13559,
+    "pathsolver_reachable": 0.99623,
+    "reachable_any_anchor": 1.0,
+    "subfresnel_clearance": 0.52731,
+    "negative_margin_some_tower_all": 0.07156,
+    "e_hits_below_10": 0.99435,
+    "on_kbest_transition": 0.04331,
+    "plane_buried_in_cell": 0.0,
+    "within_16m_of_footprint_edge": 0.04143,
+    "median_elevation_deg": 0.284,
+    "median_e_hits": 0.49,
+    "median_ps_gain_db_where_reachable": -127.39
+  },
+  "population_summary": {
+    "residual": {
+      "median_margin_m": 1.512,
+      "median_fresnel_ratio": 0.841,
+      "median_e_hits": 0.49,
+      "median_elev_deg": 0.284,
+      "median_edge_dist_m": 163.22,
+      "frac_on_transition": 0.04331,
+      "frac_subfresnel": 0.52731,
+      "frac_lit_1e9": 0.98305,
+      "frac_ps_reachable": 0.99623,
+      "frac_reflection_only": 0.08286,
+      "frac_mesh_blocked_all": 0.08663,
+      "frac_up_hit": 0.00753
+    },
+    "explained_dark": {
+      "median_margin_m": -2.166,
+      "median_fresnel_ratio": -0.933,
+      "median_e_hits": 10.83,
+      "median_elev_deg": 1.356,
+      "median_edge_dist_m": 205.5,
+      "frac_on_transition": 0.2875,
+      "frac_subfresnel": 1.0,
+      "frac_lit_1e9": 0.59375,
+      "frac_ps_reachable": 0.87813,
+      "frac_reflection_only": 0.8625,
+      "frac_mesh_blocked_all": 0.98438,
+      "frac_up_hit": 0.125
+    },
+    "lit": {
+      "median_margin_m": 1.886,
+      "median_fresnel_ratio": 6.179,
+      "median_e_hits": 10.38,
+      "median_elev_deg": 1.499,
+      "median_edge_dist_m": 153.84,
+      "frac_on_transition": 0.3125,
+      "frac_subfresnel": 0.17188,
+      "frac_lit_1e9": 1.0,
+      "frac_ps_reachable": 0.9875,
+      "frac_reflection_only": 0.05937,
+      "frac_mesh_blocked_all": 0.07187,
+      "frac_up_hit": 0.03125
+    }
+  },
+  "stats": {
+    "mannwhitney_ratio_residual_lt_lit": {
+      "U": 30201.0,
+      "p": 2.699071842946092e-56
+    },
+    "ks_ratio_residual_vs_lit": {
+      "D": 0.6989465630885122,
+      "p": 2.647378308666598e-94
+    }
+  },
+  "hypothesis_verdicts": {
+    "H0_estimator_starvation": {
+      "measured_frac_lit_1e9": 0.98305,
+      "bar": 0.6,
+      "verdict": "PASS"
+    },
+    "H1_grazing_subfresnel": {
+      "measured_frac_reachable_and_subfresnel": 0.52731,
+      "median_ratio_residual": 0.841,
+      "median_ratio_lit": 6.179,
+      "mannwhitney_p": 2.699071842946092e-56,
+      "verdict": "PASS"
+    },
+    "H2_multibounce_only": {
+      "measured_frac_reflection_only": 0.08286,
+      "bar": 0.2,
+      "verdict": "FAIL"
+    },
+    "H3_test_artefact": {
+      "measured_frac": 0.09605,
+      "components": {
+        "march_undersampled_fine_blocked": 0.07721,
+        "mesh_up_hit": 0.00753,
+        "mesh_los_blocked_all": 0.08663
+      },
+      "bar": 0.2,
+      "verdict": "FAIL"
+    },
+    "H4_plane_transition": {
+      "frac_on_transition_residual": 0.04331,
+      "frac_on_transition_lit": 0.3125,
+      "verdict": "FAIL"
+    }
+  },
+  "wall_s": 144.3,
+  "figures": [
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_residual_classes.png",
+    "/home/$USER/Ulap/amini-ulap-digital-twin/.claude/worktrees/scdt-benchmarks/comparison/figures/f8_residual_margins.png"
+  ]
+}

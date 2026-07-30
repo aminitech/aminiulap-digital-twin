@@ -1,0 +1,245 @@
+{
+  "note": "Regenerate with `bash visual/run.sh`. sha256 values are the determinism check: two runs on the same host must produce identical hashes.",
+  "viewport": "1600x900",
+  "deviceScaleFactor": 1,
+  "frozenAnimationTimestampMs": 20000,
+  "rngSeed": "mulberry32:0x5cd70001",
+  "externalNetwork": "blocked",
+  "shots": [
+    {
+      "file": "defect-f10-sampling.png",
+      "shows": "DEFECT F10 — sample convergence. No-coverage fraction against rays per transmitter (log–log, four measured points, nothing interpolated) plus the attribution of the extra shadow at each level. Blank map area falls ~10x per decade of samples with no floor until 1e8–1e9, so a cell that fills in when you fire more rays was unsampled, not shadowed. Data: comparison/results/f8.json ‣ sample_convergence.by_samples_per_tx (all four rows), fetched live at capture time and stamped with the file’s generated_utc. The stage default is READ from stage_cost.K57_default.stdout_tail, not assumed, and the page compares it against the default named in the audit’s F10 table — so if the stage default moves after the audit is written, the shot says so.",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/defect-f10-sampling.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__PAGE_READY__ === true (fetch of comparison/results/f8.json resolved and the DOM written) → document.fonts.ready → images decoded → DOM text settled (3 x 200 ms) → window.__PAGE_FAILURES__ asserted 0",
+      "consoleErrors": [],
+      "sha256": "0fd14aaeb69cfb682285b11e3729bddc6a053783de9cbe48663b5093be900540",
+      "bytes": 224029
+    },
+    {
+      "file": "defect-f8-receiver-plane.png",
+      "shows": "DEFECT F8 — the receiver-plane selection rule, drawn over one plane interval from the real spacing and receiver height, beside the before/after measurements on the 91,745-cell grid. Shows why \"nearest\" puts the receiver below local ground in 28.97 % of cells and why \"ceiling\" cannot. The interval picture makes a prediction the page checks against the measurement: (spacing/2 − rx_agl) / spacing = 28.39 % vs 28.97 % measured. The diagram is a picture of the RULE, not of the Newton DTM — f8.json carries the relief but no height profile, so no terrain profile is drawn. Numbers: comparison/results/f8.json, fetched live at capture time with the JSON pointer printed per row and the file’s generated_utc stamped in the footer; narrative: docs/audits/2026-07-29-… § F8.",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/defect-f8-receiver-plane.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__PAGE_READY__ === true (fetch of comparison/results/f8.json resolved and the DOM written) → document.fonts.ready → images decoded → DOM text settled (3 x 200 ms) → window.__PAGE_FAILURES__ asserted 0",
+      "consoleErrors": [],
+      "sha256": "6ec7320feba6edc270c291b99cdc6853b6a839b3aa4e9d40a3114bb906a19e9d",
+      "bytes": 208770
+    },
+    {
+      "file": "defect-f9-colour-scale.png",
+      "shows": "DEFECT F9 — the two published coverage figures on independent colour scales. The colourbar rectangle occupies identical pixel rows (92–1051) in both committed PNGs, so the defect is visible without touching a pixel: left, the two colourbars cropped straight out of the PNGs at their published position (same ramp, disagreeing dB labels); right, the same crops with B shifted up 34 source px so the dB axes align (labels agree, ramps offset). 34 px ÷ 12 px/dB = 2.83 dB. Crops are CSS windows onto the unmodified files — nothing recoloured, resampled or re-rendered. Context numbers from comparison/results/f8.json; shared scale (−160…−80, 5 dB grid) from the audit § F9.",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/defect-f9-colour-scale.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__PAGE_READY__ === true (fetch of comparison/results/f8.json resolved and the DOM written) → document.fonts.ready → images decoded → DOM text settled (3 x 200 ms) → window.__PAGE_FAILURES__ asserted 0",
+      "consoleErrors": [],
+      "sha256": "76b46c5b2f3e2e6e2f1309f300600998bd4a15678da13d0ecb83e4833209a310",
+      "bytes": 393655
+    },
+    {
+      "file": "failure-coverage-explorer.png",
+      "shows": "FAILURE CASE — examples/apps/coverage_explorer/app.py could not be launched with python3 (streamlit is not installed in that venv; installing it was out of scope). Chromium's real connection-refused page at the same 1600x900 viewport. Exact interpreter output: shots/failure-coverage-explorer.log",
+      "url": "http://127.0.0.1:<ephemeral>/",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "launch attempt completed (exit code observed) → navigation settled → document.readyState complete → 2 rAF ticks (a frame exists to capture)",
+      "consoleErrors": [],
+      "sha256": "a7017d523a20d8c20c20725cd00fda4424fcbaee8b4c60169545f0a1b207d00d",
+      "bytes": 27572
+    },
+    {
+      "file": "failure-f9-shared-scale-absent.png",
+      "shows": "FAILURE CASE — the F9 \"after\" state cannot be photographed. No shared-scale rendering of the two coverage figures exists in blender/sionna_out/; the fix landed in sionna_coverage.py / sionna_terrain_ground.py and the committed renders predate it. This harness photographs what the stages committed and does not run them, so the after panel is a gap in this evidence set — recorded here at the same 1600x900 settings rather than omitted. The page proves the absence rather than asserting it: it prints the LIVE directory listing of /blender/sionna_out/ (all entries, unfiltered) and quotes docs/audits/2026-07-29-… § F9 verbatim, both fetched at capture time.",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/f9-shared-scale-absent.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__PAGE_READY__ === true (directory listing and audit both fetched) → document.fonts.ready → DOM text settled (3 x 200 ms) → __PAGE_FAILURES__ asserted 0 and the listing asserted to contain the two published figures and no shared-scale variant",
+      "consoleErrors": [],
+      "sha256": "41600078e0b5ff8cf6b6c235e94902d48681475a30cbc34a9f448804fc460277",
+      "bytes": 169269
+    },
+    {
+      "file": "failure-twin-viewer-no-data.png",
+      "shows": "FAILURE CASE — ulap-twin-ui/index.html with data.js aborted by the harness (route interception; nothing in the repo was modified). Shows what the viewer actually renders when the scene payload is missing, at the same 1600x900 viewport.",
+      "url": "http://127.0.0.1:<ephemeral>/index.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": 20000,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [
+        "#t-fps",
+        "#t-clock"
+      ],
+      "maskPlaceholder": "———",
+      "readinessSignal": "#intro removed by the page failsafe → clock pinned (a pageerror is asserted, so this shot cannot silently become a success)",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_FAILED",
+        "pageerror: TypeError: Cannot read properties of undefined (reading 'buildings')"
+      ],
+      "sha256": "8ada822a15b24be0e9a7520e6fa84f3651237c34fefda61fe4fdf5ce7c096bf6",
+      "bytes": 6461
+    },
+    {
+      "file": "paper-figures-before-after.png",
+      "shows": "PAPER FIGURES, BEFORE/AFTER — the two coverage figures the paper compares, old committed render beside the regenerated one at the released defaults (K=57 ceiling stack, one shared −160…−80 dB scale, one 8 m grid, 1e8 samples/tx). Old ground-following was 28.1 % dark, most of it receiver-underground artefact plus starvation; new states its 1.16 % unsampled fraction in its own title. Old images load from blender/sionna_out (unmodified committed files); new from pages/figassets. Numbers: docs/audits/2026-07-30 and comparison/results/f8.json.",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/paper-figures-before-after.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__PAGE_READY__ === true (fetch of comparison/results/f8.json resolved and the DOM written) → document.fonts.ready → images decoded → DOM text settled (3 x 200 ms) → window.__PAGE_FAILURES__ asserted 0",
+      "consoleErrors": [],
+      "sha256": "a1b71509c59b8a429cad0437abfb1760210b9b5018420ab1341db891ab346eb4",
+      "bytes": 1126574
+    },
+    {
+      "file": "rt-compare-band.png",
+      "shows": "visual/pages/rt-compare.html?c=band — sub-6 frequency sweep vs mmWave 28/60 GHz. Both panels in an identical 660x545 box, object-fit: contain (no crop, no stretch).",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/rt-compare.html?c=band",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__RT_COMPARE_READY__ === true (both <img> load/error) → images decoded",
+      "consoleErrors": [],
+      "sha256": "678e41b6dc22b8117159f4a1b617278da218df38df18aee7c6faf91695a8079d",
+      "bytes": 566817
+    },
+    {
+      "file": "rt-compare-fidelity.png",
+      "shows": "visual/pages/rt-compare.html?c=fidelity — terrain drape vs ground-following at 1.5 m AGL (3.5 GHz). Both panels in an identical 660x545 box, object-fit: contain (no crop, no stretch).",
+      "url": "http://127.0.0.1:<ephemeral>/visual/pages/rt-compare.html?c=fidelity",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": null,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [],
+      "maskPlaceholder": null,
+      "readinessSignal": "window.__RT_COMPARE_READY__ === true (both <img> load/error) → images decoded",
+      "consoleErrors": [],
+      "sha256": "e6dc521d648a0a6e0610b7a19425f7e5ce555aa8cefad7932ca5a6133089bc59",
+      "bytes": 1274530
+    },
+    {
+      "file": "twin-viewer-2d-map.png",
+      "shows": "ulap-twin-ui/index.html — 2-D operations map: 576 LiDAR-height building footprints, 2 towers, analytical coverage rings, left control panel.",
+      "url": "http://127.0.0.1:<ephemeral>/index.html",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": 20000,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [
+        "#t-fps",
+        "#t-clock"
+      ],
+      "maskPlaceholder": "———",
+      "readinessSignal": "window.TWIN_DATA set → document.fonts.ready → #intro removed → boot toast hidden → DOM text settled (3 x 200 ms) → clock pinned",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ],
+      "sha256": "071594ee0128a6e4ff4b9503d75518efb6d41fc7967adea42b700b6647df0251",
+      "bytes": 286835
+    },
+    {
+      "file": "twin-viewer-3d-both.png",
+      "shows": "ulap-twin-ui/scene.html#both — three.js twin, camera fixed by the app's own focusTx() (tower 0, no user interaction, so it is identical every run). Radio map + traced ray paths together.",
+      "url": "http://127.0.0.1:<ephemeral>/scene.html#both",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": 20000,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [
+        "#s-fps",
+        "#badge-txt"
+      ],
+      "maskPlaceholder": "———",
+      "readinessSignal": "#loader removed by boot() → document.fonts.ready → DOM text settled (3 x 200 ms) → clock pinned",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ],
+      "sha256": "4fff5ce01e09478da948145317fa885bb90b31ca9350a4248a30716f75b74e40",
+      "bytes": 526443
+    },
+    {
+      "file": "twin-viewer-3d-paths.png",
+      "shows": "ulap-twin-ui/scene.html#paths — three.js twin, camera fixed by the app's own focusTx() (tower 0, no user interaction, so it is identical every run). 440 traced ray paths from the TX.",
+      "url": "http://127.0.0.1:<ephemeral>/scene.html#paths",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": 20000,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [
+        "#s-fps",
+        "#badge-txt"
+      ],
+      "maskPlaceholder": "———",
+      "readinessSignal": "#loader removed by boot() → document.fonts.ready → DOM text settled (3 x 200 ms) → clock pinned",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ],
+      "sha256": "9be03a6949caab04c71cb856b2738fa0ec5221b95297a6c202f05eee3b542586",
+      "bytes": 416765
+    },
+    {
+      "file": "twin-viewer-3d-radio.png",
+      "shows": "ulap-twin-ui/scene.html#radio — three.js twin, camera fixed by the app's own focusTx() (tower 0, no user interaction, so it is identical every run). Path-gain radio map draped on the ground plane.",
+      "url": "http://127.0.0.1:<ephemeral>/scene.html#radio",
+      "viewport": "1600x900",
+      "deviceScaleFactor": 1,
+      "frozenAnimationTimestampMs": 20000,
+      "rngSeed": "mulberry32:0x5cd70001",
+      "externalNetwork": "blocked",
+      "maskedSelectors": [
+        "#s-fps",
+        "#badge-txt"
+      ],
+      "maskPlaceholder": "———",
+      "readinessSignal": "#loader removed by boot() → document.fonts.ready → DOM text settled (3 x 200 ms) → clock pinned",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ],
+      "sha256": "5d6622b4336ff2532d77531455fb8e4bbfe6c9f5be27db05e30fc0759d909919",
+      "bytes": 291936
+    }
+  ]
+}

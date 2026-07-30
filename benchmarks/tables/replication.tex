@@ -1,0 +1,25 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Cross-invocation stability on one host with an identical software stack: cold artefact of one run set against the cold artefact of another.}
+  \label{tab:replication}
+  \begin{tabular}{llcccc}
+    \toprule
+    Artifact & Stage & spark-5804 CPU vs base & spark-5804 CUDA vs base & bgi-ran-01 CPU vs llvmpath & bgi-ran-01 CUDA vs base \\
+    \midrule
+    coverage\_map.png & sionna\_coverage (flat) & $=$ & $\neq$ & $=$ & $\neq$ \\
+    coverage\_pathgain\_db.png & sionna\_coverage (flat) & $=$ & $=$ & $=$ & $=$ \\
+    scene\_render.png & sionna\_coverage (flat) & $=$ & $\neq$ & $=$ & $=$ \\
+    coverage\_map\_terrain.png & sionna\_coverage (terrain) & $=$ & $\neq$ & $=$ & $=$ \\
+    coverage\_pathgain\_db\_terrain.png & sionna\_coverage (terrain) & $\neq$ & $=$ & $=$ & $=$ \\
+    scene\_render\_terrain.png & sionna\_coverage (terrain) & $=$ & $\neq$ & $=$ & $=$ \\
+    link\_metrics.csv & sionna\_analysis & $?$ & $?$ & $?$ & $=$ \\
+    link\_metrics.png & sionna\_analysis & $=$ & $\neq$ & $=$ & $=$ \\
+    multitower\_bestserver\_handover.png & sionna\_analysis & $=$ & $=$ & $=$ & $=$ \\
+    sweep\_frequency.png & sionna\_analysis & $=$ & $\neq$ & $=$ & $=$ \\
+    mmwave\_concrete\_coverage.png & sionna\_mmwave\_sinr & $=$ & $=$ & $=$ & $=$ \\
+    sinr\_map.png & sionna\_mmwave\_sinr & $=$ & $=$ & $=$ & $=$ \\
+    coverage\_pathgain\_db\_terrain\_groundfollow.png & sionna\_terrain\_ground & $=$ & $=$ & $=$ & $=$ \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

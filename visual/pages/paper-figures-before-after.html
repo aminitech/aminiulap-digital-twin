@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Paper figures: before / after</title>
+<style>
+ body{background:#111;color:#eee;font:14px/1.45 system-ui;margin:24px}
+ h1{font-size:20px} h2{font-size:15px;margin:18px 0 6px}
+ .row{display:flex;gap:16px;align-items:flex-start}
+ figure{margin:0;flex:1} img{width:100%;height:auto;display:block;background:#000}
+ figcaption{font-size:12px;color:#bbb;margin-top:6px}
+ .k{color:#ffc83c}
+</style></head><body>
+<h1>The two paper figures that changed, before / after</h1>
+<p>Every number below comes from <span class="k">docs/audits/2026-07-30-sampling-and-resolution.md</span>
+and <span class="k">comparison/results/f8.json</span>. Old = as previously committed in the paper
+(nearest-plane K=9, own colour scale, 5&nbsp;m vs 8&nbsp;m grids, 10⁶–10⁷ samples/tx).
+New = released defaults (ceiling-rule K=57, one shared −160/−80&nbsp;dB scale, one 8&nbsp;m grid, 10⁸ samples/tx).</p>
+
+<h2>Ground-following map — was 28.1% dark (28.97% of receivers underground + starvation); now 1.16% unsampled, stated in-title</h2>
+<div class="row">
+ <figure><img src="../../blender/sionna_out/coverage_pathgain_db_terrain_groundfollow.png" alt="old groundfollow">
+  <figcaption>OLD — committed reference. Most dark area is measurement artefact, not shadow.</figcaption></figure>
+ <figure><img src="figassets/new_groundfollow.png" alt="new groundfollow">
+  <figcaption>NEW — K=57 ceiling stack, 10⁸/tx, shared scale; settings and unsampled fraction printed in the figure title.</figcaption></figure>
+</div>
+
+<h2>Terrain-plane map — was own p99 scale and 5 m grid; now shared scale and the common 8 m grid</h2>
+<div class="row">
+ <figure><img src="../../blender/sionna_out/coverage_pathgain_db_terrain.png" alt="old terrain">
+  <figcaption>OLD — independently scaled; hue not comparable with its neighbour in the paper.</figcaption></figure>
+ <figure><img src="figassets/new_terrain.png" alt="new terrain">
+  <figcaption>NEW — same −160/−80 dB scale and grid as the ground-following figure; hues now mean the same dB in both.</figcaption></figure>
+</div>
+<script>
+// Inert readiness contract per DEFECT_PAGES: ready once all imgs settle; count failures.
+(function(){
+  var imgs=[].slice.call(document.images), fails=0, left=imgs.length;
+  function done(){ if(--left<=0){ window.__PAGE_FAILURES__=fails; window.__PAGE_READY__=true; } }
+  if(!imgs.length){ window.__PAGE_FAILURES__=0; window.__PAGE_READY__=true; return; }
+  imgs.forEach(function(im){
+    if(im.complete){ if(!im.naturalWidth) fails++; done(); }
+    else { im.addEventListener('load',done); im.addEventListener('error',function(){fails++;done();}); }
+  });
+})();
+</script></body></html>

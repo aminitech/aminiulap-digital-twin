@@ -1,0 +1,499 @@
+{
+  "study": "C3",
+  "question": "What does terrain and ground-following actually change, numerically?",
+  "pre_registered_metrics": [
+    "median_path_gain_db",
+    "p10_db",
+    "p90_db",
+    "best_server_change_fraction"
+  ],
+  "generated_utc": "2026-07-30T13:34:09+00:00",
+  "host": {
+    "node": "spark-5804",
+    "machine": "aarch64",
+    "python": "3.12.3",
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+  },
+  "config": {
+    "freq_hz": 3500000000.0,
+    "cell_m": 8.0,
+    "samples_per_tx": 100000000,
+    "max_depth": 5,
+    "rx_agl_m": 1.5,
+    "repeats": 3,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork",
+    "note": "all three variants solved on ONE common grid (same centre, size and cell size) so cells compare one-to-one. Since 2026-07-30 the shipped stages agree: sionna_coverage.py moved 5 m -> 8 m and both read ULAP_RM_CELL_M / ULAP_RM_SAMPLES_PER_TX, so nothing is harmonised away here. samples_per_tx was 1e7 in the superseded run of this study.",
+    "timing_caveat": "Dr.Jit persists compiled kernels in an on-disk cache, so 'cold' here means first solve in a fresh interpreter, NOT first solve ever. On a machine with an empty Dr.Jit cache the same cells took 0.16 s (flat), 0.16 s (terrain_plane) and 1.41 s (terrain_ground, 9 solves). Timing here is indicative; benchmarks/ owns the authoritative harness.",
+    "k_planes": 57,
+    "k_planes_source": "ceil(relief 55.52 m / tolerance 1 m) + 1",
+    "plane_selection_rule": "ceiling (never below target height)"
+  },
+  "failures": [],
+  "inputs": {
+    "scene_flat": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene/scene.xml",
+    "scene_terrain": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/mitsuba_scene_terrain/scene.xml",
+    "manifest": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
+    "manifest_md5": "419b775af0d975ffd6ecfaa5861e1f0f",
+    "towers": [
+      "Newton",
+      "Rising Sun"
+    ],
+    "terrain_relief_m": 55.52,
+    "terrain_zmin_m": 54.74,
+    "terrain_zmax_m": 110.26,
+    "n_buildings": 576,
+    "scene": "Newton, Barbados \u2014 the government scene the ray tracer was run on (576 footprints). NOT the bundled open-data examples/ scene."
+  },
+  "grid": {
+    "center_xy": [
+      -1.5,
+      3.19
+    ],
+    "size_xy": [
+      2353.91,
+      2487.84
+    ],
+    "cell_m": 8.0,
+    "flat_scene_bbox": [
+      [
+        -1178.5,
+        -1240.7,
+        0.0
+      ],
+      [
+        1175.5,
+        1247.1,
+        12.0
+      ]
+    ],
+    "terrain_scene_bbox": [
+      [
+        -1178.5,
+        -1240.7,
+        54.7
+      ],
+      [
+        1175.5,
+        1247.1,
+        115.5
+      ]
+    ],
+    "flat_and_terrain_xy_extent_identical": true
+  },
+  "ground_following_artifact": {
+    "underground_cell_fraction": 0.0,
+    "plane_spacing_m": 0.991,
+    "worst_case_height_error_m": 0.496,
+    "selected_plane_minus_ground_m": {
+      "median": 1.95,
+      "p10": 1.59,
+      "p90": 2.36
+    },
+    "note": "Cells where the selected plane sits below local ground. They are indistinguishable from genuine shadow in the shipped map. The banding visible in the ground-following figure runs along terrain contours -- these bands, not radio physics."
+  },
+  "ground_following": {
+    "plane_z_m": [
+      56.24,
+      57.23,
+      58.22,
+      59.21,
+      60.21,
+      61.2,
+      62.19,
+      63.18,
+      64.17,
+      65.16,
+      66.15,
+      67.15,
+      68.14,
+      69.13,
+      70.12,
+      71.11,
+      72.1,
+      73.09,
+      74.09,
+      75.08,
+      76.07,
+      77.06,
+      78.05,
+      79.04,
+      80.03,
+      81.03,
+      82.02,
+      83.01,
+      84.0,
+      84.99,
+      85.98,
+      86.97,
+      87.97,
+      88.96,
+      89.95,
+      90.94,
+      91.93,
+      92.92,
+      93.91,
+      94.91,
+      95.9,
+      96.89,
+      97.88,
+      98.87,
+      99.86,
+      100.85,
+      101.85,
+      102.84,
+      103.83,
+      104.82,
+      105.81,
+      106.8,
+      107.79,
+      108.79,
+      109.78,
+      110.77,
+      111.76
+    ],
+    "planes_used_histogram": {
+      "0": 0,
+      "1": 1831,
+      "2": 635,
+      "3": 1249,
+      "4": 690,
+      "5": 626,
+      "6": 520,
+      "7": 770,
+      "8": 494,
+      "9": 850,
+      "10": 692,
+      "11": 590,
+      "12": 487,
+      "13": 808,
+      "14": 567,
+      "15": 675,
+      "16": 561,
+      "17": 633,
+      "18": 1573,
+      "19": 1021,
+      "20": 915,
+      "21": 1148,
+      "22": 1772,
+      "23": 1057,
+      "24": 980,
+      "25": 1799,
+      "26": 1280,
+      "27": 3607,
+      "28": 1281,
+      "29": 1285,
+      "30": 1271,
+      "31": 3418,
+      "32": 1333,
+      "33": 1433,
+      "34": 1597,
+      "35": 1657,
+      "36": 1702,
+      "37": 1423,
+      "38": 1298,
+      "39": 1164,
+      "40": 1223,
+      "41": 1262,
+      "42": 1834,
+      "43": 1925,
+      "44": 1817,
+      "45": 2628,
+      "46": 3032,
+      "47": 11225,
+      "48": 4677,
+      "49": 2155,
+      "50": 1793,
+      "51": 8179,
+      "52": 583,
+      "53": 644,
+      "54": 513,
+      "55": 81,
+      "56": 1482
+    },
+    "target_agl_m": 1.5,
+    "terrain_plane_height_above_local_ground_m": {
+      "median": 22.56,
+      "min": 5.0,
+      "max": 60.52,
+      "note": "how far the single terrain_plane cut sits above local ground -- the quantity ground-following exists to fix"
+    }
+  },
+  "variants": {
+    "flat": {
+      "status": "ok",
+      "stats_repeat0": {
+        "median_db": -113.564,
+        "p10_db": -127.752,
+        "p90_db": -93.611,
+        "mean_db": -112.188,
+        "p90_minus_p10_db": 34.141,
+        "finite_cells": 91397,
+        "total_cells": 91745,
+        "no_coverage_fraction": 0.00379
+      },
+      "median_db_across_repeats": [
+        -113.564,
+        -113.572,
+        -113.572
+      ],
+      "median_db_spread_db": 0.008,
+      "median_db_of_repeat_medians": -113.572,
+      "p10_db_across_repeats": [
+        -127.752,
+        -127.76,
+        -127.758
+      ],
+      "p90_db_across_repeats": [
+        -93.611,
+        -93.609,
+        -93.611
+      ],
+      "timing": [
+        {
+          "repeat": 0,
+          "seed": 42,
+          "cold": true,
+          "wall_s": 0.141,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 1,
+          "seed": 43,
+          "cold": false,
+          "wall_s": 0.123,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 2,
+          "seed": 44,
+          "cold": false,
+          "wall_s": 0.123,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        }
+      ],
+      "wall_s_median": 0.123,
+      "seed_noise_floor": {
+        "best_server_change_fraction_same_variant_different_seed": 0.00411,
+        "path_gain_rms_delta_db_same_variant_different_seed": 0.7806,
+        "note": "Monte-Carlo noise floor. Any between-variant change fraction that does not clearly exceed this number is not a terrain effect."
+      }
+    },
+    "terrain_plane": {
+      "status": "ok",
+      "stats_repeat0": {
+        "median_db": -112.297,
+        "p10_db": -125.708,
+        "p90_db": -94.158,
+        "mean_db": -110.864,
+        "p90_minus_p10_db": 31.551,
+        "finite_cells": 91623,
+        "total_cells": 91745,
+        "no_coverage_fraction": 0.00133
+      },
+      "median_db_across_repeats": [
+        -112.297,
+        -112.31,
+        -112.313
+      ],
+      "median_db_spread_db": 0.016,
+      "median_db_of_repeat_medians": -112.31,
+      "p10_db_across_repeats": [
+        -125.708,
+        -125.703,
+        -125.699
+      ],
+      "p90_db_across_repeats": [
+        -94.158,
+        -94.156,
+        -94.157
+      ],
+      "timing": [
+        {
+          "repeat": 0,
+          "seed": 42,
+          "cold": true,
+          "wall_s": 0.119,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 1,
+          "seed": 43,
+          "cold": false,
+          "wall_s": 0.108,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 2,
+          "seed": 44,
+          "cold": false,
+          "wall_s": 0.107,
+          "n_solves": 1,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        }
+      ],
+      "wall_s_median": 0.108,
+      "seed_noise_floor": {
+        "best_server_change_fraction_same_variant_different_seed": 0.00258,
+        "path_gain_rms_delta_db_same_variant_different_seed": 1.0309,
+        "note": "Monte-Carlo noise floor. Any between-variant change fraction that does not clearly exceed this number is not a terrain effect."
+      }
+    },
+    "terrain_ground": {
+      "status": "ok",
+      "stats_repeat0": {
+        "median_db": -116.51,
+        "p10_db": -128.143,
+        "p90_db": -93.863,
+        "mean_db": -113.502,
+        "p90_minus_p10_db": 34.28,
+        "finite_cells": 90680,
+        "total_cells": 91745,
+        "no_coverage_fraction": 0.01161
+      },
+      "median_db_across_repeats": [
+        -116.51,
+        -116.493,
+        -116.508
+      ],
+      "median_db_spread_db": 0.017,
+      "median_db_of_repeat_medians": -116.508,
+      "p10_db_across_repeats": [
+        -128.143,
+        -128.135,
+        -128.142
+      ],
+      "p90_db_across_repeats": [
+        -93.863,
+        -93.861,
+        -93.855
+      ],
+      "timing": [
+        {
+          "repeat": 0,
+          "seed": 42,
+          "cold": true,
+          "wall_s": 6.194,
+          "n_solves": 57,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 1,
+          "seed": 43,
+          "cold": false,
+          "wall_s": 6.264,
+          "n_solves": 57,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        },
+        {
+          "repeat": 2,
+          "seed": 44,
+          "cold": false,
+          "wall_s": 5.955,
+          "n_solves": 57,
+          "mitsuba_variant": "cuda_ad_mono_polarized"
+        }
+      ],
+      "wall_s_median": 6.194,
+      "seed_noise_floor": {
+        "best_server_change_fraction_same_variant_different_seed": 0.00989,
+        "path_gain_rms_delta_db_same_variant_different_seed": 1.551,
+        "note": "Monte-Carlo noise floor. Any between-variant change fraction that does not clearly exceed this number is not a terrain effect."
+      },
+      "stats_repeat0_excluding_underground_cells": {
+        "median_db": -116.51,
+        "p10_db": -128.143,
+        "p90_db": -93.863,
+        "mean_db": -113.502,
+        "p90_minus_p10_db": 34.28,
+        "finite_cells": 90680,
+        "total_cells": 91745,
+        "no_coverage_fraction": 0.01161,
+        "cells_removed": 0,
+        "note": "terrain_ground with cells whose selected plane sits below local ground removed from BOTH numerator and denominator; compare against stats_repeat0 to see how much of the no-coverage area is the discretisation, not the radio"
+      }
+    }
+  },
+  "pairwise": {
+    "flat__vs__terrain_plane": {
+      "best_server_change_fraction": 0.10041,
+      "best_server_n_changed": 9165,
+      "median_path_gain_delta_db": -0.427,
+      "p10_delta_db": -2.726,
+      "p90_delta_db": 9.448,
+      "rms_delta_db": 6.279,
+      "fraction_cells_within_3db": 0.7542,
+      "fraction_cells_over_10db": 0.0995,
+      "n_cells_compared": 91275,
+      "no_coverage_fraction": {
+        "flat": 0.00379,
+        "terrain_plane": 0.00133
+      }
+    },
+    "flat__vs__terrain_ground": {
+      "best_server_change_fraction": 0.21925,
+      "best_server_n_changed": 19821,
+      "median_path_gain_delta_db": -0.199,
+      "p10_delta_db": -9.711,
+      "p90_delta_db": 3.029,
+      "rms_delta_db": 6.729,
+      "fraction_cells_within_3db": 0.6864,
+      "fraction_cells_over_10db": 0.1284,
+      "n_cells_compared": 90404,
+      "no_coverage_fraction": {
+        "flat": 0.00379,
+        "terrain_ground": 0.01161
+      }
+    },
+    "terrain_plane__vs__terrain_ground": {
+      "best_server_change_fraction": 0.2227,
+      "best_server_n_changed": 20175,
+      "median_path_gain_delta_db": -0.218,
+      "p10_delta_db": -12.564,
+      "p90_delta_db": 3.142,
+      "rms_delta_db": 7.984,
+      "fraction_cells_within_3db": 0.5856,
+      "fraction_cells_over_10db": 0.1625,
+      "n_cells_compared": 90591,
+      "no_coverage_fraction": {
+        "terrain_plane": 0.00133,
+        "terrain_ground": 0.01161
+      }
+    },
+    "terrain_plane__vs__terrain_ground__excluding_underground_cells": {
+      "best_server_change_fraction": 0.2227,
+      "median_path_gain_delta_db": -0.218,
+      "p10_delta_db": -12.564,
+      "p90_delta_db": 3.142,
+      "rms_delta_db": 7.984,
+      "fraction_cells_within_3db": 0.5856,
+      "fraction_cells_over_10db": 0.1625,
+      "n_cells_compared": 90591,
+      "note": "the pre-registered comparison with the discretisation artifact removed; the difference between this row and the unqualified one is the size of the artifact"
+    }
+  },
+  "verdict": {
+    "question": "Does the nine-plane ground-following machinery earn its complexity over the single horizontal terrain plane?",
+    "median_path_gain_delta_db": -0.218,
+    "rms_delta_db": 7.984,
+    "best_server_change_fraction": 0.2227,
+    "monte_carlo_noise_floor_change_fraction": 0.00989,
+    "change_fraction_over_noise_floor": 22.52,
+    "cost_multiplier_vs_single_plane": 57.35,
+    "p10_delta_db": -12.564,
+    "p90_delta_db": 3.142,
+    "fraction_cells_over_10db": 0.1625,
+    "no_coverage_fraction_terrain_plane": 0.00133,
+    "no_coverage_fraction_terrain_ground": 0.01161,
+    "note": "Stated whichever way the numbers fall. A small delta here is a finding against the nine-plane design, and is reported as such. Read the median and the tails together: the pre-registered median is the metric most likely to hide a terrain effect, because raising or lowering the measurement plane moves cells in both directions."
+  }
+}

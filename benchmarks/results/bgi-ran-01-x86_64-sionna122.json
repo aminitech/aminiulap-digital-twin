@@ -1,0 +1,583 @@
+{
+  "host_facts": {
+    "host": "bgi-ran-01",
+    "arch": "x86_64",
+    "python": "3.12.13",
+    "cores_logical": 256,
+    "cpu": "Intel(R) Xeon(R) 6760P",
+    "ram_gb": 503.0,
+    "gpu": "NVIDIA H200 NVL, 9.0",
+    "mitsuba_version": "3.8.0",
+    "drjit_version": "1.3.1"
+  },
+  "repeats": 3,
+  "cells": [
+    {
+      "backend": "cpu",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.749,
+          "user_s": 212.56,
+          "sys_s": 15.21,
+          "cpu_pct": 4795.7,
+          "max_rss_mb": 1274.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "1d07770d4313b1067527ebfed827439d",
+            "coverage_pathgain_db.png": "ff25cb7cd51f94f16d5efeb3ecbab367",
+            "scene_render.png": "0021a69de9a1b3bb6f8cf50b969dcdba"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.363,
+          "user_s": 211.44,
+          "sys_s": 18.28,
+          "cpu_pct": 5265.2,
+          "max_rss_mb": 1248.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.422,
+          "user_s": 213.43,
+          "sys_s": 16.31,
+          "cpu_pct": 5195.6,
+          "max_rss_mb": 1249.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.353,
+          "user_s": 188.65,
+          "sys_s": 16.53,
+          "cpu_pct": 4713.5,
+          "max_rss_mb": 1254.8,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "861a6fa1fbee3f9e85dfaa308e33b348",
+            "coverage_pathgain_db_terrain.png": "3a77aa8048e4999f5be96da2407881a5",
+            "scene_render_terrain.png": "f836dbbe69df25f6649a5ff42440adae"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.344,
+          "user_s": 182.19,
+          "sys_s": 14.58,
+          "cpu_pct": 4529.3,
+          "max_rss_mb": 1252.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.959,
+          "user_s": 183.59,
+          "sys_s": 15.15,
+          "cpu_pct": 5020.4,
+          "max_rss_mb": 1252.9,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 5.078,
+          "user_s": 216.15,
+          "sys_s": 13.59,
+          "cpu_pct": 4524.6,
+          "max_rss_mb": 1176.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.csv": "08afea6db1da9b0e635fef3650a23c4f",
+            "link_metrics.png": "2267129f6d14780987beaec4054f7986",
+            "multitower_bestserver_handover.png": "4e8503268b78a9ec305cfbaff38da45c",
+            "sweep_frequency.png": "d9f40ff859e7e1f323b23ecae152a55c"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.644,
+          "user_s": 223.73,
+          "sys_s": 16.15,
+          "cpu_pct": 5164.8,
+          "max_rss_mb": 1163.4,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.652,
+          "user_s": 224.21,
+          "sys_s": 11.71,
+          "cpu_pct": 5070.9,
+          "max_rss_mb": 1154.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.276,
+          "user_s": 117.13,
+          "sys_s": 5.62,
+          "cpu_pct": 3746.8,
+          "max_rss_mb": 953.6,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "mmwave_concrete_coverage.png": "caf3835498251f99c7af41476c86cace",
+            "sinr_map.png": "f66a3e564779e8edf68c64a1ef5c5b75"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.225,
+          "user_s": 119.07,
+          "sys_s": 4.91,
+          "cpu_pct": 3844.9,
+          "max_rss_mb": 951.1,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.042,
+          "user_s": 115.95,
+          "sys_s": 5.34,
+          "cpu_pct": 3986.7,
+          "max_rss_mb": 954.8,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.291,
+          "user_s": 56.2,
+          "sys_s": 5.15,
+          "cpu_pct": 2677.4,
+          "max_rss_mb": 589.4,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "d21efd5b221e55fa3804dd9b62ca602f"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.322,
+          "user_s": 55.5,
+          "sys_s": 4.25,
+          "cpu_pct": 2573.2,
+          "max_rss_mb": 588.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.289,
+          "user_s": 54.45,
+          "sys_s": 4.17,
+          "cpu_pct": 2561.2,
+          "max_rss_mb": 592.5,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.09,
+          "user_s": 14.12,
+          "sys_s": 1.15,
+          "cpu_pct": 373.3,
+          "max_rss_mb": 754.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "4d0e989018c134760ddcc3493e15579f",
+            "coverage_pathgain_db.png": "90776c783a55c62f3bd04f3afaa51241",
+            "scene_render.png": "59986abb95d013851dff2f1e039b58b3"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.737,
+          "user_s": 10.92,
+          "sys_s": 0.6,
+          "cpu_pct": 308.3,
+          "max_rss_mb": 731.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.738,
+          "user_s": 10.92,
+          "sys_s": 0.61,
+          "cpu_pct": 308.4,
+          "max_rss_mb": 730.6,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.807,
+          "user_s": 10.99,
+          "sys_s": 0.6,
+          "cpu_pct": 304.5,
+          "max_rss_mb": 730.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "a0789e0777ffa9e8f5dccf5cc70c298e",
+            "coverage_pathgain_db_terrain.png": "39421f6f881a18c110c878fda747e3b2",
+            "scene_render_terrain.png": "94ca4f9b9bcd46a0e2c897007027ca4f"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.812,
+          "user_s": 11.0,
+          "sys_s": 0.61,
+          "cpu_pct": 304.5,
+          "max_rss_mb": 730.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "scene_render_terrain.png": "b4e94b8ed933e77840c7e47452d5eff3"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.785,
+          "user_s": 10.99,
+          "sys_s": 0.59,
+          "cpu_pct": 305.9,
+          "max_rss_mb": 730.6,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "94bf4f3098d2d7c09b9f94893af60c30"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.077,
+          "user_s": 14.23,
+          "sys_s": 0.62,
+          "cpu_pct": 364.3,
+          "max_rss_mb": 582.6,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.png": "0272037942db9e352bdf3ff390000861",
+            "multitower_bestserver_handover.png": "5981826f1fadb4bbc964a9a2419b1733",
+            "sweep_frequency.png": "62ae55c801e9ee38be780a5c0b7306c9"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.707,
+          "user_s": 11.01,
+          "sys_s": 0.49,
+          "cpu_pct": 310.2,
+          "max_rss_mb": 577.2,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.712,
+          "user_s": 11.05,
+          "sys_s": 0.46,
+          "cpu_pct": 310.1,
+          "max_rss_mb": 579.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.772,
+          "user_s": 10.05,
+          "sys_s": 0.52,
+          "cpu_pct": 381.2,
+          "max_rss_mb": 557.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "mmwave_concrete_coverage.png": "615ab2a0079c28385de598afa80c6bc0",
+            "sinr_map.png": "d8f50e1a325ac0292041cc69bdad3bd4"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.739,
+          "user_s": 10.09,
+          "sys_s": 0.45,
+          "cpu_pct": 384.8,
+          "max_rss_mb": 557.4,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.779,
+          "user_s": 10.1,
+          "sys_s": 0.48,
+          "cpu_pct": 380.8,
+          "max_rss_mb": 555.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.049,
+          "user_s": 9.42,
+          "sys_s": 0.42,
+          "cpu_pct": 480.3,
+          "max_rss_mb": 539.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "0d0e8222344c3cf1b7a399f6ea6fac37"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.053,
+          "user_s": 9.41,
+          "sys_s": 0.44,
+          "cpu_pct": 479.8,
+          "max_rss_mb": 539.9,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.027,
+          "user_s": 9.43,
+          "sys_s": 0.4,
+          "cpu_pct": 485.0,
+          "max_rss_mb": 539.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    }
+  ],
+  "annotations": {
+    "order": 4,
+    "primary": false,
+    "env_label": "bgi / sionna-rt 1.2.2 (version sensitivity)",
+    "work_dir_fresh": true,
+    "stack": {
+      "python": "3.12.13",
+      "sionna_rt": "1.2.2",
+      "mitsuba": "3.8.0",
+      "drjit": "1.3.1",
+      "matplotlib": "3.10.8",
+      "numpy": "2.4.3"
+    },
+    "interpreter": "/home/$USER/ulap-twin-verify/venv-s122/bin/python",
+    "drjit_libllvm_path": "/lib64/libLLVM.so.20.1",
+    "notes": "Version-sensitivity arm, NOT the primary. Purpose-built venv pinned to the 1.2.2 stack so the 1.2.2 comparison is matched across hosts too. Empty work dir, both backends.",
+    "added": "post-hoc metadata, hand-written; not produced by run_bench.py. From the 2.0.1 run sets onward run_bench.py records host_facts.interpreter and host_facts.sionna_rt_version itself."
+  }
+}

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F10 — at the shipped sampling, 47 % of the map is unsampled, not shadowed</title>
+<!--
+  F10 evidence page. Self-contained: NO external resources.
+  Every plotted point is fetched live from
+  /comparison/results/f8.json -> sample_convergence.by_samples_per_tx
+  and the JSON pointer is printed under each chart.
+
+  The whole argument in one sentence: if "shadow" shrinks when you fire more rays,
+  it was never shadow. The left chart is that test; the right chart is what the
+  residual is actually made of at each sampling level.
+-->
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#151518; --line:#26262b; --ink:#f2f2f4;
+    --muted:#9a9aa4; --accent:#FFC83C; --warn:#ff6b57; --good:#7ad4a0; --cool:#6aa9ff;
+    --violet:#b48cff;
+    --mono: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  body{display:flex;flex-direction:column;padding:14px 18px 10px;overflow:hidden}
+
+  header{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:15px;font-weight:600}
+  header .sub{font-family:var(--mono);font-size:10px;color:var(--muted);
+    letter-spacing:.06em;text-transform:uppercase}
+  header .spacer{flex:1}
+  header .tag{font-family:var(--mono);font-size:9.5px;color:var(--accent);
+    border:1px solid #3a3320;background:#201c10;padding:3px 8px;border-radius:4px;letter-spacing:.07em}
+
+  .grid{flex:1 1 auto;display:grid;grid-template-columns:790px 1fr;gap:14px;padding:12px 0 0;min-height:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    display:flex;flex-direction:column;overflow:hidden;min-height:0}
+  .card > h2{font-size:11.5px;font-weight:600;padding:9px 11px 2px}
+  .card > h2 .n{font-family:var(--mono);color:var(--muted);font-weight:400;font-size:10px}
+  .card > .lede{font-size:10.5px;line-height:1.42;color:#b9b9c2;padding:2px 11px 6px}
+  .card > .lede b{color:var(--ink)}
+  .src{font-family:var(--mono);font-size:8.5px;color:#6f6f79;padding:4px 11px 8px;word-break:break-all}
+
+  svg{display:block;flex:0 0 auto}
+  svg text{font-family:var(--sans)}
+  svg text.m{font-family:var(--mono)}
+
+  table{width:100%;border-collapse:collapse;font-size:10.5px}
+  th,td{text-align:left;padding:3.5px 11px;border-top:1px solid #1e1e22}
+  th{color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:400}
+  td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+  tr.shipped td{background:#221a0e}
+  .callout{margin:9px 11px 0;padding:8px 10px;border:1px solid #3a3320;background:#1b1810;
+    border-radius:6px;font-size:10.5px;line-height:1.45;color:#e6e2d4}
+  .callout b{color:var(--accent)}
+  .fail{margin:9px 11px;padding:8px 10px;border:1px solid #5a2a20;background:#2a1410;
+    border-radius:6px;color:var(--warn);font-family:var(--mono);font-size:10px}
+
+  .notebox{margin:9px 11px 0;padding:8px 10px;border:1px solid #2c4436;background:#111814;
+    border-radius:6px;font-size:10.5px;line-height:1.5;color:#c7d8cd}
+  .notebox b{color:var(--good)}
+  .notebox code{display:block;font-family:var(--mono);font-size:9.5px;color:#8fe0b4;
+    padding:5px 0 3px;word-break:break-word}
+  .notebox .cav{padding-top:4px;color:#9a9aa4;font-size:9.5px}
+  .prose{padding:9px 11px 10px;font-size:10.5px;line-height:1.5;color:#b9b9c2;overflow:hidden}
+  .prose p{padding-bottom:7px}
+  .prose b{color:var(--ink)}
+  .prose code{font-family:var(--mono);font-size:9.5px;color:var(--accent)}
+
+  footer{flex:0 0 auto;padding-top:8px;border-top:1px solid var(--line);margin-top:10px;
+    font-family:var(--mono);font-size:9px;color:var(--muted);display:flex;gap:16px;
+    letter-spacing:.03em;flex-wrap:wrap}
+  footer .k{color:#6f6f79}
+</style>
+</head>
+<body>
+  <header>
+    <h1>F10 — “shadow” that disappears when you fire more rays was never shadow</h1>
+    <span class="sub" id="hsub">—</span>
+    <span class="spacer"></span>
+    <span class="tag">DEFECT F10 · SAMPLE CONVERGENCE</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>No-coverage fraction vs rays per transmitter
+        <span class="n">— log–log, K=57 ceiling vs the single horizontal plane</span></h2>
+      <div class="lede">
+        Same seed, same scene, same plane stack: <b>only <code>samples_per_tx</code> varies</b>.
+        Blank map area falls roughly <b>10× per decade of samples</b> with no floor until
+        10<sup>8</sup>–10<sup>9</sup>. A cell that fills in when you look harder was an
+        <b>unsampled</b> cell, not a dark one.
+      </div>
+      <svg id="fig1" width="786" height="668" role="img"
+           aria-label="no-coverage fraction against samples per transmitter"></svg>
+      <div class="src" id="src1">—</div>
+    </div>
+
+    <div class="card">
+      <h2>What the extra shadow is actually made of <span class="n" id="h2sub">—</span></h2>
+      <div class="lede">
+        Attribution of the ground-following map’s extra shadow at each sampling level.
+        The <b>unexplained</b> band is the part no geometry accounts for.
+      </div>
+      <svg id="fig2" width="722" height="262" role="img"
+           aria-label="attribution of extra shadow by sampling level"></svg>
+      <table>
+        <thead><tr><th>samples / tx</th><th style="text-align:right">plane</th>
+          <th style="text-align:right">ground-follow</th><th style="text-align:right">extra</th>
+          <th style="text-align:right">wall</th></tr></thead>
+        <tbody id="tbl"><tr><td colspan="5" style="color:#9a9aa4">loading…</td></tr></tbody>
+      </table>
+      <div class="callout" id="callout">—</div>
+      <div class="callout" id="callout2"
+           style="border-color:#26262b;background:#131316;color:#b9b9c2">—</div>
+      <div id="notebox" class="notebox">—</div>
+      <div class="prose">
+        <p id="drift"></p>
+        <p><b>For the published figure:</b> it predates this change, so its dark area is
+        dominated by unsampled cells and cannot be read as shadow.</p>
+      </div>
+      <div id="err"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span id="f-gen"><span class="k">data</span> /comparison/results/f8.json ‣ sample_convergence.by_samples_per_tx — fetched live at capture time</span>
+    <span><span class="k">narrative</span> docs/audits/2026-07-29-f8-f9-receiver-plane-and-colour-scale.md § F10</span>
+    <span><span class="k">interpolation</span> none — four measured points</span>
+  </footer>
+
+<script>
+// ---------------------------------------------------------------------------
+// No timers, no animation, no Math.random, no wall-clock. Pure SVG built from
+// four measured points.
+// ---------------------------------------------------------------------------
+var NS = 'http://www.w3.org/2000/svg';
+function el(n, a, t) {
+  var e = document.createElementNS(NS, n);
+  for (var k in a) e.setAttribute(k, a[k]);
+  if (t !== undefined) e.textContent = t;
+  return e;
+}
+function pct(v, d) { return (v * 100).toFixed(d === undefined ? 2 : d) + ' %'; }
+function expLabel(e) { return '10' + String(e).replace('6', '⁶').replace('7', '⁷')
+  .replace('8', '⁸').replace('9', '⁹'); }
+
+var SERIES = [
+  { key: 'terrain_plane_no_coverage_fraction',     label: 'single horizontal plane — no coverage', col: '#6aa9ff' },
+  { key: 'ground_following_no_coverage_fraction',  label: 'ground-following (K=57 ceiling) — no coverage', col: '#ff6b57' },
+  { key: 'extra_shadow_fraction_of_map',           label: 'extra shadow vs the plane', col: '#b48cff' }
+];
+
+function chart1(pts, shippedExp) {
+  var svg = document.getElementById('fig1');
+  var L = 74, R = 752, T = 56, B = 604;
+  var xe = function (e) { return L + (e - 6) / 3 * (R - L); };          // 10^6 .. 10^9
+  var FLOOR = 1e-3;                                                      // log-y floor
+  var ye = function (v) {                                                // 1e-3 .. 1
+    var lv = Math.log10(Math.max(v, FLOOR));
+    return B - (lv - Math.log10(FLOOR)) / 3 * (B - T);
+  };
+
+  // grid + y ticks
+  [[1, '100 %'], [0.1, '10 %'], [0.01, '1 %'], [0.001, '0.1 %']].forEach(function (t) {
+    svg.appendChild(el('line', { x1: L, y1: ye(t[0]), x2: R, y2: ye(t[0]),
+      stroke: '#22222a', 'stroke-width': '1' }));
+    svg.appendChild(el('text', { x: L - 9, y: ye(t[0]) + 3.5, fill: '#9a9aa4', 'font-size': '9.5',
+      'text-anchor': 'end', class: 'm' }, t[1]));
+  });
+  // x ticks
+  pts.forEach(function (p) {
+    svg.appendChild(el('line', { x1: xe(p.exp), y1: T, x2: xe(p.exp), y2: B,
+      stroke: '#1c1c22', 'stroke-width': '1' }));
+    svg.appendChild(el('text', { x: xe(p.exp), y: B + 18, fill: '#9a9aa4', 'font-size': '11',
+      'text-anchor': 'middle', class: 'm' }, expLabel(p.exp)));
+  });
+  svg.appendChild(el('text', { x: (L + R) / 2, y: B + 36, fill: '#b9b9c2', 'font-size': '10.5',
+    'text-anchor': 'middle' }, 'samples per transmitter'));
+
+  // shipped-default marker
+  svg.appendChild(el('rect', { x: Math.max(L, xe(shippedExp) - 26), y: T,
+    width: 26 + Math.min(26, xe(shippedExp) - L), height: B - T,
+    fill: '#FFC83C', 'fill-opacity': '0.07' }));
+  svg.appendChild(el('text', { x: xe(shippedExp), y: T - 10, fill: '#FFC83C', 'font-size': '10',
+    'text-anchor': 'middle', 'font-weight': '600', class: 'm' }, 'SHIPPED DEFAULT'));
+
+  // series
+  SERIES.forEach(function (s, si) {
+    var d = '', zeroAt = null;
+    pts.forEach(function (p, i) {
+      var v = p[s.key];
+      if (v <= 0) { zeroAt = p; return; }          // cannot be drawn on a log axis
+      d += (d ? ' L' : 'M') + xe(p.exp) + ' ' + ye(v);
+    });
+    svg.appendChild(el('path', { d: d, stroke: s.col, 'stroke-width': '2.2', fill: 'none' }));
+    pts.forEach(function (p) {
+      var v = p[s.key];
+      if (v <= 0) return;
+      svg.appendChild(el('circle', { cx: xe(p.exp), cy: ye(v), r: '4',
+        fill: '#151518', stroke: s.col, 'stroke-width': '2' }));
+      // Series 2 (extra shadow) converges onto series 1 above 1e7 — labelling every
+      // point would overprint. Label its headline point only; the table at right
+      // carries all four values, so nothing is hidden by this.
+      if (si === 2 && p.exp !== 6) return;
+      var dy = (si === 0) ? 16 : -10;          // plane below the marker, others above
+      svg.appendChild(el('text', { x: xe(p.exp) + (p.exp === 9 ? -9 : 9),
+        y: ye(v) + dy, fill: s.col, 'font-size': '10',
+        'text-anchor': p.exp === 9 ? 'end' : 'start', class: 'm' }, pct(v)));
+    });
+    if (zeroAt) {   // honest handling of an exact zero on a log axis
+      svg.appendChild(el('circle', { cx: xe(zeroAt.exp), cy: ye(FLOOR), r: '4',
+        fill: '#151518', stroke: s.col, 'stroke-width': '2', 'stroke-dasharray': '2 2' }));
+      svg.appendChild(el('text', { x: xe(zeroAt.exp) - 9, y: ye(FLOOR) - 34, fill: s.col,
+        'font-size': '10', 'text-anchor': 'end', class: 'm' },
+        '0.00 % — cannot be drawn on a log axis'));
+    }
+  });
+
+  // legend — inside the plot, in the quadrant no series occupies (high sampling,
+  // high no-coverage never happens), so it can never sit on top of the data
+  var lx = R - 268, ly = T + 14;
+  SERIES.forEach(function (s, i) {
+    var y = ly + i * 17;
+    svg.appendChild(el('line', { x1: lx, y1: y, x2: lx + 22, y2: y,
+      stroke: s.col, 'stroke-width': '2.4' }));
+    var words = s.label.split(' — ');
+    svg.appendChild(el('text', { x: lx + 29, y: y + 3.5, fill: s.col, 'font-size': '10' },
+      words[0] + (words[1] ? '  ·  ' + words[1] : '')));
+  });
+}
+
+function chart2(pts) {
+  var svg = document.getElementById('fig2');
+  var L = 70, R = 706, T = 24, B = 212;
+  var bw = 92, gap = (R - L - 4 * bw) / 4;
+  var BANDS = [
+    ['ridge_shadow_terrain_only', '#7ad4a0', 'ridge (terrain)'],
+    ['building_shadow',           '#6aa9ff', 'building'],
+    ['unexplained_by_geometry',   '#ff6b57', 'unexplained by geometry']
+  ];
+  pts.forEach(function (p, i) {
+    var x0 = L + gap / 2 + i * (bw + gap);
+    var acc = 0;
+    BANDS.forEach(function (b) {
+      var v = p.attr[b[0]];
+      var h = v * (B - T);
+      svg.appendChild(el('rect', { x: x0, y: B - acc - h, width: bw, height: h,
+        fill: b[1], 'fill-opacity': '0.85' }));
+      if (v > 0.09) {
+        svg.appendChild(el('text', { x: x0 + bw / 2, y: B - acc - h / 2 + 3.5, fill: '#0d0d0f',
+          'font-size': '9.5', 'text-anchor': 'middle', 'font-weight': '600', class: 'm' },
+          pct(v, 0)));
+      }
+      acc += h;
+    });
+    svg.appendChild(el('text', { x: x0 + bw / 2, y: B + 15, fill: '#9a9aa4', 'font-size': '10.5',
+      'text-anchor': 'middle', class: 'm' }, expLabel(p.exp)));
+  });
+  [[0, '0'], [0.5, '50'], [1, '100 %']].forEach(function (t) {
+    svg.appendChild(el('text', { x: L - 8, y: B - t[0] * (B - T) + 3.5, fill: '#9a9aa4',
+      'font-size': '9', 'text-anchor': 'end', class: 'm' }, t[1]));
+  });
+  BANDS.forEach(function (b, i) {
+    svg.appendChild(el('rect', { x: L + i * 200, y: T - 18, width: 9, height: 9, fill: b[1] }));
+    svg.appendChild(el('text', { x: L + i * 200 + 14, y: T - 10, fill: '#b9b9c2',
+      'font-size': '9.5' }, b[2]));
+  });
+}
+
+function finish(f) {
+  window.__PAGE_FAILURES__ = f;
+  window.__PAGE_READY__ = true;
+  document.documentElement.setAttribute('data-ready', '1');
+}
+
+fetch('/comparison/results/f8.json')
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function (d) {
+    var by = d.sample_convergence.by_samples_per_tx;
+    // Keys are "1e+06" .. "1e+09"; sort numerically so the order cannot depend on
+    // object-key iteration surprises.
+    var pts = Object.keys(by).map(function (k) {
+      var o = by[k];
+      return {
+        raw: k,
+        exp: Math.round(Math.log10(Number(k))),
+        terrain_plane_no_coverage_fraction: o.terrain_plane_no_coverage_fraction,
+        ground_following_no_coverage_fraction: o.ground_following_no_coverage_fraction,
+        extra_shadow_fraction_of_map: o.extra_shadow_fraction_of_map,
+        attr: o.extra_shadow_attribution_fraction,
+        wall_s: o.wall_s
+      };
+    }).sort(function (a, b) { return a.exp - b.exp; });
+
+    // The SHIPPED default is what the stage printed while the study ran, not the
+    // study's own samples_per_tx — read it out of the stage's captured stdout.
+    var shippedLine = d.stage_cost.K57_default.stdout_tail.filter(function (l) {
+      return l.indexOf('samples_per_tx=') !== -1;
+    })[0] || '';
+    var mm = shippedLine.match(/samples_per_tx=1e\+?(\d+)/);
+    var shippedExp = mm ? Number(mm[1]) : 6;
+
+    document.getElementById('hsub').textContent =
+      d.grid.cells.toLocaleString('en-US') + ' cells @ ' + d.grid.cell_m + ' m · ' +
+      (d.config.freq_hz / 1e9).toFixed(1) + ' GHz · max_depth ' + d.config.max_depth +
+      ' · seed ' + d.config.seed;
+    document.getElementById('h2sub').textContent = '— fractions of the extra-shadow area';
+
+    chart1(pts, shippedExp);
+    chart2(pts);
+
+    document.getElementById('f-gen').innerHTML =
+      '<span class="k">data</span> /comparison/results/f8.json ‣ ' +
+      'sample_convergence.by_samples_per_tx · generated ' + d.generated_utc +
+      ' on ' + d.host.node + ' (' + d.host.machine + ') · fetched live at capture time';
+
+    document.getElementById('src1').textContent =
+      'f8.json ‣ sample_convergence.by_samples_per_tx.{1e+06 … 1e+09}.' +
+      '{terrain_plane_no_coverage_fraction, ground_following_no_coverage_fraction, ' +
+      'extra_shadow_fraction_of_map} · shipped default read from ' +
+      'stage_cost.K57_default.stdout_tail: "' + shippedLine + '"';
+
+    var tb = document.getElementById('tbl');
+    tb.innerHTML = '';
+    pts.forEach(function (p) {
+      var tr = document.createElement('tr');
+      if (p.exp === shippedExp) tr.className = 'shipped';
+      tr.innerHTML = '<td class="n">' + expLabel(p.exp) +
+        (p.exp === shippedExp ? ' <span style="color:#FFC83C">shipped</span>' : '') + '</td>' +
+        '<td class="n">' + pct(p.terrain_plane_no_coverage_fraction) + '</td>' +
+        '<td class="n">' + pct(p.ground_following_no_coverage_fraction) + '</td>' +
+        '<td class="n">' + pct(p.extra_shadow_fraction_of_map) + '</td>' +
+        '<td class="n">' + p.wall_s.toFixed(2) + ' s</td>';
+      tb.appendChild(tr);
+    });
+
+    var shipped = pts.filter(function (p) { return p.exp === shippedExp; })[0];
+    var best = pts[pts.length - 1];
+
+    document.getElementById('callout').innerHTML =
+      'At the shipped default <b>' + expLabel(shippedExp) + ' rays/tx</b>, <b>' +
+      pct(shipped.ground_following_no_coverage_fraction) + '</b> of the ground-following map ' +
+      'is blank and <b>' + pct(shipped.attr.unexplained_by_geometry) + '</b> of the extra shadow ' +
+      'is unexplained by any geometry. At <b>' + expLabel(best.exp) + '</b> the residual is <b>' +
+      pct(best.ground_following_no_coverage_fraction) + '</b> of the map and <b>' +
+      pct(best.attr.ridge_shadow_terrain_only) + '</b> of it resolves into genuine ridge shadow — ' +
+      'for ' + (best.wall_s / shipped.wall_s).toFixed(0) + '× the wall clock ' +
+      '(' + shipped.wall_s.toFixed(2) + ' s → ' + best.wall_s.toFixed(2) + ' s) on this host. ' +
+      'Where the default should sit is a cost decision the audits record; this chart ' +
+      'establishes only what each level actually measures.';
+
+    // The stage now warns at runtime instead of shipping a silent default. It is in
+    // the captured stdout, so quote it rather than paraphrase it.
+    var noteLines = (d.stage_cost.K57_default.stdout_tail || []).filter(function (l) {
+      return l.indexOf('NOTE:') === 0;
+    });
+    var nb = document.getElementById('notebox');
+    if (noteLines.length) {
+      nb.innerHTML = '<b>The stage now says so itself.</b> f8.json captured this on the ' +
+        'ground-following run at the current default:';
+      noteLines.forEach(function (l) {
+        var c = document.createElement('code'); c.textContent = l; nb.appendChild(c);
+      });
+      var cav = document.createElement('div');
+      cav.className = 'cav';
+      cav.textContent = 'f8.json ‣ stage_cost.K57_default.stdout_tail · ' +
+        'samples_per_tx is now a parameter (ULAP_GF_SAMPLES_PER_TX) with a runtime warning.';
+      nb.appendChild(cav);
+    } else {
+      nb.innerHTML = '<b>No runtime NOTE in the captured stage stdout.</b> This generation of ' +
+        'f8.json (' + d.generated_utc + ') carries no sampling warning from the stage — ' +
+        'f8.json ‣ stage_cost.K57_default.stdout_tail.';
+    }
+
+    document.getElementById('callout2').innerHTML =
+      'Independent corroboration, no ray tracer involved: a straight-line line-of-sight test ' +
+      'over the DTM puts <b>genuine</b> ridge shadow at <b>' +
+      pct(d.geometric_los.terrain_only.ridge_shadow_fraction_of_map) + '</b> of the map ' +
+      '<span style="font-family:var(--mono);font-size:9px">' +
+      '(f8.json ‣ geometric_los.terrain_only.ridge_shadow_fraction_of_map)</span>. ' +
+      'The ray tracer resolves less than that at ' + expLabel(best.exp) +
+      ' because diffraction fills most of it in. Two independent methods agree the effect ' +
+      'is real and small.';
+
+    // The audit's F10 table names the default it was written against. If the stage
+    // has moved since, that drift must be visible here rather than papered over.
+    var AUDIT = '2026-07-29-f8-f9-receiver-plane-and-colour-scale.md';
+    Promise.all([
+      fetch('/docs/audits/' + AUDIT)
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); }),
+      // Audit filenames are date-prefixed, so a name-sorted directory listing IS a
+      // chronology. Look for a LATER audit before accusing the study of drift — the
+      // change may already be documented, and this shot must not imply otherwise.
+      fetch('/docs/audits/')
+        .then(function (r) { return r.ok ? r.text() : ''; })
+        .catch(function () { return ''; })
+    ])
+      .then(function (both) {
+        var md = both[0];
+        var later = [];
+        if (both[1]) {
+          var doc = new DOMParser().parseFromString(both[1], 'text/html');
+          later = Array.prototype.map.call(doc.querySelectorAll('ul li a'), function (a) {
+            return a.textContent;
+          }).filter(function (n) { return /\.md$/.test(n) && n > AUDIT; });
+        }
+        var line = md.split('\n').filter(function (l) {
+          return l.indexOf('(shipped)') !== -1;
+        })[0] || '';
+        var am = line.match(/10\u2074|10\u2075|10\u2076|10\u2077|10\u2078|10\u2079/);
+        var auditDefault = am ? am[0] : null;
+        var live = expLabel(shippedExp);
+        var el2 = document.getElementById('drift');
+        if (auditDefault && auditDefault !== live) {
+          el2.innerHTML = '<b style="color:#FFC83C">The default moved after the audit was ' +
+            'written.</b> The audit\u2019s § F10 table marks <b>' + auditDefault +
+            '</b> as shipped; the results file read at capture time reports the stage ' +
+            'default as <b>' + live + '</b> ' +
+            '<span style="font-family:var(--mono);font-size:9px">' +
+            '(stage_cost.K57_default.stdout_tail)</span>. Both rows are in the table above.' +
+            (later.length
+              ? ' A later audit is present and may record the change: ' +
+                '<span style="font-family:var(--mono);font-size:9px;color:#8fe0b4">' +
+                later.join(', ') + '</span> (docs/audits/, fetched at capture time).'
+              : ' No later audit is present in docs/audits/.');
+        } else if (auditDefault) {
+          el2.innerHTML = '<b>Audit and artifact agree</b> on the shipped default (<b>' +
+            live + '</b>): audit § F10 table vs stage_cost.K57_default.stdout_tail.';
+        } else {
+          el2.innerHTML = '<b>Could not read a shipped default out of the audit\u2019s ' +
+            'F10 table</b> — comparison against the live artifact not made.';
+        }
+        finish(0);
+      })
+      .catch(function (e2) {
+        document.getElementById('drift').innerHTML =
+          '<b style="color:#ff6b57">Audit unreadable (' + String(e2) + ')</b> — the ' +
+          'audit-vs-artifact default comparison was not made.';
+        finish(1);
+      });
+    return;
+  })
+  .catch(function (e) {
+    document.getElementById('err').innerHTML =
+      '<div class="fail">FAILED TO LOAD /comparison/results/f8.json — ' + String(e) +
+      '<br>Nothing on this page can be plotted. Recorded as-is.</div>';
+    document.getElementById('tbl').innerHTML =
+      '<tr><td colspan="5" style="color:#ff6b57">unavailable</td></tr>';
+    finish(1);
+  });
+</script>
+</body>
+</html>
