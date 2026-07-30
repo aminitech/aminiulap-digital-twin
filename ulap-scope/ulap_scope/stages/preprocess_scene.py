@@ -11,6 +11,8 @@ Includes a terrain grid interpolated from the building AVG_DTM (geoportal ground
 elevation) so the scene can be built flat OR draped over real terrain.
 """
 import json, os, shutil, subprocess
+
+from ulap_scope.gdal_utils import gdal_tool, run_gdal
 import numpy as np
 import geopandas as gpd
 from shapely.geometry import MultiPolygon
@@ -21,25 +23,6 @@ SA   = f"{ROOT}/bbd-geo-portal/study_area"
 BUILD= f"{ROOT}/blender/scene_build"
 os.makedirs(BUILD, exist_ok=True)
 
-def _run_gdal(cmd):
-    """Run a GDAL CLI with actionable context on failure instead of a raw traceback."""
-    try:
-        return subprocess.run(cmd, check=True, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        raise SystemExit(f"preprocess_scene: {cmd[0]} failed (rc={e.returncode}) on "
-                         f"{' '.join(cmd[1:])}\nstderr: {(e.stderr or '').strip()[-800:]}")
-
-
-def _gdal(tool):
-    """Resolve a GDAL CLI tool from $ULAP_GDAL_BIN or PATH (portable across OSes)."""
-    override = os.environ.get("ULAP_GDAL_BIN")
-    path = os.path.join(override, tool) if override else shutil.which(tool)
-    if not path:
-        raise SystemExit(
-            f"{tool} not found. Install GDAL (on PATH) or set ULAP_GDAL_BIN to "
-            "the directory containing the GDAL binaries."
-        )
-    return path
 
 OX, OY = 32735.32016057213, 64854.73663833553   # scene origin in EPSG:21292 (from .blend)
 EPSG = 21292
@@ -48,10 +31,10 @@ EPSG = 21292
 src_tif = f"{ROOT}/blender/GOOGLE_SAT_WM.tif"
 tmp_tif = f"{BUILD}/_basemap_3857.tif"
 out_tif = f"{BUILD}/GOOGLE_SAT_BNG.tif"
-_run_gdal([_gdal("gdal_translate"),"-a_srs","EPSG:3857","-q",src_tif,tmp_tif])
-_run_gdal([_gdal("gdalwarp"),"-t_srs","EPSG:21292","-r","cubic","-overwrite","-q",
+run_gdal([gdal_tool("gdal_translate"),"-a_srs","EPSG:3857","-q",src_tif,tmp_tif])
+run_gdal([gdal_tool("gdalwarp"),"-t_srs","EPSG:21292","-r","cubic","-overwrite","-q",
                 "-dstalpha",tmp_tif,out_tif])
-info = json.loads(_run_gdal([_gdal("gdalinfo"),"-json",out_tif]).stdout)
+info = json.loads(run_gdal([gdal_tool("gdalinfo"),"-json",out_tif]).stdout)
 cc = info["cornerCoordinates"]; W,H = info["size"]
 xs = [cc["upperLeft"][0],cc["lowerRight"][0]]; ys=[cc["upperLeft"][1],cc["lowerRight"][1]]
 basemap = {"tif":out_tif,"px_w":W,"px_h":H,

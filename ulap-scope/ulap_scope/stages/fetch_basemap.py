@@ -14,6 +14,8 @@ Output: blender/scene_build/GOOGLE_SAT_BNG.tif (overwrites, full extent) and
 updates basemap bounds in scene_manifest.json.
 """
 import os, json, math, io, time, shutil, urllib.request, subprocess
+
+from ulap_scope.gdal_utils import gdal_tool, run_gdal
 from PIL import Image
 from pyproj import Transformer
 
@@ -24,25 +26,6 @@ TILE_URL = ("https://server.arcgisonline.com/ArcGIS/rest/services/"
             "World_Imagery/MapServer/tile/{z}/{y}/{x}")
 MERC = 20037508.342789244
 
-def _run_gdal(cmd):
-    """Run a GDAL CLI with actionable context on failure instead of a raw traceback."""
-    try:
-        return subprocess.run(cmd, check=True, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        raise SystemExit(f"fetch_basemap: {cmd[0]} failed (rc={e.returncode}) on "
-                         f"{' '.join(cmd[1:])}\nstderr: {(e.stderr or '').strip()[-800:]}")
-
-
-def _gdal(tool):
-    """Resolve a GDAL CLI tool from $ULAP_GDAL_BIN or PATH (portable across OSes)."""
-    override = os.environ.get("ULAP_GDAL_BIN")
-    path = os.path.join(override, tool) if override else shutil.which(tool)
-    if not path:
-        raise SystemExit(
-            f"{tool} not found. Install GDAL (on PATH) or set ULAP_GDAL_BIN to "
-            "the directory containing the GDAL binaries."
-        )
-    return path
 
 with open(f"{BUILD}/scene_manifest.json") as _mf:
     mani = json.load(_mf)
@@ -100,11 +83,11 @@ lrx = tile_merc_x(xt1+1, ZOOM); lry = tile_merc_y(yt1+1, ZOOM)
 # ---- 4. georeference (3857) then warp to 21292 ----
 tif3857 = f"{BUILD}/_mosaic_3857.tif"
 out_tif = f"{BUILD}/GOOGLE_SAT_BNG.tif"
-_run_gdal([_gdal("gdal_translate"),"-q","-a_srs","EPSG:3857",
+run_gdal([gdal_tool("gdal_translate"),"-q","-a_srs","EPSG:3857",
            "-a_ullr",str(ulx),str(uly),str(lrx),str(lry),mos_png,tif3857])
-_run_gdal([_gdal("gdalwarp"),"-q","-t_srs","EPSG:21292","-r","cubic",
+run_gdal([gdal_tool("gdalwarp"),"-q","-t_srs","EPSG:21292","-r","cubic",
            "-overwrite","-dstalpha",tif3857,out_tif])
-info = json.loads(_run_gdal([_gdal("gdalinfo"),"-json",out_tif]).stdout)
+info = json.loads(run_gdal([gdal_tool("gdalinfo"),"-json",out_tif]).stdout)
 cc = info["cornerCoordinates"]; W,H = info["size"]
 bxs=[cc["upperLeft"][0],cc["lowerRight"][0]]; bys=[cc["upperLeft"][1],cc["lowerRight"][1]]
 mani["basemap"] = {"tif":out_tif,"px_w":W,"px_h":H,
