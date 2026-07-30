@@ -13,6 +13,7 @@ Env overrides (all optional):
   ULAP_BLENDER_BIN    Blender executable
   ULAP_PREP_PY        python w/ geopandas+scipy+pyproj+pillow (prep stages)
   ULAP_RT_PY          python w/ sionna-rt (RT stages)
+  ULAP_GDAL_BIN       dir with the GDAL CLIs  (default: resolved from PATH)
 
 Nothing here hard-codes one developer's machine. With no environment set, the
 three tool defaults resolve against the machine actually running the code:

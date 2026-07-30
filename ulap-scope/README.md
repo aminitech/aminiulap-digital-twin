@@ -63,13 +63,17 @@ The pipeline spans three Python interpreters (no single env can host all deps):
 | **Blender** | `…/Blender.app/Contents/Resources/4.4/python/bin/python3.11` | `requirements/blender.txt` + osgeo GDAL bindings + mitsuba-blender add-on | build, export |
 | **RT** | `/opt/anaconda3/envs/sionna/bin/python` | `requirements/rt.txt` | coverage, analysis, mmwave, terrain-ground, animate |
 
-Point the pipeline at them with env vars (defaults match the dev machine):
+Point the pipeline at them with env vars. All are optional: `ULAP_BLENDER_BIN`
+defaults to `blender` on `PATH`, the interpreters default to the current Python,
+and the GDAL CLIs are resolved from `PATH` unless `ULAP_GDAL_BIN` is set. Set them
+only when the tools live somewhere non-standard (example shows one dev machine):
 
 ```bash
 export ULAP_PROJECT_ROOT=/path/to/ulap-digital-twin   # holds bbd-geo-portal/ and blender/
 export ULAP_BLENDER_BIN=/Applications/Blender.app/Contents/MacOS/Blender
 export ULAP_PREP_PY=/opt/anaconda3/bin/python
 export ULAP_RT_PY=/opt/anaconda3/envs/sionna/bin/python
+export ULAP_GDAL_BIN=/opt/homebrew/bin                 # dir with gdal_translate/gdalwarp/gdalinfo
 ```
 
 ## Define a new study (reusable twins)
