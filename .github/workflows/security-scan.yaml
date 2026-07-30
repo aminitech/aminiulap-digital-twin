@@ -1,0 +1,55 @@
+# Security Scan
+#
+# Runs Semgrep (SAST -> Semgrep Cloud) and, on pull requests, an AI Security
+# Review that consolidates the Semgrep SARIF + a Trivy/Grype dependency scan +
+# a security-persona review of the diff, posts inline + summary comments and a
+# Check Run, and gates the merge on Critical/High findings.
+#
+# Secrets (passed explicitly, not `secrets: inherit`): SEMGREP_APP_TOKEN,
+# AWS_BEARER_TOKEN_BEDROCK.
+# Data flow: the AI review sends the PR diff to Amini's OWN AWS Bedrock account
+# (us-west-2); content stays inside Amini's AWS boundary, not a third-party SaaS.
+# Secrets are scrubbed from the diff with gitleaks before it is sent.
+#
+# FAILURE SEMANTICS (when a block is expected):
+#  - Semgrep and the Trivy/Grype scanners are non-fatal; their errors never block.
+#  - The AI review is FAIL-CLOSED: if a review is expected but the model backend
+#    returns no successful passes (e.g. Bedrock outage or a bad token) the job
+#    fails and blocks the merge rather than silently passing. Slow calls retry
+#    (adaptive, up to 4) behind a 300s read timeout.
+#  - The gate blocks only on Critical/High findings (gate-threshold); dependency
+#    findings with no upstream fix are reported but do not block.
+# OVERRIDE (gate stuck on infra, not a real finding): an admin can merge past the
+# required check, or temporarily set `run-ai-review: false` (semgrep-only) or
+# `gate-threshold: none` (advisory) via a quick PR, then revert.
+#
+# Make "Security Scan / ai-security-review" a required check to block merges.
+name: Security Scan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    # Pinned to an immutable commit SHA (the release is recorded in the trailing
+    # comment on the uses: line) so the gating logic cannot change under this
+    # repo without a deliberate, reviewed bump.
+    uses: aminitech/.github/.github/workflows/reusable-security-scan.yaml@342553608b9da5cdaf92544ca2820eb896f002d6 # v1.4.0
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    with:
+      gate-threshold: high
+    # Least privilege: pass only the secrets the scan needs.
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}

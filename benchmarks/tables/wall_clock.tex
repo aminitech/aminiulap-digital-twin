@@ -1,0 +1,18 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Wall-clock per pipeline stage: median of three repeats, full min--max spread in parentheses. Seconds.}
+  \label{tab:wall}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Stage & spark-5804 CPU & spark-5804 CUDA & bgi-ran-01 CPU & bgi-ran-01 CUDA \\
+    \midrule
+    sionna\_coverage (flat) & 8.56 (8.47-8.69) & 3.45 (3.41-3.61) & 4.48 (4.27-4.48) & 3.84 (3.81-3.87) \\
+    sionna\_coverage (terrain) & 9.98 (9.79-11.23) & 3.56 (3.48-3.56) & 4.25 (4.11-4.46) & 3.95 (3.90-3.96) \\
+    sionna\_analysis & 3.41 (3.31-3.77) & 2.74 (2.62-2.93) & 4.92 (4.91-4.95) & 3.96 (3.94-3.96) \\
+    sionna\_mmwave\_sinr & 2.59 (2.00-2.80) & 2.27 (2.24-2.28) & 3.21 (3.21-3.28) & 2.88 (2.86-2.90) \\
+    sionna\_terrain\_ground & 1.93 (1.91-2.05) & 1.78 (1.70-1.83) & 2.26 (2.25-2.39) & 2.02 (2.01-2.04) \\
+    Variant selected & llvm\_ad\_mono\_polarized & cuda\_ad\_mono\_polarized & llvm\_ad\_mono\_polarized & cuda\_ad\_mono\_polarized \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

@@ -100,6 +100,14 @@ OpenStreetMap / Geofabrik extracts
   (c) OpenStreetMap contributors, Open Database License (ODbL) 1.0.
   Any derived database distributed onward must also be ODbL.
 
+  This repository DISTRIBUTES such a derived database:
+  examples/data/open_scene_mitsuba/meshes/Buildings.ply (and flat/meshes/Buildings.ply)
+  are building geometry derived from OpenStreetMap and are therefore ODbL 1.0,
+  notwithstanding the Apache-2.0 licence covering this repository's source code.
+  Attribution required: (c) OpenStreetMap contributors.
+  Terrain meshes derive from AWS Terrain Tiles and are public domain.
+  See docs/OPEN-DATA-SCENE.md.
+
 OpenCellID
   https://opencellid.org
   CC BY-SA 4.0.
@@ -119,3 +127,6 @@ TeleGeography submarine cable data
 PeeringDB
   https://www.peeringdb.com
   CC BY 4.0.
+
+Licence-compatibility review for the ODbL-derived files: see
+"Third-party data licence assessment" in DATA.md.

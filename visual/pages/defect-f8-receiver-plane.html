@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>F8 — nine planes over 55.5 m of relief put the receiver underground</title>
+<!--
+  F8 evidence page. Self-contained: NO external resources.
+  Served from the repo root; every number is fetched live from
+  /comparison/results/f8.json and the JSON pointer is printed beside it.
+
+  WHY A DIAGRAM AND NOT A SCREENSHOT
+  ----------------------------------
+  The mechanism is a discretisation rule, and it is exactly reproducible from one
+  number (plane_spacing_m = 6.94) plus one number (rx_agl_m = 1.5). The diagram
+  below draws ONE plane interval with the ground rising linearly across it. That
+  is not a picture of the Newton DTM and does not pretend to be — f8.json carries
+  the relief (55.52 m) and the extremes (54.74 / 110.26 m) but not a height
+  profile, so no terrain profile is drawn here.
+
+  What the interval picture buys is a prediction that can be checked against the
+  measurement: with ground uniformly distributed across one interval, "nearest"
+  puts the receiver below ground for (spacing/2 - rx_agl) / spacing of it
+  = (3.47 - 1.5) / 6.94 = 28.39 %. The stage measured 28.97 % on the real
+  91,745-cell grid. The rule, not a coincidence.
+-->
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#151518; --line:#26262b; --ink:#f2f2f4;
+    --muted:#9a9aa4; --accent:#FFC83C; --warn:#ff6b57; --good:#7ad4a0; --cool:#6aa9ff;
+    --mono: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  body{display:flex;flex-direction:column;padding:14px 18px 10px;overflow:hidden}
+
+  header{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:15px;font-weight:600}
+  header .sub{font-family:var(--mono);font-size:10px;color:var(--muted);
+    letter-spacing:.06em;text-transform:uppercase}
+  header .spacer{flex:1}
+  header .tag{font-family:var(--mono);font-size:9.5px;color:var(--accent);
+    border:1px solid #3a3320;background:#201c10;padding:3px 8px;border-radius:4px;letter-spacing:.07em}
+
+  .grid{flex:1 1 auto;display:grid;grid-template-columns:912px 1fr;gap:14px;padding:12px 0 0;min-height:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    display:flex;flex-direction:column;overflow:hidden;min-height:0}
+  .card > h2{font-size:11.5px;font-weight:600;padding:9px 11px 2px}
+  .card > h2 .n{font-family:var(--mono);color:var(--muted);font-weight:400;font-size:10px}
+  .card > .lede{font-size:10.5px;line-height:1.42;color:#b9b9c2;padding:2px 11px 7px}
+  .card > .lede b{color:var(--ink)}
+  .card > .lede code{font-family:var(--mono);font-size:10px;color:var(--accent)}
+
+  svg{display:block}
+  #fig text{font-family:var(--sans)}
+  #fig text.m{font-family:var(--mono)}
+  .right{overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:10.5px}
+  th,td{text-align:left;padding:3.5px 11px;border-top:1px solid #1e1e22;vertical-align:top}
+  th{color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:400}
+  td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+  td.b{color:var(--warn)} td.a{color:var(--good)}
+  td.src{font-family:var(--mono);font-size:8.5px;color:#6f6f79;word-break:break-all}
+  .callout{margin:9px 11px 0;padding:8px 10px;border:1px solid #3a3320;background:#1b1810;
+    border-radius:6px;font-size:10.5px;line-height:1.45;color:#e6e2d4}
+  .callout b{color:var(--accent)}
+  .fail{margin:9px 11px;padding:8px 10px;border:1px solid #5a2a20;background:#2a1410;
+    border-radius:6px;color:var(--warn);font-family:var(--mono);font-size:10px}
+
+  footer{flex:0 0 auto;padding-top:8px;border-top:1px solid var(--line);margin-top:10px;
+    font-family:var(--mono);font-size:9px;color:var(--muted);display:flex;gap:16px;
+    letter-spacing:.03em;flex-wrap:wrap}
+  footer .k{color:#6f6f79}
+</style>
+</head>
+<body>
+  <header>
+    <h1>F8 — the ground-following map put the receiver below local ground in 28.97 % of cells</h1>
+    <span class="sub" id="hsub">—</span>
+    <span class="spacer"></span>
+    <span class="tag">DEFECT F8 · MECHANISM + MEASUREMENT</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>The rule, drawn over one plane interval
+        <span class="n" id="d-sub">—</span></h2>
+      <div class="lede">
+        Ground rises linearly across one plane spacing. <b>Nearest</b> (shipped) snaps the
+        receiver to whichever plane is closest to <code>ground + 1.5 m</code>; for the lower
+        part of the interval that plane is <b>below the ground itself</b>, the terrain occludes
+        the receiver, and the solver returns nothing — which the figure draws as shadow.
+        <b>Ceiling</b> (fixed) never selects a plane below the target, so the receiver cannot
+        go underground at any spacing.
+      </div>
+      <svg id="fig" width="908" height="700" viewBox="0 0 908 700" role="img"
+           aria-label="plane-selection rule over one plane interval"></svg>
+    </div>
+
+    <div class="card right">
+      <h2>Measured on the grid the stage actually uses <span class="n" id="t-sub">—</span></h2>
+      <table>
+        <thead><tr><th>metric</th><th style="text-align:right">shipped</th>
+          <th style="text-align:right">fixed</th><th>f8.json pointer</th></tr></thead>
+        <tbody id="tbl"><tr><td colspan="4" style="color:#9a9aa4">loading…</td></tr></tbody>
+      </table>
+      <div class="callout" id="callout">—</div>
+      <div class="callout" id="callout2" style="border-color:#26262b;background:#131316;color:#b9b9c2">—</div>
+      <div class="callout" id="callout3" style="border-color:#26262b;background:#131316;color:#b9b9c2">—</div>
+      <div id="err"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span id="f-gen"><span class="k">numbers</span> fetched live from /comparison/results/f8.json at capture time; pointer printed per row</span>
+    <span><span class="k">diagram</span> one plane interval, ground linear — a picture of the RULE, not of the Newton DTM</span>
+    <span><span class="k">narrative</span> docs/audits/2026-07-29-f8-f9-receiver-plane-and-colour-scale.md § F8</span>
+  </footer>
+
+<script>
+// ---------------------------------------------------------------------------
+// No timers, no animation, no Math.random, no wall-clock. Every value below is
+// read out of comparison/results/f8.json; nothing is hard-coded except the
+// axis furniture.
+// ---------------------------------------------------------------------------
+var NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs, text) {
+  var n = document.createElementNS(NS, name);
+  for (var k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function pct(x, d) { return (x * 100).toFixed(d === undefined ? 2 : d) + ' %'; }
+function m(x, d) { return x.toFixed(d === undefined ? 2 : d) + ' m'; }
+
+function draw(S, AGL) {
+  var svg = document.getElementById('fig');
+  var HALF = S / 2;                 // 3.47 m — the furthest "nearest" can reach
+  // Underground when the selected plane sits below local ground. With ground g
+  // measured up from plane k, "nearest" picks plane k while g + AGL < S/2, i.e.
+  // for g < HALF - AGL. Every one of those cells has the receiver under the hill.
+  var XU = HALF - AGL;              // 1.97 m — ground heights that land underground
+  var W0 = 78, W1 = 818;            // x pixel range (leaves room for the
+                                    // right-hand series labels inside the SVG box)
+  var x = function (v) { return W0 + (v / S) * (W1 - W0); };
+
+  // ---- subplot 1: heights ------------------------------------------------
+  var P1T = 42, P1B = 330, Y1HI = 9.4, Y1LO = -1.4;
+  var y1 = function (v) { return P1B - (v - Y1LO) / (Y1HI - Y1LO) * (P1B - P1T); };
+  // ---- subplot 2: signed offset from target ------------------------------
+  var P2T = 400, P2B = 646, Y2HI = 7.6, Y2LO = -4.2;
+  var y2 = function (v) { return P2B - (v - Y2LO) / (Y2HI - Y2LO) * (P2B - P2T); };
+
+  var g = el('g');
+
+  // underground band, both subplots — ground heights 0 .. XU
+  g.appendChild(el('rect', { x: x(0), y: P1T, width: x(XU) - x(0), height: P1B - P1T,
+    fill: '#ff6b57', 'fill-opacity': '0.09' }));
+  g.appendChild(el('rect', { x: x(0), y: P2T, width: x(XU) - x(0), height: P2B - P2T,
+    fill: '#ff6b57', 'fill-opacity': '0.09' }));
+
+  // ---------- subplot 1 ----------
+  g.appendChild(el('text', { x: W0, y: P1T - 14, fill: '#f2f2f4', 'font-size': '11.5',
+    'font-weight': '600', class: 's' },
+    'height above the lower plane  [m]'));
+
+  // the two bracketing planes
+  [[0, 'plane k'], [S, 'plane k + 1']].forEach(function (p) {
+    g.appendChild(el('line', { x1: W0, y1: y1(p[0]), x2: W1, y2: y1(p[0]),
+      stroke: '#6aa9ff', 'stroke-width': '1.6' }));
+    g.appendChild(el('text', { x: W1 + 4, y: y1(p[0]) + 3.5, fill: '#6aa9ff',
+      'font-size': '9.5', class: 'm' }, p[1]));
+  });
+
+  // ground and target
+  g.appendChild(el('line', { x1: x(0), y1: y1(0), x2: x(S), y2: y1(S),
+    stroke: '#8d7a5f', 'stroke-width': '2.6' }));
+  g.appendChild(el('line', { x1: x(0), y1: y1(AGL), x2: x(S), y2: y1(S + AGL),
+    stroke: '#FFC83C', 'stroke-width': '1.6', 'stroke-dasharray': '5 4' }));
+  g.appendChild(el('text', { x: x(S) - 4, y: y1(S) - 6, fill: '#b6a488', 'font-size': '10',
+    'text-anchor': 'end', class: 'm' }, 'local ground'));
+  g.appendChild(el('text', { x: x(S) - 4, y: y1(S + AGL) - 6, fill: '#FFC83C', 'font-size': '10',
+    'text-anchor': 'end', class: 'm' },
+    'target = ground + ' + AGL.toFixed(1) + ' m AGL'));
+
+  // NEAREST: selected plane = k for ground < XU, k+1 above it
+  g.appendChild(el('path', { d: 'M' + x(0) + ' ' + y1(0) + ' L' + x(XU) + ' ' + y1(0) +
+    ' L' + x(XU) + ' ' + y1(S) + ' L' + x(S) + ' ' + y1(S),
+    stroke: '#ff6b57', 'stroke-width': '2.6', fill: 'none' }));
+  g.appendChild(el('text', { x: x(XU / 2), y: y1(0) + 15, fill: '#ff6b57', 'font-size': '10',
+    'text-anchor': 'middle', 'font-weight': '600', class: 'm' },
+    'NEAREST selects plane k'));
+  g.appendChild(el('text', { x: x(XU / 2), y: y1(0) + 28, fill: '#ff6b57', 'font-size': '9.5',
+    'text-anchor': 'middle', class: 'm' },
+    '— which is under the ground here'));
+
+  // CEILING: selected plane = k+1 across (almost all of) this interval
+  g.appendChild(el('path', { d: 'M' + x(0) + ' ' + (y1(S) - 5) + ' L' + x(S - AGL) + ' ' + (y1(S) - 5),
+    stroke: '#7ad4a0', 'stroke-width': '2.6', fill: 'none', 'stroke-dasharray': '7 3' }));
+  g.appendChild(el('text', { x: x((S - AGL) / 2), y: y1(S) - 11, fill: '#7ad4a0',
+    'font-size': '10', 'text-anchor': 'middle', 'font-weight': '600',
+    class: 'm' }, 'CEILING selects plane k + 1 — always at or above target'));
+
+  // underground hatch label
+  g.appendChild(el('text', { x: x(XU / 2), y: P1T + 16, fill: '#ff6b57', 'font-size': '10.5',
+    'text-anchor': 'middle', 'font-weight': '600' },
+    'receiver underground  ' + m(XU) + ' of ' + m(S) + '  =  ' + pct(XU / S, 2)));
+
+  // y ticks subplot 1
+  [0, 2, 4, 6, 8].forEach(function (v) {
+    g.appendChild(el('text', { x: W0 - 8, y: y1(v) + 3.5, fill: '#9a9aa4', 'font-size': '9',
+      'text-anchor': 'end', class: 'm' }, String(v)));
+  });
+
+  // ---------- subplot 2 ----------
+  g.appendChild(el('text', { x: W0, y: P2T - 14, fill: '#f2f2f4', 'font-size': '11.5',
+    'font-weight': '600' }, 'signed height error of the selected plane vs the target  [m]'));
+
+  // zero line and the "ground level" line at -AGL
+  g.appendChild(el('line', { x1: W0, y1: y2(0), x2: W1, y2: y2(0),
+    stroke: '#3a3a42', 'stroke-width': '1' }));
+  g.appendChild(el('line', { x1: W0, y1: y2(-AGL), x2: W1, y2: y2(-AGL),
+    stroke: '#ff6b57', 'stroke-width': '1.2', 'stroke-dasharray': '4 3' }));
+  g.appendChild(el('text', { x: W1 + 4, y: y2(-AGL) + 3.5, fill: '#ff6b57', 'font-size': '9',
+    class: 'm' }, 'ground'));
+  g.appendChild(el('text', { x: W1 + 4, y: y2(0) + 3.5, fill: '#9a9aa4', 'font-size': '9',
+    class: 'm' }, 'target'));
+
+  // NEAREST sawtooth: u = -(g + AGL) below XU, u = S - (g + AGL) above
+  g.appendChild(el('path', {
+    d: 'M' + x(0) + ' ' + y2(-AGL) + ' L' + x(XU) + ' ' + y2(-HALF) +
+       ' M' + x(XU) + ' ' + y2(HALF) + ' L' + x(S) + ' ' + y2(-AGL),
+    stroke: '#ff6b57', 'stroke-width': '2.4', fill: 'none' }));
+  g.appendChild(el('line', { x1: x(XU), y1: y2(-HALF), x2: x(XU), y2: y2(HALF),
+    stroke: '#ff6b57', 'stroke-width': '1', 'stroke-dasharray': '2 3' }));
+
+  // CEILING sawtooth: u = S - (g + AGL) for g <= S-AGL, then 2S - (g+AGL)
+  g.appendChild(el('path', {
+    d: 'M' + x(0) + ' ' + y2(S - AGL) + ' L' + x(S - AGL) + ' ' + y2(0) +
+       ' M' + x(S - AGL) + ' ' + y2(S) + ' L' + x(S) + ' ' + y2(S - AGL),
+    stroke: '#7ad4a0', 'stroke-width': '2.4', fill: 'none', 'stroke-dasharray': '7 3' }));
+
+  // shade the "below ground" part of the nearest sawtooth
+  g.appendChild(el('path', {
+    d: 'M' + x(0) + ' ' + y2(-AGL) + ' L' + x(XU) + ' ' + y2(-HALF) +
+       ' L' + x(XU) + ' ' + y2(-AGL) + ' Z',
+    fill: '#ff6b57', 'fill-opacity': '0.3' }));
+
+  g.appendChild(el('text', { x: x(XU) + 8, y: y2(HALF) - 6, fill: '#ff6b57', 'font-size': '10',
+    class: 'm' }, 'nearest: ±' + HALF.toFixed(2) + ' m'));
+  g.appendChild(el('text', { x: x(S - AGL) + 8, y: y2(S) - 6, fill: '#7ad4a0', 'font-size': '10',
+    'text-anchor': 'end', class: 'm' }, 'ceiling: 0 … ' + S.toFixed(2) + ' m'));
+
+  // Where both rules select plane k+1 the two curves are the same curve. Say so,
+  // rather than leaving a reader to wonder why one line is drawn over another.
+  var CY = y2(Y2LO + 0.5);
+  g.appendChild(el('line', { x1: x(XU), y1: CY, x2: x(S - AGL), y2: CY,
+    stroke: '#9a9aa4', 'stroke-width': '1' }));
+  [x(XU), x(S - AGL)].forEach(function (px) {
+    g.appendChild(el('line', { x1: px, y1: CY - 4, x2: px, y2: CY + 4,
+      stroke: '#9a9aa4', 'stroke-width': '1' }));
+  });
+  g.appendChild(el('text', { x: (x(XU) + x(S - AGL)) / 2, y: CY - 7, fill: '#9a9aa4',
+    'font-size': '9.5', 'text-anchor': 'middle', class: 'm' },
+    'both rules select plane k + 1 here — the curves coincide'));
+
+  [-4, -2, 0, 2, 4, 6].forEach(function (v) {
+    g.appendChild(el('text', { x: W0 - 8, y: y2(v) + 3.5, fill: '#9a9aa4', 'font-size': '9',
+      'text-anchor': 'end', class: 'm' }, String(v)));
+  });
+
+  // ---------- shared x axis ----------
+  g.appendChild(el('line', { x1: W0, y1: P2B + 1, x2: W1, y2: P2B + 1,
+    stroke: '#3a3a42', 'stroke-width': '1' }));
+  [0, 1, 2, 3, 4, 5, 6, S].forEach(function (v) {
+    g.appendChild(el('line', { x1: x(v), y1: P2B + 1, x2: x(v), y2: P2B + 6,
+      stroke: '#3a3a42', 'stroke-width': '1' }));
+    g.appendChild(el('text', { x: x(v), y: P2B + 18, fill: '#9a9aa4', 'font-size': '9',
+      'text-anchor': 'middle', class: 'm' },
+      v === S ? S.toFixed(2) : String(v)));
+  });
+  g.appendChild(el('text', { x: (W0 + W1) / 2, y: P2B + 33, fill: '#b9b9c2', 'font-size': '10.5',
+    'text-anchor': 'middle' },
+    'local ground height within one plane interval  [m]   ·   interval = plane spacing = ' +
+    S.toFixed(2) + ' m'));
+
+  svg.appendChild(g);
+}
+
+var ready = false;
+function finish(failures) {
+  window.__PAGE_FAILURES__ = failures;
+  window.__PAGE_READY__ = true;
+  document.documentElement.setAttribute('data-ready', '1');
+}
+
+fetch('/comparison/results/f8.json')
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function (d) {
+    var before = d.variants.K9_nearest__shipped;
+    var after  = d.variants.K57_ceiling__fixed;
+    var S = before.plane_spacing_m;        // 6.94
+    var AGL = d.config.rx_agl_m;           // 1.5
+
+    document.getElementById('hsub').textContent =
+      'K ' + d.config.k_before + ' → ' + d.config.k_after + ' planes · spacing ' +
+      S.toFixed(2) + ' → ' + after.plane_spacing_m.toFixed(3) + ' m · relief ' +
+      d.inputs.terrain_relief_m.toFixed(2) + ' m';
+    document.getElementById('d-sub').textContent =
+      '— spacing ' + S.toFixed(2) + ' m, target ' + AGL.toFixed(1) + ' m AGL';
+    document.getElementById('t-sub').textContent =
+      '— ' + d.grid.cells.toLocaleString('en-US') + ' cells @ ' + d.grid.cell_m + ' m';
+
+    draw(S, AGL);
+
+    var v = d.verdict;
+    var rows = [
+      ['receiver below local ground', pct(v.underground_cell_fraction.before),
+        pct(v.underground_cell_fraction.after, 0), 'verdict.underground_cell_fraction'],
+      ['… by more than 1 m', pct(v.underground_gt_1m_fraction.before),
+        pct(v.underground_gt_1m_fraction.after, 0), 'verdict.underground_gt_1m_fraction'],
+      ['median |height offset|', m(v.median_abs_height_offset_m.before),
+        m(v.median_abs_height_offset_m.after), 'verdict.median_abs_height_offset_m'],
+      ['max |height offset|', m(v.max_abs_height_offset_m.before),
+        m(v.max_abs_height_offset_m.after), 'verdict.max_abs_height_offset_m'],
+      ['no-coverage fraction', pct(v.no_coverage_fraction.before),
+        pct(v.no_coverage_fraction.after), 'verdict.no_coverage_fraction'],
+      ['extra shadow vs the flat plane', pct(v.extra_shadow_fraction_of_map.before),
+        pct(v.extra_shadow_fraction_of_map.after), 'verdict.extra_shadow_fraction_of_map'],
+      ['… of which: underground artefact',
+        pct(v.extra_shadow_attribution_fraction.before.underground_discretisation_artefact),
+        pct(v.extra_shadow_attribution_fraction.after.underground_discretisation_artefact, 0),
+        'verdict.extra_shadow_attribution_fraction.*.underground_discretisation_artefact'],
+      ['… of which: genuine ridge shadow',
+        pct(v.extra_shadow_attribution_fraction.before.ridge_shadow_terrain_only),
+        pct(v.extra_shadow_attribution_fraction.after.ridge_shadow_terrain_only),
+        'verdict.extra_shadow_attribution_fraction.*.ridge_shadow_terrain_only'],
+      ['stage wall clock', d.stage_cost.K9.wall_s.toFixed(2) + ' s',
+        d.stage_cost.K57_default.wall_s.toFixed(2) + ' s', 'stage_cost.*.wall_s'],
+      ['stage peak RSS', d.stage_cost.K9.peak_rss_mb.toFixed(0) + ' MB',
+        d.stage_cost.K57_default.peak_rss_mb.toFixed(0) + ' MB', 'stage_cost.*.peak_rss_mb']
+    ];
+    var tb = document.getElementById('tbl');
+    tb.innerHTML = '';
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r[0] + '</td><td class="n b">' + r[1] +
+                     '</td><td class="n a">' + r[2] + '</td><td class="src">' + r[3] + '</td>';
+      tb.appendChild(tr);
+    });
+
+    // the prediction the diagram makes, checked against the measurement
+    var half = S / 2, xu = half - AGL, pred = xu / S;
+    document.getElementById('callout').innerHTML =
+      'The diagram predicts <b>(' + half.toFixed(2) + ' − ' + AGL.toFixed(1) + ') / ' +
+      S.toFixed(2) + ' = ' + pct(pred, 2) + '</b> of cells underground if ground height is ' +
+      'uniform across an interval. The stage measured <b>' +
+      pct(before.underground_cell_fraction) + '</b> on the real ' +
+      d.grid.cells.toLocaleString('en-US') + '-cell grid. The two agree to ' +
+      Math.abs(before.underground_cell_fraction - pred).toFixed(4).replace('0.', '0.') +
+      ' — this is the rule, not a coincidence.';
+
+    document.getElementById('callout2').innerHTML =
+      'Independent corroboration, no ray tracer involved: a straight-line DTM ' +
+      'line-of-sight test puts <b>genuine</b> ridge shadow at <b>' +
+      pct(d.geometric_los.terrain_only.ridge_shadow_fraction_of_map, 2) +
+      '</b> of the map <span style="font-family:var(--mono);font-size:9px">' +
+      '(geometric_los.terrain_only.ridge_shadow_fraction_of_map)</span>. ' +
+      'K=' + d.config.k_before + ' is an exact subset of the K=' + d.config.k_after +
+      ' stack, so before and after are read off the <b>same solves</b> — none of this ' +
+      'delta is re-solve noise <span style="font-family:var(--mono);font-size:9px">(config.note)</span>.';
+
+    // Stamp WHICH generation of f8.json this shot read. The file is regenerated by
+    // the study; without this a reader cannot tell two shots of different datasets
+    // apart, and the drift would be silent.
+    document.getElementById('f-gen').innerHTML =
+      '<span class="k">numbers</span> /comparison/results/f8.json generated ' +
+      d.generated_utc + ' on ' + d.host.node + ' (' + d.host.machine + ') · ' +
+      'fetched live at capture time, pointer printed per row · study samples_per_tx ' +
+      d.config.samples_per_tx.toExponential(0);
+
+    // The claim the numbers support, as opposed to the one the figure implied.
+    var bs = v.best_server_change_fraction_vs_terrain_plane;
+    document.getElementById('callout3').innerHTML =
+      'What survives the fix is <b>not</b> a shadow-area claim. The plane stack changes ' +
+      '<b>serving-cell association in ' + pct(bs.after) + ' of cells</b> against a ' +
+      'Monte-Carlo noise floor of ' + pct(bs.monte_carlo_noise_floor) + ' ' +
+      '<span style="font-family:var(--mono);font-size:9px">' +
+      '(verdict.best_server_change_fraction_vs_terrain_plane)</span>, and <b>' +
+      pct(after.vs_terrain_plane.fraction_cells_over_10db) + ' of cells differ by more than ' +
+      '10 dB</b> <span style="font-family:var(--mono);font-size:9px">' +
+      '(variants.K57_ceiling__fixed.vs_terrain_plane.fraction_cells_over_10db)</span>. ' +
+      'The audit uses C3\u2019s more conservative 1.03 % floor for the published ratio.';
+
+    finish(0);
+  })
+  .catch(function (e) {
+    document.getElementById('err').innerHTML =
+      '<div class="fail">FAILED TO LOAD /comparison/results/f8.json — ' + String(e) +
+      '<br>No number on this page can be shown. Recorded as-is.</div>';
+    document.getElementById('tbl').innerHTML =
+      '<tr><td colspan="4" style="color:#ff6b57">unavailable</td></tr>';
+    finish(1);
+  });
+</script>
+</body>
+</html>

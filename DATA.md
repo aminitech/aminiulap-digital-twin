@@ -34,6 +34,8 @@ Point `ULAP_DATA_DIR` at a directory laid out as described in
 | Copernicus GLO-30 | 30 m DEM | Free, full and open | Manual download, or the study wizard recommends it |
 | ESA WorldCover | 10 m land cover | CC BY 4.0 | Manual download |
 | OpenStreetMap / Geofabrik | Building footprints (fallback) | ODbL 1.0 | Manual download |
+| OpenStreetMap via Overpass | `examples/data/open_scene_mitsuba/` building meshes — **shipped in this repo** | ODbL 1.0, share-alike, attribution required | Committed; regenerate with `export_mitsuba_direct.py` |
+| AWS Terrain Tiles | `examples/data/open_scene_mitsuba/` terrain meshes — **shipped in this repo** | Public domain | Committed |
 | OpenCellID | Cell tower positions | CC BY-SA 4.0 | Manual download |
 
 ## Supplied by you: Barbados Geoportal
@@ -245,6 +247,18 @@ The following are **not** in this repository and will not be added:
 - **Any layer supplied under a bilateral arrangement** rather than from the
   public geoportal.
 
+
+## Verification path for holders of the restricted data
+
+The Barbados Geoportal layers cannot be redistributed, so a public clone cannot reproduce
+the paper's Barbados numbers — but an institution that already holds the export can verify
+this work end to end. `claims/restricted_artefact_checksums.json` records the MD5 of every
+restricted-derived artefact in the pipeline (scene manifest, tower list, both Mitsuba
+scenes, and the numeric output). Regenerate them from your own copy of the export with
+`ulap-scope preprocess / build / export` and the checksums must match; then
+`claims/verify_claims.py --rerun` must pass. If both hold, you have reproduced the paper
+from sovereign data without either side transmitting it.
+
 ## Reproducibility note
 
 Because the Barbados layers cannot be redistributed here, a third party cannot
@@ -252,3 +266,29 @@ reproduce the Barbados-specific figures byte-for-byte without obtaining those
 layers. The pipeline itself is fully reproducible on **any** study area: run
 `ulap-scope init` to define a new study anywhere in the world using the open
 sources listed above. See the README's reproduction path.
+
+## Third-party data licence assessment (ODbL share-alike)
+
+Recorded so the redistribution boundary is a reviewed decision, not an accident.
+
+- **What is distributed:** `examples/data/open_scene_mitsuba/meshes/Buildings.ply`
+  (and the flat variant) — building geometry derived from OpenStreetMap, therefore a
+  *derived database* under **ODbL 1.0** (share-alike). Terrain height samples derive
+  from AWS Terrain Tiles (public domain per Mapzen/AWS terms). Everything else in the
+  scene (materials, XML, exporter) is original code under Apache-2.0.
+- **The boundary:** ODbL's share-alike applies to the *data files*, not to the source
+  code that reads them, and not to produced works (rendered maps/figures) provided
+  attribution is given. The repository is a *collective work*: Apache-2.0 covers the
+  code; the two `.ply` derived databases remain under ODbL 1.0, stated in `NOTICE`.
+  A consumer redistributing the repository must keep the NOTICE attribution and pass
+  the ODbL terms along **for those files only** — this is the same boundary every
+  OSM-derived extract (Geofabrik et al.) ships under.
+- **Alternative considered:** not committing the meshes and fetching at build time
+  (`export_mitsuba_direct.py` regenerates them byte-identically from the manifest —
+  a test enforces this). Committing was chosen deliberately: a fresh clone must run
+  the ray tracer with no network access, and the byte-identical-regeneration test
+  keeps the committed artefact honest. The fetch-at-build path remains available to
+  any downstream consumer who prefers not to redistribute ODbL data.
+- **Reviewed:** G. Gichuru, 2026-07-30, against ODbL 1.0 §4.4–4.6 and the OSMF
+  Community Guidelines on produced works vs derived databases. Revisit if the scene
+  gains sources beyond OSM + AWS Terrain Tiles.

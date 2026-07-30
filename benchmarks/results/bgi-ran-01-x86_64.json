@@ -1,0 +1,571 @@
+{
+  "host_facts": {
+    "host": "bgi-ran-01",
+    "arch": "x86_64",
+    "python": "3.12.13",
+    "cores_logical": 256,
+    "cpu": "Intel(R) Xeon(R) 6760P",
+    "ram_gb": 503.0,
+    "gpu": "NVIDIA H200 NVL, 9.0",
+    "mitsuba_version": "3.8.0",
+    "drjit_version": "1.3.1"
+  },
+  "repeats": 3,
+  "cells": [
+    {
+      "backend": "cpu",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.163,
+          "user_s": 7.74,
+          "sys_s": 0.07,
+          "cpu_pct": 4785.4,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "initech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py flat\"\n\tUser time (seconds): 7.74\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 4857%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7074\n\tVoluntary context switches: 107\n\tInvoluntary context switches: 1988\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.157,
+          "user_s": 7.74,
+          "sys_s": 0.07,
+          "cpu_pct": 4988.7,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "initech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py flat\"\n\tUser time (seconds): 7.74\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 5043%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.15\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7051\n\tVoluntary context switches: 107\n\tInvoluntary context switches: 1574\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.166,
+          "user_s": 7.74,
+          "sys_s": 0.07,
+          "cpu_pct": 4709.1,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "initech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py flat\"\n\tUser time (seconds): 7.74\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 4768%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7048\n\tVoluntary context switches: 103\n\tInvoluntary context switches: 2335\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.166,
+          "user_s": 7.77,
+          "sys_s": 0.04,
+          "cpu_pct": 4696.3,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "itech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py terrain\"\n\tUser time (seconds): 7.77\n\tSystem time (seconds): 0.04\n\tPercent of CPU this job got: 4738%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7052\n\tVoluntary context switches: 99\n\tInvoluntary context switches: 2283\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.169,
+          "user_s": 7.74,
+          "sys_s": 0.07,
+          "cpu_pct": 4614.0,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "itech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py terrain\"\n\tUser time (seconds): 7.74\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 4657%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7049\n\tVoluntary context switches: 96\n\tInvoluntary context switches: 2285\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.165,
+          "user_s": 7.78,
+          "sys_s": 0.03,
+          "cpu_pct": 4743.8,
+          "max_rss_mb": 50.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "tech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_coverage.py terrain\"\n\tUser time (seconds): 7.78\n\tSystem time (seconds): 0.03\n\tPercent of CPU this job got: 4796%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 51200\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 7052\n\tVoluntary context switches: 101\n\tInvoluntary context switches: 2150\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.52,
+          "user_s": 8.09,
+          "sys_s": 0.07,
+          "cpu_pct": 1569.5,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "e/aminitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_analysis.py\"\n\tUser time (seconds): 8.09\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 1574%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.51\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14971\n\tVoluntary context switches: 101\n\tInvoluntary context switches: 2344\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.52,
+          "user_s": 8.1,
+          "sys_s": 0.06,
+          "cpu_pct": 1569.9,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "e/aminitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_analysis.py\"\n\tUser time (seconds): 8.10\n\tSystem time (seconds): 0.06\n\tPercent of CPU this job got: 1577%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.51\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14970\n\tVoluntary context switches: 106\n\tInvoluntary context switches: 2328\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.527,
+          "user_s": 8.12,
+          "sys_s": 0.07,
+          "cpu_pct": 1552.7,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "e/aminitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_analysis.py\"\n\tUser time (seconds): 8.12\n\tSystem time (seconds): 0.07\n\tPercent of CPU this job got: 1557%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.52\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14970\n\tVoluntary context switches: 102\n\tInvoluntary context switches: 1940\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.534,
+          "user_s": 8.11,
+          "sys_s": 0.06,
+          "cpu_pct": 1528.8,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "minitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_mmwave_sinr.py\"\n\tUser time (seconds): 8.11\n\tSystem time (seconds): 0.06\n\tPercent of CPU this job got: 1536%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.53\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14904\n\tVoluntary context switches: 105\n\tInvoluntary context switches: 2270\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.524,
+          "user_s": 8.12,
+          "sys_s": 0.05,
+          "cpu_pct": 1560.6,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "minitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_mmwave_sinr.py\"\n\tUser time (seconds): 8.12\n\tSystem time (seconds): 0.05\n\tPercent of CPU this job got: 1566%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.52\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14910\n\tVoluntary context switches: 100\n\tInvoluntary context switches: 2263\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.526,
+          "user_s": 8.11,
+          "sys_s": 0.06,
+          "cpu_pct": 1554.4,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "minitech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_mmwave_sinr.py\"\n\tUser time (seconds): 8.11\n\tSystem time (seconds): 0.06\n\tPercent of CPU this job got: 1561%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.52\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14912\n\tVoluntary context switches: 100\n\tInvoluntary context switches: 2342\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.516,
+          "user_s": 8.11,
+          "sys_s": 0.05,
+          "cpu_pct": 1581.2,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "itech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_terrain_ground.py\"\n\tUser time (seconds): 8.11\n\tSystem time (seconds): 0.05\n\tPercent of CPU this job got: 1586%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.51\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14918\n\tVoluntary context switches: 106\n\tInvoluntary context switches: 2218\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.492,
+          "user_s": 8.1,
+          "sys_s": 0.04,
+          "cpu_pct": 1655.9,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "itech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_terrain_ground.py\"\n\tUser time (seconds): 8.10\n\tSystem time (seconds): 0.04\n\tPercent of CPU this job got: 1663%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.49\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14888\n\tVoluntary context switches: 101\n\tInvoluntary context switches: 1824\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": false,
+          "returncode": 1,
+          "wall_s": 0.49,
+          "user_s": 8.09,
+          "sys_s": 0.05,
+          "cpu_pct": 1662.8,
+          "max_rss_mb": 88.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "itech/ulap-twin-verify/amini-ulap-digital-twin/ulap-scope/ulap_scope/stages/sionna_terrain_ground.py\"\n\tUser time (seconds): 8.09\n\tSystem time (seconds): 0.05\n\tPercent of CPU this job got: 1668%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.48\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 90112\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 14891\n\tVoluntary context switches: 109\n\tInvoluntary context switches: 2336\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 6.432,
+          "user_s": 17.22,
+          "sys_s": 2.78,
+          "cpu_pct": 310.9,
+          "max_rss_mb": 797.6,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "4d0e989018c134760ddcc3493e15579f",
+            "coverage_pathgain_db.png": "6905c740eff89ead2f502bbc87826f1d",
+            "scene_render.png": "59986abb95d013851dff2f1e039b58b3"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.96,
+          "user_s": 11.18,
+          "sys_s": 0.58,
+          "cpu_pct": 297.0,
+          "max_rss_mb": 693.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "eded07cd19bb07a2cc8777fd62f39195"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.977,
+          "user_s": 11.16,
+          "sys_s": 0.6,
+          "cpu_pct": 295.7,
+          "max_rss_mb": 690.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "14a2730969a220be2d0eb34699202bf0"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.584,
+          "user_s": 14.69,
+          "sys_s": 1.45,
+          "cpu_pct": 352.1,
+          "max_rss_mb": 740.4,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "94bf4f3098d2d7c09b9f94893af60c30",
+            "coverage_pathgain_db_terrain.png": "1109c4df4a3d4b19b01bfba74ef3b025",
+            "scene_render_terrain.png": "b4e94b8ed933e77840c7e47452d5eff3"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.031,
+          "user_s": 11.2,
+          "sys_s": 0.62,
+          "cpu_pct": 293.2,
+          "max_rss_mb": 693.9,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "scene_render_terrain.png": "94ca4f9b9bcd46a0e2c897007027ca4f"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.973,
+          "user_s": 11.17,
+          "sys_s": 0.57,
+          "cpu_pct": 295.5,
+          "max_rss_mb": 693.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "scene_render_terrain.png": "b4e94b8ed933e77840c7e47452d5eff3"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.029,
+          "user_s": 11.3,
+          "sys_s": 0.5,
+          "cpu_pct": 292.8,
+          "max_rss_mb": 546.0,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.csv": "08afea6db1da9b0e635fef3650a23c4f",
+            "link_metrics.png": "0f9dad3e112c609b0029cde714d952ea",
+            "multitower_bestserver_handover.png": "2b445ef96fb282dc0d35a534c9a2ca10",
+            "sweep_frequency.png": "5c649bf333c760557458933f294406fb"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.086,
+          "user_s": 11.31,
+          "sys_s": 0.55,
+          "cpu_pct": 290.3,
+          "max_rss_mb": 544.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.089,
+          "user_s": 11.3,
+          "sys_s": 0.56,
+          "cpu_pct": 290.1,
+          "max_rss_mb": 545.1,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.517,
+          "user_s": 13.92,
+          "sys_s": 1.18,
+          "cpu_pct": 429.4,
+          "max_rss_mb": 574.2,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "mmwave_concrete_coverage.png": "547f55c47a5f5ab5df6d00d7b08912a2",
+            "sinr_map.png": "080c52c6830120f9b20214e408935d20"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.923,
+          "user_s": 10.18,
+          "sys_s": 0.54,
+          "cpu_pct": 366.8,
+          "max_rss_mb": 523.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.279,
+          "user_s": 10.43,
+          "sys_s": 0.54,
+          "cpu_pct": 334.6,
+          "max_rss_mb": 520.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.831,
+          "user_s": 14.95,
+          "sys_s": 2.04,
+          "cpu_pct": 443.5,
+          "max_rss_mb": 586.2,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "a2c370fd9fdd06ac5ba5aa37a46e43ac"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.158,
+          "user_s": 9.47,
+          "sys_s": 0.48,
+          "cpu_pct": 461.1,
+          "max_rss_mb": 514.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.129,
+          "user_s": 9.45,
+          "sys_s": 0.46,
+          "cpu_pct": 465.4,
+          "max_rss_mb": 512.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    }
+  ],
+  "annotations": {
+    "order": 6,
+    "primary": false,
+    "env_label": "bgi / 2.0.1 as-found (no DRJIT_LIBLLVM_PATH)",
+    "work_dir_fresh": true,
+    "stack": {
+      "python": "3.12.13",
+      "sionna_rt": "2.0.1",
+      "mitsuba": "3.8.0",
+      "drjit": "1.3.1",
+      "matplotlib": "3.11.1",
+      "numpy": "2.5.1"
+    },
+    "interpreter": "/home/$USER/ulap-twin-verify/venv/bin/python",
+    "drjit_libllvm_path": null,
+    "failure_error": "ImportError: jit_init_thread_state(): the LLVM backend is inactive because the LLVM shared library (\"libLLVM.so\") could not be found! Set the DRJIT_LIBLLVM_PATH environment variable to specify its path.",
+    "notes": "The host's pre-existing venv exactly as found. All five cpu cells fail at import: Rocky Linux 9 ships /lib64/libLLVM.so.20.1 but no unversioned libLLVM.so, the name drjit dlopens. sionna/rt/__init__.py tries cuda_ad_mono_polarized first and only then llvm_ad_mono_polarized, so without the harness's CUDA_VISIBLE_DEVICES='' this host would have run 'CPU' on the GPU. Produced before the stderr_tail fix, so the recorded tail is GNU time -v output; the ImportError is preserved in annotations.failure_error.",
+    "added": "post-hoc metadata, hand-written; not produced by run_bench.py. From the 2.0.1 run sets onward run_bench.py records host_facts.interpreter and host_facts.sionna_rt_version itself."
+  }
+}

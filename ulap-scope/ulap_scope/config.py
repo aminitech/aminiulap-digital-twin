@@ -10,21 +10,65 @@ Env overrides (all optional):
   ULAP_PROJECT_ROOT   repo root that contains bbd-geo-portal/ and blender/
   ULAP_DATA_DIR       geoportal shapefiles root (default <root>/bbd-geo-portal)
   ULAP_WORK_DIR       working/output dir      (default <root>/blender)
-  ULAP_BLENDER_BIN    Blender executable      (default: `blender` on PATH)
+  ULAP_BLENDER_BIN    Blender executable
   ULAP_PREP_PY        python w/ geopandas+scipy+pyproj+pillow (prep stages)
   ULAP_RT_PY          python w/ sionna-rt (RT stages)
   ULAP_GDAL_BIN       dir with the GDAL CLIs  (default: resolved from PATH)
+
+Nothing here hard-codes one developer's machine. With no environment set, the
+three tool defaults resolve against the machine actually running the code:
+Blender from PATH (or the standard macOS/Windows install location if that is
+where it is), and both stage interpreters from the interpreter running the CLI.
+`ulap-scope info` reports whether each one is really there -- see `tool_status`.
 """
 from __future__ import annotations
-import os
-import shutil
-import sys
+import os, shutil, sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
 def _default_root() -> Path:
     # <root>/ulap-scope/ulap_scope/config.py  -> repo root is three parents up
     return Path(__file__).resolve().parents[2]
+
+# Standard per-OS install locations, checked only if `blender` is not on PATH.
+# Nothing is assumed to exist: each is tested before it is used.
+_BLENDER_FALLBACKS = (
+    "/Applications/Blender.app/Contents/MacOS/Blender",          # macOS
+    "/usr/bin/blender", "/usr/local/bin/blender",                # Linux distro / manual
+    "/var/lib/flatpak/exports/bin/org.blender.Blender",          # Linux flatpak
+    r"C:\Program Files\Blender Foundation\Blender 4.4\blender.exe",   # Windows
+)
+
+def _default_blender_bin() -> str:
+    """Blender executable: $ULAP_BLENDER_BIN, else PATH, else a standard install."""
+    env = os.environ.get("ULAP_BLENDER_BIN")
+    if env:
+        return env
+    found = shutil.which("blender")
+    if found:
+        return found
+    for candidate in _BLENDER_FALLBACKS:
+        if Path(candidate).exists():
+            return candidate
+    # Not installed. Return the bare command rather than a dead absolute path, so
+    # the failure reads as "blender: not found" instead of a stranger's home dir.
+    return "blender"
+
+def _default_prep_py() -> str:
+    """Prep interpreter: $ULAP_PREP_PY, else the interpreter running this code."""
+    return os.environ.get("ULAP_PREP_PY") or sys.executable or "python3"
+
+def _default_rt_py() -> str:
+    """RT interpreter: $ULAP_RT_PY, else the interpreter running this code."""
+    return os.environ.get("ULAP_RT_PY") or sys.executable or "python3"
+
+def _tool_exists(path: str) -> bool:
+    """True if `path` names a runnable program (absolute/relative path or on PATH)."""
+    if not path:
+        return False
+    if os.sep in path or (os.altsep and os.altsep in path):
+        return os.path.isfile(path) and os.access(path, os.X_OK)
+    return shutil.which(path) is not None
 
 @dataclass(frozen=True)
 class Config:
@@ -47,16 +91,13 @@ class Config:
     max_depth: int = 5
     samples_per_tx: int = 10**6
 
-    # --- interpreters (override per machine via env; cross-platform defaults so
-    #     a fresh clone runs without editing code) ---
-    blender_bin: str = (os.environ.get("ULAP_BLENDER_BIN")
-                        or shutil.which("blender")
-                        or "/Applications/Blender.app/Contents/MacOS/Blender")
-    # The prep and RT stages need different dependency sets (geopandas vs
-    # sionna-rt); point them at separate interpreters via env. Both default to
-    # the current interpreter so a single all-deps env also works out of the box.
-    prep_py: str = os.environ.get("ULAP_PREP_PY") or sys.executable
-    rt_py: str = os.environ.get("ULAP_RT_PY") or sys.executable
+    # --- interpreters (override per machine) ---
+    # default_factory, not a plain default: the env var is read when a Config is
+    # built, not when this module is first imported. Setting ULAP_* after import
+    # therefore still takes effect, which is what the docstring above promises.
+    blender_bin: str = field(default_factory=_default_blender_bin)
+    prep_py: str = field(default_factory=_default_prep_py)
+    rt_py: str = field(default_factory=_default_rt_py)
 
     # --- derived paths ---
     @property
@@ -91,6 +132,75 @@ class Config:
     def stages_dir(self) -> Path:
         # vendored stage scripts shipped with the package
         return Path(__file__).resolve().parent / "stages"
+
+    # --- honesty about the toolchain -------------------------------------
+    def tool_status(self, probe: bool = True) -> list[dict]:
+        """Report each external tool: where it resolved to, and whether it is there.
+
+        Returns one dict per tool with keys:
+          name    short label ("blender_bin")
+          env     the environment variable that overrides it
+          path    the resolved command or path
+          source  "env" if an override is set, else "auto"
+          ok      True if the command exists and is executable
+          status  "ok" | "missing" | "incomplete" | "unknown"
+          note    a plain-English explanation when something is missing or unproven
+
+        `ok` and `status` say different things on purpose: an interpreter that
+        exists but has none of its stage dependencies is `ok=True, incomplete` --
+        the file is there, the capability is not.
+
+        `probe=False` skips the (subprocess) check that an interpreter really
+        carries its stage dependencies, and reports existence only.
+        """
+        specs = (
+            ("blender_bin", "ULAP_BLENDER_BIN", self.blender_bin, None,
+             "needed only to BUILD a new scene (build, export); the exported "
+             "Mitsuba scenes are committed, so the RT stages do not need it"),
+            ("prep_py", "ULAP_PREP_PY", self.prep_py, "geopandas",
+             "needed for clip, preprocess, basemap"),
+            ("rt_py", "ULAP_RT_PY", self.rt_py, "sionna.rt",
+             "needed for coverage, analysis, mmwave-sinr, terrain-ground, animate"),
+        )
+        out = []
+        for name, var, path, module, purpose in specs:
+            overridden = bool(os.environ.get(var))
+            ok = _tool_exists(path)
+            if not ok:
+                note = f"NOT FOUND -- {purpose}. Set {var} to point at it."
+            elif module is None:
+                note = purpose
+            else:
+                has = self._has_module(path, module) if probe else None
+                if has is True:
+                    note = purpose
+                elif has is False:
+                    note = (f"found, but it does not provide `{module}` -- {purpose}. "
+                            f"Set {var} to an interpreter that has it.")
+                else:
+                    note = f"{purpose} (dependency check skipped)"
+            out.append({"name": name, "env": var, "path": path,
+                        "source": "env" if overridden else "auto",
+                        "ok": ok, "note": note})
+        return out
+
+    @staticmethod
+    def _has_module(interpreter: str, module: str) -> bool | None:
+        """True/False if `interpreter` provides `module`; None if unknowable.
+
+        Uses `find_spec` rather than a real import: importing `sionna.rt` pulls in
+        Mitsuba and Dr.Jit and can take tens of seconds, which is too slow for a
+        command whose whole job is to answer quickly.
+        """
+        import subprocess
+        code = ("import importlib.util as u, sys; "
+                f"sys.exit(0 if u.find_spec({module!r}) else 1)")
+        try:
+            r = subprocess.run([interpreter, "-c", code],
+                               capture_output=True, timeout=60)
+            return r.returncode == 0
+        except Exception:
+            return None
 
     def env(self) -> dict:
         """Environment for subprocess stage runs (portable paths)."""

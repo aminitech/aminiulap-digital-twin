@@ -36,10 +36,12 @@ def _info(cfg):
     print("  manifest     :", cfg.manifest_path, "(exists:", cfg.manifest_path.exists(), ")")
     print("  out_dir      :", cfg.out_dir)
     print("  stages_dir   :", cfg.stages_dir)
-    print("  blender_bin  :", cfg.blender_bin)
-    print("  prep_py      :", cfg.prep_py)
-    print("  rt_py        :", cfg.rt_py)
     print("  study centre :", cfg.center_lonlat, "EPSG:", cfg.epsg)
+    print("\nToolchain (auto = resolved from this machine; env = you set the variable)")
+    for t in cfg.tool_status():
+        mark = "ok     " if t["ok"] else "MISSING"
+        print(f"  [{mark}] {t['name']:<11} : {t['path']}  ({t['source']})")
+        print(f"              {t['note']}")
 
 def main(argv=None):
     p = argparse.ArgumentParser(prog="ulap-scope", description="Ulap Scope digital-twin RF pipeline")

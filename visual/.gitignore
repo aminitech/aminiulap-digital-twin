@@ -1,0 +1,9 @@
+# Playwright runner scratch — never evidence
+test-results/
+playwright-report/
+blob-report/
+.playwright-artifacts-*/
+
+# only present if someone runs `npm install` here
+node_modules/
+package-lock.json

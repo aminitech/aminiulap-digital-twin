@@ -1,0 +1,17 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Solver version sensitivity, sionna-rt 1.2.2/? to 2.0.1: median wall-clock before, after, and the ratio. Seconds.}
+  \label{tab:versionwall}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Stage & spark-5804 CPU & spark-5804 CUDA & spark-5804 CPU & spark-5804 CUDA & bgi-ran-01 CPU & bgi-ran-01 CUDA \\
+    \midrule
+    sionna\_coverage (flat) & 8.38 -> 8.56 (1.02x) & 3.56 -> 3.45 (0.97x) & 10.16 -> 8.56 (0.84x) & 7.54 -> 3.45 (0.46x) & 4.42 -> 4.48 (1.01x) & 3.74 -> 3.84 (1.03x) \\
+    sionna\_coverage (terrain) & 10.04 -> 9.98 (0.99x) & 3.58 -> 3.56 (0.99x) & 11.57 -> 9.98 (0.86x) & 7.71 -> 3.56 (0.46x) & 4.34 -> 4.25 (0.98x) & 3.81 -> 3.95 (1.04x) \\
+    sionna\_analysis & 2.96 -> 3.41 (1.15x) & 2.75 -> 2.74 (1.00x) & 2.65 -> 3.41 (1.29x) & 2.53 -> 2.74 (1.08x) & 4.65 -> 4.92 (1.06x) & 3.71 -> 3.96 (1.07x) \\
+    sionna\_mmwave\_sinr & 1.97 -> 2.59 (1.31x) & 2.07 -> 2.27 (1.09x) & 1.81 -> 2.59 (1.43x) & 1.96 -> 2.27 (1.16x) & 3.23 -> 3.21 (1.00x) & 2.77 -> 2.88 (1.04x) \\
+    sionna\_terrain\_ground & 1.69 -> 1.93 (1.15x) & 1.67 -> 1.78 (1.06x) & 203.85 -> 1.93 (0.01x) & 7.55 -> 1.78 (0.24x) & 2.29 -> 2.26 (0.99x) & 2.05 -> 2.02 (0.98x) \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

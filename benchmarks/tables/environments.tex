@@ -1,0 +1,27 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Every run set executed, including the ones that failed. No cell is dropped (METHOD.md rules 5 and 6).}
+  \label{tab:environments}
+  \begin{tabular}{lllllr}
+    \toprule
+    Run set & Host & Environment & Backend & Cells ok & Verdict \\
+    \midrule
+    spark-5804-aarch64-sionna201.json & spark-5804 & spark / sionna-rt 2.0.1 & cpu & 5/5 & all cells valid \\
+    spark-5804-aarch64-sionna201.json & spark-5804 & spark / sionna-rt 2.0.1 & cuda & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64-sionna201.json & bgi-ran-01 & bgi / sionna-rt 2.0.1 & cpu & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64-sionna201.json & bgi-ran-01 & bgi / sionna-rt 2.0.1 & cuda & 5/5 & all cells valid \\
+    spark-5804-aarch64.json & spark-5804 & spark / 2.0.1 (run 1) & cpu & 2/5 & INVALID (cpu label, variant unreported) \\
+    spark-5804-aarch64.json & spark-5804 & spark / 2.0.1 (run 1) & cuda & 5/5 & all cells valid \\
+    spark-5804-aarch64-fresh.json & spark-5804 & spark / sionna-rt 1.2.2 (version sensitivity) & cpu & 5/5 & all cells valid \\
+    spark-5804-aarch64-fresh.json & spark-5804 & spark / sionna-rt 1.2.2 (version sensitivity) & cuda & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64-sionna122.json & bgi-ran-01 & bgi / sionna-rt 1.2.2 (version sensitivity) & cpu & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64-sionna122.json & bgi-ran-01 & bgi / sionna-rt 1.2.2 (version sensitivity) & cuda & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64-llvmpath.json & bgi-ran-01 & bgi / 2.0.1 + DRJIT\_LIBLLVM\_PATH (cpu only) & cpu & 5/5 & all cells valid \\
+    bgi-ran-01-x86\_64.json & bgi-ran-01 & bgi / 2.0.1 as-found (no DRJIT\_LIBLLVM\_PATH) & cpu & 0/5 & FAILED 3/3 \\
+    bgi-ran-01-x86\_64.json & bgi-ran-01 & bgi / 2.0.1 as-found (no DRJIT\_LIBLLVM\_PATH) & cuda & 5/5 & all cells valid \\
+    spark-5804-aarch64-local.json & spark-5804 & spark-5804-aarch64-local & cpu & 5/5 & all cells valid \\
+    spark-5804-aarch64-local.json & spark-5804 & spark-5804-aarch64-local & cuda & 5/5 & all cells valid \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

@@ -14,6 +14,28 @@ shapefiles ──clip──▶ study_area ──preprocess──▶ manifest+ter
 
 Everything runs **on CPU** (Mitsuba LLVM backend) — no CUDA required.
 
+## You do not need Blender to reproduce the results
+
+The exported Mitsuba scenes are **committed** (`blender/mitsuba_scene/`,
+`blender/mitsuba_scene_terrain/`), so every Sionna RT stage runs without Blender installed
+at all. This was confirmed by running the full pipeline on three machines — an NVIDIA GB10,
+an NVIDIA H200 NVL and a Raspberry Pi 4 — none of which had Blender.
+
+```sh
+# copy the committed scene into a work dir, then run any RT stage against it
+W=/tmp/ulap-work && mkdir -p $W/sionna_out
+cp -r blender/scene_build blender/mitsuba_scene blender/mitsuba_scene_terrain $W/
+ULAP_WORK_DIR=$W MPLBACKEND=Agg \
+  python ulap-scope/ulap_scope/stages/sionna_coverage.py terrain
+```
+
+`ULAP_WORK_DIR` must contain `scene_build/`, `mitsuba_scene/` and `mitsuba_scene_terrain/`.
+
+**Blender 4.4 is only needed to build a NEW scene** — a different study area, different
+buildings, different terrain. The `clip`, `preprocess`, `basemap`, `build` and `export`
+stages are the scene-construction half of the pipeline; the `sionna_*` stages are the
+solving half and need only `sionna-rt`.
+
 ## Layout
 
 ```

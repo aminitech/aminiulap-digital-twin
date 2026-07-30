@@ -1,0 +1,14 @@
+# Dependencies for the benchmark harness.
+#
+#   python3 -m venv venv && venv/bin/pip install -r benchmarks/requirements.txt
+#
+# run_bench.py drives the RT stages out-of-process, so the interpreter you pass with
+# --python is the one that needs sionna-rt. Point it at this venv.
+#
+# GNU time is also required (peak RSS per invocation). Debian/Ubuntu: apt install time.
+# Rocky/RHEL: dnf install time. Without it the harness records zeros, not errors.
+
+sionna-rt==2.0.1     # the version pinned by ulap-scope and cited in the paper
+matplotlib>=3.8      # stages write figures
+numpy>=1.26
+scipy>=1.11

@@ -1,4 +1,6 @@
 [build-system]
+# setuptools>=77 is the first release that accepts a PEP 639 SPDX expression in
+# `project.license` and emits it as the `License-Expression` core metadata field.
 requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
@@ -8,7 +10,9 @@ version = "0.1.0"
 description = "Barbados / Newton digital-twin RF pipeline (BlenderGIS -> Mitsuba -> Sionna RT) for Ulap One"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+# PEP 639 SPDX expression. Must match the repository LICENSE file (Apache-2.0),
+# CITATION.cff and the licence section of the top-level README.
+license = "Apache-2.0"
 authors = [{ name = "Ulap One" }]
 # Core import surface (geo + config + CLI orchestration) is light. The heavy,
 # env-specific deps (geopandas / bpy / sionna-rt) are installed per stage-env
