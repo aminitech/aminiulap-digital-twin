@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ulap RT outputs — side-by-side comparison</title>
+<!--
+  Objective side-by-side viewer for the committed Sionna-RT render outputs.
+
+  * NO external resources (no CDN fonts, no scripts) — renders identically offline.
+  * Every image sits in a FIXED 700 x 640 box with `object-fit: contain`, so the two
+    panels are compared at exactly the same scale-independent footprint and neither
+    is cropped or stretched to flatter it.
+  * Which comparison is shown is chosen by `?c=fidelity` or `?c=band` — no random,
+    no default-to-whatever-looks-best.
+
+  Image paths are relative to the repo root, so this page must be served from the
+  repo root (visual/pages/rt-compare.html).
+-->
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#151518; --line:#26262b; --ink:#f2f2f4;
+    --muted:#9a9aa4; --accent:#FFC83C; --warn:#ff8f5a;
+    --mono: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  body{display:flex;flex-direction:column;padding:16px 20px 12px;overflow:hidden}
+
+  header{display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:15px;font-weight:600;letter-spacing:.01em}
+  header .sub{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  header .spacer{flex:1}
+  header .tag{font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid #3a3320;
+    background:#201c10;padding:3px 8px;border-radius:4px;letter-spacing:.08em}
+
+  .grid{flex:1 1 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:14px 0 0;
+    min-height:0;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    display:flex;flex-direction:column;overflow:hidden;min-height:0}
+  .card h2{font-size:12.5px;font-weight:600;padding:10px 12px 3px}
+  .card .file{font-family:var(--mono);font-size:10px;color:var(--muted);padding:0 12px 8px;word-break:break-all}
+  /* FIXED image box — identical for both panels, contain so nothing is cropped */
+  .box{width:700px;height:640px;flex:0 0 auto;margin:0 auto;background:#000;
+    display:flex;align-items:center;justify-content:center;border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line)}
+  .box img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;
+    image-rendering:auto}
+  .box .missing{font-family:var(--mono);font-size:12px;color:var(--warn);text-align:center;padding:20px}
+  .card p{font-size:11.5px;line-height:1.45;color:#cfcfd6;padding:9px 12px 11px}
+  .card p b{color:var(--ink);font-weight:600}
+
+  footer{flex:0 0 auto;padding-top:9px;border-top:1px solid var(--line);margin-top:12px;
+    font-family:var(--mono);font-size:9.5px;color:var(--muted);display:flex;gap:18px;letter-spacing:.04em}
+  footer .k{color:#6f6f79}
+</style>
+</head>
+<body>
+  <header>
+    <h1 id="title">—</h1>
+    <span class="sub" id="subtitle">—</span>
+    <span class="spacer"></span>
+    <span class="tag">SIONNA RT · blender/sionna_out</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2 id="l-title">—</h2>
+      <div class="file" id="l-file">—</div>
+      <div class="box"><img id="l-img" alt=""></div>
+      <p id="l-note">—</p>
+    </div>
+    <div class="card">
+      <h2 id="r-title">—</h2>
+      <div class="file" id="r-file">—</div>
+      <div class="box"><img id="r-img" alt=""></div>
+      <p id="r-note">—</p>
+    </div>
+  </div>
+
+  <footer>
+    <span><span class="k">image box</span> 700x640 px · object-fit: contain (no crop, no stretch)</span>
+    <span><span class="k">source</span> blender/sionna_out/*.png, unmodified</span>
+    <span><span class="k">captions</span> quoted from blender/sionna_out/newton_rt_analysis.md</span>
+    <span><span class="k">caveat</span> colourbar ranges are per-image — compare structure + colourbar, not hue</span>
+  </footer>
+
+<script>
+// Deterministic: the comparison is selected purely by the ?c= query parameter.
+var COMPARISONS = {
+  fidelity: {
+    title: "Fidelity tier: terrain drape vs ground-following",
+    // NOTE: the two source renders carry INDEPENDENT colourbar ranges
+    // (A ~ -160..-85 dB, B ~ -155..-80 dB). Do not read the two images as a
+    // shared colour scale - compare the structure and the colourbars, not the hue.
+    subtitle: "3.5 GHz · same scene · same solver · independent colourbar ranges",
+    left: {
+      title: "A · Terrain drape (analysis plane over the DEM)",
+      file: "blender/sionna_out/coverage_pathgain_db_terrain.png",
+      note: "Buildings on the 55-110 m DEM. Adds hill shadowing to the flat-ground idealisation, but the receiver plane is still a plane. Analysis doc role: <b>hill-shadowing view</b>."
+    },
+    right: {
+      title: "B · Ground-following, 1.5 m AGL",
+      file: "blender/sionna_out/coverage_pathgain_db_terrain_groundfollow.png",
+      note: "Receiver at handset/pedestrian height <b>following</b> the terrain. Markedly more fragmented: deep shadow behind the Newton village buildings and in terrain lows. Analysis doc role: <b>planning / acceptance (most realistic)</b>."
+    }
+  },
+  band: {
+    title: "Band selection: sub-6 sweep vs mmWave",
+    subtitle: "1.8 / 3.5 / 6 / 10 GHz medians vs 28 & 60 GHz concrete-only",
+    left: {
+      title: "A · Sub-6 frequency sweep",
+      file: "blender/sionna_out/sweep_frequency.png",
+      note: "1.8 / 3.5 / 6 / 10 GHz medians. Behaves as free-space physics predicts (~5-6 dB extra loss per doubling, no anomalous excess loss). Analysis doc role: <b>band selection</b>."
+    },
+    right: {
+      title: "B · mmWave 28 & 60 GHz (concrete-only)",
+      file: "blender/sionna_out/mmwave_concrete_coverage.png",
+      note: "Median -130 dB @ 28 GHz, -136 dB @ 60 GHz, with <b>large white NLoS holes</b>. LoS-only; FWA/hotspot feasibility only. Figures are <b>optimistic</b> - no foliage, no rain, no O2 absorption at 60 GHz."
+    }
+  }
+};
+
+(function () {
+  var key = new URLSearchParams(location.search).get('c') || 'fidelity';
+  var c = COMPARISONS[key];
+  if (!c) { document.body.innerHTML = '<pre style="color:#ff8f5a;font:14px monospace;padding:40px">' +
+      'unknown comparison: ' + key + '\nknown: ' + Object.keys(COMPARISONS).join(', ') + '</pre>'; return; }
+
+  document.title = 'RT compare - ' + c.title;
+  document.getElementById('title').textContent = c.title;
+  document.getElementById('subtitle').textContent = c.subtitle;
+
+  var pending = 0, done = 0;
+  ['l', 'r'].forEach(function (side) {
+    var d = side === 'l' ? c.left : c.right;
+    document.getElementById(side + '-title').textContent = d.title;
+    document.getElementById(side + '-file').textContent = d.file;
+    document.getElementById(side + '-note').innerHTML = d.note;
+    var img = document.getElementById(side + '-img');
+    pending++;
+    img.addEventListener('load', function () { done++; check(); });
+    img.addEventListener('error', function () {
+      // Failure is shown, never hidden.
+      img.parentNode.innerHTML = '<div class="missing">IMAGE FAILED TO LOAD<br>' + d.file + '</div>';
+      done++; check();
+    });
+    // Path is relative to the repo root; the page is served from there.
+    img.src = '/' + d.file;
+    img.alt = d.title;
+  });
+
+  function check() {
+    if (done < pending) return;
+    // Explicit readiness signal for the capture harness - no sleeps needed.
+    window.__RT_COMPARE_READY__ = true;
+    document.documentElement.setAttribute('data-ready', '1');
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+{
+  "host_facts": {
+    "host": "spark-5804",
+    "arch": "aarch64",
+    "python": "3.12.3",
+    "cores_logical": 20,
+    "cpu": "0xd87",
+    "ram_gb": 121.7,
+    "gpu": "NVIDIA GB10, 12.1",
+    "interpreter": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python",
+    "sionna_rt_version": "2.0.1",
+    "mitsuba_version": "3.8.0",
+    "drjit_version": "1.3.1",
+    "numpy_version": "2.5.1",
+    "matplotlib_version": "3.11.1"
+  },
+  "repeats": 3,
+  "cells": [
+    {
+      "backend": "cpu",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 15.809,
+          "user_s": 139.97,
+          "sys_s": 1.63,
+          "cpu_pct": 895.7,
+          "max_rss_mb": 799.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "43d9a4a12015774cc27750ee4459a051",
+            "coverage_pathgain_db.png": "f8be3310d9acbfe07933faca84612031",
+            "pathgain_scale.json": "8013a5aa59fe4af619b8a0ec8e85940b",
+            "scene_render.png": "6f3cd0f990d50ef013eb66182b97e419"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 16.788,
+          "user_s": 137.63,
+          "sys_s": 1.72,
+          "cpu_pct": 830.1,
+          "max_rss_mb": 799.1,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 16.894,
+          "user_s": 137.67,
+          "sys_s": 1.83,
+          "cpu_pct": 825.8,
+          "max_rss_mb": 798.5,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "70636133c56c0b60d7999b85c26a420e"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 19.456,
+          "user_s": 164.44,
+          "sys_s": 2.46,
+          "cpu_pct": 857.8,
+          "max_rss_mb": 802.5,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "a1feb5e0564d7905b9f10fd480201569",
+            "coverage_pathgain_db_terrain.png": "6917c3a2ffdf624171f2e5e68293e264",
+            "pathgain_scale.json": "9a7f66efae1e4d43ec29b4b65ed2eb40",
+            "scene_render_terrain.png": "4a2e124c9b772896df4c6c4cadc9bfbe"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 19.523,
+          "user_s": 168.22,
+          "sys_s": 1.9,
+          "cpu_pct": 871.4,
+          "max_rss_mb": 801.5,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 20.192,
+          "user_s": 157.78,
+          "sys_s": 2.16,
+          "cpu_pct": 792.1,
+          "max_rss_mb": 801.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "76c4182766d891b3c2e1c5121956927e"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 6.229,
+          "user_s": 11.52,
+          "sys_s": 1.84,
+          "cpu_pct": 214.5,
+          "max_rss_mb": 555.9,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.csv": "08afea6db1da9b0e635fef3650a23c4f",
+            "link_metrics.png": "2eae2e70d7f7200cf444a62c560c86ab",
+            "multitower_bestserver_handover.png": "1a2b2f49e636e4d8893506e45ce80d86",
+            "sweep_frequency.png": "46937571f82c8f15b83fce815e5131b1"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 6.199,
+          "user_s": 11.41,
+          "sys_s": 1.16,
+          "cpu_pct": 202.8,
+          "max_rss_mb": 556.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 6.261,
+          "user_s": 11.4,
+          "sys_s": 1.26,
+          "cpu_pct": 202.2,
+          "max_rss_mb": 555.4,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.028,
+          "user_s": 5.71,
+          "sys_s": 0.65,
+          "cpu_pct": 210.1,
+          "max_rss_mb": 357.0,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "mmwave_concrete_coverage.png": "a71812265f8aef99c4ad64f1508c7a5b",
+            "sinr_map.png": "e4b82bec2578ab2ef189d356183c50d5"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.361,
+          "user_s": 4.87,
+          "sys_s": 0.47,
+          "cpu_pct": 226.2,
+          "max_rss_mb": 357.4,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.485,
+          "user_s": 5.22,
+          "sys_s": 0.65,
+          "cpu_pct": 236.2,
+          "max_rss_mb": 356.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 257.755,
+          "user_s": 3046.37,
+          "sys_s": 3.57,
+          "cpu_pct": 1183.3,
+          "max_rss_mb": 358.6,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "2137199a51f766791e1237174fd22469",
+            "pathgain_scale.json": "c2d7568f33d49f26d1cf7f41f2cd2ffb"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 282.039,
+          "user_s": 3056.83,
+          "sys_s": 3.41,
+          "cpu_pct": 1085.0,
+          "max_rss_mb": 356.9,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "eb475d16bc543b11d489a7432889f05a"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 262.653,
+          "user_s": 3073.42,
+          "sys_s": 3.4,
+          "cpu_pct": 1171.4,
+          "max_rss_mb": 357.3,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.228,
+          "user_s": 3.48,
+          "sys_s": 0.74,
+          "cpu_pct": 130.7,
+          "max_rss_mb": 740.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "1849a126fe054dd3ef8de155aeb7991e",
+            "coverage_pathgain_db.png": "d51e5f85895b4b6f58d81982761fa346",
+            "scene_render.png": "b6819865a01e2e87cde43ec5010ad66e"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.211,
+          "user_s": 3.72,
+          "sys_s": 0.73,
+          "cpu_pct": 138.6,
+          "max_rss_mb": 741.2,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "7d4edc57747294b8e80cfbecf37a105a",
+            "scene_render.png": "ecf7cb879a71ab57e07a5df85af1e3d7"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.054,
+          "user_s": 3.68,
+          "sys_s": 0.69,
+          "cpu_pct": 143.1,
+          "max_rss_mb": 741.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "94faabab17e4857b0ad6df02b860cd20",
+            "scene_render.png": "728b51912b1627f4806f821192e65ec6"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.119,
+          "user_s": 3.61,
+          "sys_s": 0.7,
+          "cpu_pct": 138.2,
+          "max_rss_mb": 741.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "abc39c74819829e14cca70ca9c2e6640",
+            "coverage_pathgain_db_terrain.png": "a48cea2a7c7f87e0c55411bd7b382be2",
+            "scene_render_terrain.png": "67b3643824cc64846d60461824027201"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "stage-stdout",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.169,
+          "user_s": 3.71,
+          "sys_s": 0.73,
+          "cpu_pct": 140.1,
+          "max_rss_mb": 741.0,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "c596a2c7066979ee0b8b74b598d7d6a0",
+            "scene_render_terrain.png": "bf0657f2e692f845b2c672e0a15708b0"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "stage-stdout",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.28,
+          "user_s": 3.66,
+          "sys_s": 0.79,
+          "cpu_pct": 135.7,
+          "max_rss_mb": 741.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "f3a37202bfabf326ad397bf2781998c6"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "stage-stdout",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.633,
+          "user_s": 3.3,
+          "sys_s": 0.59,
+          "cpu_pct": 147.8,
+          "max_rss_mb": 599.0,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.png": "18bc11e0c3f5025fc8cb104b971916f4",
+            "multitower_bestserver_handover.png": "d92985fba79aa650d6db8e2fdcab28af",
+            "sweep_frequency.png": "5dde916c570acc4f51b746da5a248998"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.562,
+          "user_s": 3.36,
+          "sys_s": 0.54,
+          "cpu_pct": 152.2,
+          "max_rss_mb": 599.3,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.png": "2d86e02af73ad43d37e77e34ce764e77"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.489,
+          "user_s": 3.24,
+          "sys_s": 0.55,
+          "cpu_pct": 152.3,
+          "max_rss_mb": 598.9,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "link_metrics.png": "18bc11e0c3f5025fc8cb104b971916f4"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 1.986,
+          "user_s": 2.71,
+          "sys_s": 0.59,
+          "cpu_pct": 166.1,
+          "max_rss_mb": 577.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "mmwave_concrete_coverage.png": "45c1fa68087a85f6e953dbc7d7208363",
+            "sinr_map.png": "c59f1689de239fd7a6b57a48d2630be0"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.089,
+          "user_s": 2.75,
+          "sys_s": 0.63,
+          "cpu_pct": 161.8,
+          "max_rss_mb": 577.6,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.078,
+          "user_s": 2.78,
+          "sys_s": 0.62,
+          "cpu_pct": 163.6,
+          "max_rss_mb": 577.4,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 7.555,
+          "user_s": 8.12,
+          "sys_s": 0.59,
+          "cpu_pct": 115.3,
+          "max_rss_mb": 638.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "64e104f5e97139b60093a707581a0bdf"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "variant_source": "probe",
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 7.56,
+          "user_s": 8.27,
+          "sys_s": 0.63,
+          "cpu_pct": 117.7,
+          "max_rss_mb": 639.1,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "bce35402af5f4d7651334075487b3224"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "variant_source": "probe",
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 7.635,
+          "user_s": 8.14,
+          "sys_s": 0.63,
+          "cpu_pct": 114.9,
+          "max_rss_mb": 639.8,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "64e104f5e97139b60093a707581a0bdf"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "variant_source": "probe",
+          "cold": false
+        }
+      ]
+    }
+  ],
+  "annotations": {
+    "env_label": "spark/2.0.1 @ raised defaults (coverage 1e8/8m, gf 1e8/K=57 ceiling)",
+    "primary": false,
+    "interpreter": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python",
+    "note": "Re-measure after the sampling/resolution decisions; NOT comparable to the primary rows, which are pinned to the settings then in force. Host carried concurrent agent load for part of the run (cpu-classes ladder) -- treat spreads accordingly."
+  }
+}

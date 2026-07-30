@@ -1,0 +1,569 @@
+{
+  "host_facts": {
+    "host": "spark-5804",
+    "arch": "aarch64",
+    "python": "3.12.3",
+    "cores_logical": 20,
+    "cpu": "0xd87",
+    "ram_gb": 121.7,
+    "gpu": "NVIDIA GB10, 12.1",
+    "mitsuba_version": "3.8.0",
+    "drjit_version": "1.3.1"
+  },
+  "repeats": 3,
+  "cells": [
+    {
+      "backend": "cpu",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 8.918,
+          "user_s": 84.3,
+          "sys_s": 0.95,
+          "cpu_pct": 956.0,
+          "max_rss_mb": 829.8,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "017d01dd5208deeceee6b02ad204a95b",
+            "coverage_pathgain_db.png": "51283db9496a400f4f2f54414ce7e5c1",
+            "scene_render.png": "6f3cd0f990d50ef013eb66182b97e419"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 8.615,
+          "user_s": 84.1,
+          "sys_s": 0.92,
+          "cpu_pct": 986.9,
+          "max_rss_mb": 830.3,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 8.221,
+          "user_s": 81.35,
+          "sys_s": 1.4,
+          "cpu_pct": 1006.6,
+          "max_rss_mb": 829.5,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 10.665,
+          "user_s": 107.43,
+          "sys_s": 0.93,
+          "cpu_pct": 1016.0,
+          "max_rss_mb": 858.2,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "8e4150742b37891cdcf4cad63ac7232f",
+            "coverage_pathgain_db_terrain.png": "f703e24836a85c29e4ff102fee6d8eb9",
+            "scene_render_terrain.png": "4a2e124c9b772896df4c6c4cadc9bfbe"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 10.019,
+          "user_s": 104.86,
+          "sys_s": 0.85,
+          "cpu_pct": 1055.1,
+          "max_rss_mb": 834.7,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {
+            "coverage_pathgain_db_terrain.png": "8f92c3c6820fc54d214f0851e14fc360"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 10.043,
+          "user_s": 109.66,
+          "sys_s": 0.88,
+          "cpu_pct": 1100.7,
+          "max_rss_mb": 834.3,
+          "variant": "llvm_ad_mono_polarized",
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.139,
+          "user_s": 10.96,
+          "sys_s": 0.68,
+          "cpu_pct": 370.9,
+          "max_rss_mb": 552.4,
+          "variant": null,
+          "outputs": {
+            "link_metrics.png": "2eae2e70d7f7200cf444a62c560c86ab",
+            "multitower_bestserver_handover.png": "1a2b2f49e636e4d8893506e45ce80d86",
+            "sweep_frequency.png": "46937571f82c8f15b83fce815e5131b1"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.931,
+          "user_s": 8.93,
+          "sys_s": 0.65,
+          "cpu_pct": 326.8,
+          "max_rss_mb": 554.4,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.009,
+          "user_s": 8.93,
+          "sys_s": 0.57,
+          "cpu_pct": 315.7,
+          "max_rss_mb": 553.9,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.562,
+          "user_s": 5.46,
+          "sys_s": 0.34,
+          "cpu_pct": 226.4,
+          "max_rss_mb": 376.6,
+          "variant": null,
+          "outputs": {
+            "mmwave_concrete_coverage.png": "a71812265f8aef99c4ad64f1508c7a5b",
+            "sinr_map.png": "e4b82bec2578ab2ef189d356183c50d5"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.277,
+          "user_s": 5.51,
+          "sys_s": 0.35,
+          "cpu_pct": 257.4,
+          "max_rss_mb": 356.0,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.037,
+          "user_s": 5.51,
+          "sys_s": 0.32,
+          "cpu_pct": 286.2,
+          "max_rss_mb": 357.1,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.42,
+          "user_s": 9.97,
+          "sys_s": 0.28,
+          "cpu_pct": 299.7,
+          "max_rss_mb": 327.7,
+          "variant": null,
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "13a051ebb45e62bf3ad1d9c3975c47fb"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 1.767,
+          "user_s": 8.03,
+          "sys_s": 0.26,
+          "cpu_pct": 469.1,
+          "max_rss_mb": 304.9,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 1.858,
+          "user_s": 7.74,
+          "sys_s": 0.27,
+          "cpu_pct": 431.1,
+          "max_rss_mb": 303.9,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_flat",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.798,
+          "user_s": 3.46,
+          "sys_s": 0.9,
+          "cpu_pct": 114.8,
+          "max_rss_mb": 747.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "38b2cd759c825fb9b645baf15d0df25f",
+            "coverage_pathgain_db.png": "809328c5fe516f203797e7bd1ae56afd",
+            "scene_render.png": "a86be099e6172f53c40e31e4ba1b1829"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.435,
+          "user_s": 3.86,
+          "sys_s": 0.86,
+          "cpu_pct": 137.4,
+          "max_rss_mb": 749.5,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "50fd3404453d36735df244aebbeb69d5",
+            "scene_render.png": "ecd15f34626b8dc60455a6283e6fe8be"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.503,
+          "user_s": 3.86,
+          "sys_s": 0.87,
+          "cpu_pct": 135.0,
+          "max_rss_mb": 748.7,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map.png": "609a3e3375a177a1f6cd7662aae7d039",
+            "scene_render.png": "cf34ba0605565a3c369728b4f5437571"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "coverage_terrain",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 4.116,
+          "user_s": 4.41,
+          "sys_s": 0.98,
+          "cpu_pct": 131.0,
+          "max_rss_mb": 798.0,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "c73d21dd763be6fad5209dd404104639",
+            "coverage_pathgain_db_terrain.png": "b654c5b88bbfc3db67aeb9c77072d791",
+            "scene_render_terrain.png": "ac6ee0e62a1dfa865d5e0686111511f9"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.355,
+          "user_s": 3.46,
+          "sys_s": 0.82,
+          "cpu_pct": 127.6,
+          "max_rss_mb": 750.1,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "582a4361fe82b64cc5bc2b6338f5434a",
+            "scene_render_terrain.png": "bf0657f2e692f845b2c672e0a15708b0"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 3.478,
+          "user_s": 3.56,
+          "sys_s": 0.85,
+          "cpu_pct": 126.8,
+          "max_rss_mb": 749.4,
+          "variant": "cuda_ad_mono_polarized",
+          "outputs": {
+            "coverage_map_terrain.png": "74d08d8c5e321241fb998a3e6827ddbe",
+            "coverage_pathgain_db_terrain.png": "79f548a351b3c10421c4520bdeb3f8d2",
+            "scene_render_terrain.png": "67b3643824cc64846d60461824027201"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "analysis",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.914,
+          "user_s": 3.5,
+          "sys_s": 0.62,
+          "cpu_pct": 141.4,
+          "max_rss_mb": 597.7,
+          "variant": null,
+          "outputs": {
+            "link_metrics.png": "dc5ab80c0d360ac4a7be683541118dfd",
+            "multitower_bestserver_handover.png": "d92985fba79aa650d6db8e2fdcab28af",
+            "sweep_frequency.png": "5dde916c570acc4f51b746da5a248998"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.794,
+          "user_s": 2.74,
+          "sys_s": 0.62,
+          "cpu_pct": 120.3,
+          "max_rss_mb": 598.1,
+          "variant": null,
+          "outputs": {
+            "link_metrics.png": "18bc11e0c3f5025fc8cb104b971916f4",
+            "sweep_frequency.png": "88015fc472e463e1a49da80291dec785"
+          },
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.898,
+          "user_s": 3.5,
+          "sys_s": 0.6,
+          "cpu_pct": 141.5,
+          "max_rss_mb": 599.7,
+          "variant": null,
+          "outputs": {
+            "link_metrics.png": "2d86e02af73ad43d37e77e34ce764e77",
+            "sweep_frequency.png": "5dde916c570acc4f51b746da5a248998"
+          },
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "mmwave_sinr",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.534,
+          "user_s": 2.67,
+          "sys_s": 0.7,
+          "cpu_pct": 133.0,
+          "max_rss_mb": 632.0,
+          "variant": null,
+          "outputs": {
+            "mmwave_concrete_coverage.png": "45c1fa68087a85f6e953dbc7d7208363",
+            "sinr_map.png": "c59f1689de239fd7a6b57a48d2630be0"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.118,
+          "user_s": 2.5,
+          "sys_s": 0.65,
+          "cpu_pct": 148.7,
+          "max_rss_mb": 575.8,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.104,
+          "user_s": 2.51,
+          "sys_s": 0.66,
+          "cpu_pct": 150.7,
+          "max_rss_mb": 576.1,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    },
+    {
+      "backend": "cuda",
+      "stage": "terrain_ground",
+      "runs": [
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 2.805,
+          "user_s": 2.94,
+          "sys_s": 0.69,
+          "cpu_pct": 129.4,
+          "max_rss_mb": 661.0,
+          "variant": null,
+          "outputs": {
+            "coverage_pathgain_db_terrain_groundfollow.png": "ec7aca874f701cfbcf1dd81cd2cc7b5e"
+          },
+          "stderr_tail": "",
+          "repeat": 0,
+          "cold": true
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 1.627,
+          "user_s": 2.28,
+          "sys_s": 0.58,
+          "cpu_pct": 175.8,
+          "max_rss_mb": 563.9,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 1,
+          "cold": false
+        },
+        {
+          "ok": true,
+          "returncode": 0,
+          "wall_s": 1.628,
+          "user_s": 2.3,
+          "sys_s": 0.59,
+          "cpu_pct": 177.5,
+          "max_rss_mb": 564.1,
+          "variant": null,
+          "outputs": {},
+          "stderr_tail": "",
+          "repeat": 2,
+          "cold": false
+        }
+      ]
+    }
+  ],
+  "annotations": {
+    "order": 2,
+    "primary": false,
+    "env_label": "spark / 2.0.1 (run 1)",
+    "work_dir_fresh": false,
+    "stack": {
+      "python": "3.12.3",
+      "sionna_rt": "2.0.1",
+      "mitsuba": "3.8.0",
+      "drjit": "1.3.1",
+      "matplotlib": "3.11.1",
+      "numpy": "2.5.1"
+    },
+    "interpreter": "not recorded by the harness revision that produced this file; identified as a sionna-rt 2.0.1 environment - almost certainly /home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python - by checksum fingerprint",
+    "drjit_libllvm_path": null,
+    "notes": "First run on spark-5804. The interpreter was NOT recorded, and an earlier annotation of this file guessed sionna-rt 1.2.2; that guess was wrong. Seven repeat-stable artefacts (coverage_pathgain_db.png, link_metrics.png, multitower_bestserver_handover.png, sweep_frequency.png, mmwave_concrete_coverage.png, sinr_map.png, coverage_pathgain_db_terrain_groundfollow.png) match the 2.0.1 run byte for byte and differ from the 1.2.2 run, so this is a 2.0.1 environment. Produced by an earlier run_bench.py with no variant probe, so three stages report variant=null and are marked INVALID under METHOD.md rule 2. Work dir was not empty, so link_metrics.csv never appears in any outputs diff. Retained as the same-stack cross-invocation partner of the primary.",
+    "added": "post-hoc metadata, hand-written; not produced by run_bench.py. From the 2.0.1 run sets onward run_bench.py records host_facts.interpreter and host_facts.sionna_rt_version itself."
+  }
+}

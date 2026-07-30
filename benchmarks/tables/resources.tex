@@ -1,0 +1,17 @@
+% requires \usepackage{booktabs}
+\begin{table*}[t]
+  \centering
+  \caption{Resource cost per stage: median CPU utilisation (sum of child user+sys over wall) and peak RSS in MB.}
+  \label{tab:resources}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Stage & spark-5804 CPU & spark-5804 CUDA & bgi-ran-01 CPU & bgi-ran-01 CUDA \\
+    \midrule
+    sionna\_coverage (flat) & 982\% / 832 & 131\% / 750 & 5048\% / 1248 & 303\% / 725 \\
+    sionna\_coverage (terrain) & 1043\% / 835 & 133\% / 750 & 4750\% / 1250 & 297\% / 726 \\
+    sionna\_analysis & 272\% / 556 & 130\% / 598 & 4821\% / 1168 & 297\% / 576 \\
+    sionna\_mmwave\_sinr & 258\% / 357 & 134\% / 576 & 3896\% / 951 & 370\% / 556 \\
+    sionna\_terrain\_ground & 406\% / 305 & 160\% / 564 & 2624\% / 592 & 486\% / 545 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

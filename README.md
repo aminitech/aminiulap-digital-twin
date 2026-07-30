@@ -161,6 +161,31 @@ with `python examples/data/fetch_open_scene.py --lon <lon> --lat <lat>`.
 | [03 · Scene & terrain](examples/notebooks/03_scene_and_terrain.ipynb) | manifests, footprint rasters, Fresnel clearance, receiver height |
 | [04 · Coverage & SINR](examples/notebooks/04_coverage_and_sinr.ipynb) | area maps, band sweeps, geometry ablation, the third-tower trap |
 
+## Reproduce the numbers, and check them
+
+Three directories exist so a third party can verify this work rather than take it on
+trust. Each is self-contained and each states its own limitations.
+
+| Path | What it answers | Run it |
+|---|---|---|
+| [`benchmarks/`](benchmarks/) | What does this actually cost to run, and on what hardware? Three machines (GB10, H200 host, Raspberry Pi 4), CPU and GPU, five stages, three repeats — plus a CPU-classes ladder from 2 cores up. | `python benchmarks/run_bench.py --work-dir <copy of blender/> --python <interpreter with sionna-rt>` |
+| [`comparison/`](comparison/) | Is deterministic ray tracing better than the cheap alternatives? Against a closed-form model (C1), against a stochastic 3GPP TR 38.901 surface (C2), and across terrain variants (C3). | `python comparison/c1_rt_vs_analytical.py` (also `c2_`, `c3_`) |
+| [`visual/`](visual/) | Do the screenshots regenerate, byte for byte? | `bash visual/run.sh` |
+
+**Start at [`docs/VALIDATION.md`](docs/VALIDATION.md)** — it explains the five layers of
+evidence, what each one can and cannot prove, and states honestly where reproduction is
+currently gated.
+
+Method and the rules these obey are pre-registered in
+[`benchmarks/METHOD.md`](benchmarks/METHOD.md) — written before any measurement was
+taken, so results could not be chosen after the fact. Failures are published rather than
+dropped; several findings in these directories run against the project's own claims.
+
+You do **not** need the Barbados data for any of this: the exported Mitsuba scenes are
+committed, so every ray-tracing stage runs with no Blender and no licence-restricted
+layer. Set `ULAP_WORK_DIR` to a copy of `blender/` containing `scene_build/`,
+`mitsuba_scene/` and `mitsuba_scene_terrain/`.
+
 ## Architecture
 
 ```mermaid

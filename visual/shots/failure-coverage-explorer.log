@@ -1,0 +1,4 @@
+$ python3 -m streamlit run examples/apps/coverage_explorer/app.py --server.port <ephemeral>
+exit code: 1
+
+/usr/bin/python3: No module named streamlit

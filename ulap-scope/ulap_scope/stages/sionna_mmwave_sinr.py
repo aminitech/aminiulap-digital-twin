@@ -10,10 +10,35 @@ sionna_mmwave_sinr.py
 """
 import os, json
 os.environ.setdefault("DRJIT_NO_RTLD_DEEPBIND", "1")
+
+# ── Backend contract ─────────────────────────────────────────────────────────────
+# Sionna selects the CUDA variant FIRST when none is set (sionna/rt/__init__.py:
+#   mi.set_variant("cuda_ad_mono_polarized", "llvm_ad_mono_polarized")
+# ), so on any machine with a visible GPU a nominally-CPU run silently executes on
+# the GPU. Its guard is `if mi.variant() is None` — meaning a variant pinned BEFORE
+# sionna imports is respected. So: pin it here from MI_DEFAULT_VARIANT, loudly. An
+# unavailable variant raises instead of falling back; a post-import mismatch aborts
+# rather than letting the wrong backend masquerade as the one requested.
+_WANT_VARIANT = os.environ.get("MI_DEFAULT_VARIANT")
+if _WANT_VARIANT:
+    import mitsuba as _mi_pin
+    try:
+        _mi_pin.set_variant(_WANT_VARIANT)
+    except (ImportError, AttributeError, RuntimeError) as _e:
+        raise SystemExit(
+            f"requested backend {_WANT_VARIANT!r} is not available on this host: {_e}\n"
+            "refusing to fall back silently -- fix the environment "
+            "(e.g. DRJIT_LIBLLVM_PATH for the LLVM backend) or unset MI_DEFAULT_VARIANT.")
 import numpy as np
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import sionna.rt as rt
+
+if _WANT_VARIANT:
+    import mitsuba as _mi_chk
+    if _mi_chk.variant() != _WANT_VARIANT:
+        raise SystemExit(f"backend mismatch: requested {_WANT_VARIANT!r} but the solver "
+                         f"selected {_mi_chk.variant()!r}; refusing to report results for the wrong backend")
 from sionna.rt import load_scene, PlanarArray, Transmitter, RadioMapSolver
 
 HERE = os.environ.get("ULAP_WORK_DIR") or os.path.dirname(os.path.abspath(__file__))

@@ -1,0 +1,3 @@
+# The claims gate needs only a YAML parser. Everything else is stdlib.
+# Re-running the producers additionally needs benchmarks/requirements.txt.
+PyYAML>=6.0

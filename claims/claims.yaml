@@ -1,0 +1,199 @@
+# Claims register — every quantitative claim the paper makes, bound to the artefact
+# that produces it.
+#
+#   python claims/verify_claims.py            # check the paper against the artefacts
+#   python claims/verify_claims.py --rerun    # re-run producers first, then check
+#
+# WHY THIS EXISTS
+# A paper and its codebase drift. Prose is written alongside a moving target, and nobody
+# notices until a reviewer re-runs something. On this project a single afternoon of
+# re-running found four defects, three of them in the abstract: frequency-sweep medians
+# that did not reproduce, a ridge-shadowing claim that was largely a sampling artefact,
+# two compared figures on independent colour scales, and a publish branch missing the
+# reproduction path.
+#
+# None of those were findable by reading the paper against itself. All of them were
+# findable by executing something. This file makes that execution routine instead of
+# heroic: it is the difference between "the paper was true when someone wrote it" and
+# "the paper is true today".
+#
+# HOW TO ADD A CLAIM
+# If you put a number in the paper, add it here in the same commit. If you cannot point
+# at an artefact that produces it, that is the finding — not a reason to skip the entry.
+
+paper:
+  file: ../../ulap-research-papers/working-directory/6g-isac-sovereign-cognitive-digital-twin/paper/22-july-2026/SCDT_6G_ISAC_paper_v3_with_benchmarks.tex
+  # Relative to this repository root. Adjust if the papers repo lives elsewhere.
+
+claims:
+
+  # ── deterministic propagation, frequency sweep ────────────────────────────────
+  - id: sweep-medians
+    what: Median best-server path gain at 1.8 / 3.5 / 6 / 10 GHz
+    appears_in: [abstract, "Table IV", "frequency-sweep figure caption"]
+    paper_text: "-106.2/-112.6/-117.2/-121.5"
+    produced_by: ulap-scope/ulap_scope/stages/sionna_analysis.py
+    extract:
+      kind: stdout_regex
+      pattern: 'median=(-[0-9.]+) dB'
+      join: "/"
+    tolerance_db: 0.05
+    note: >
+      Was -108/-114/-119/-123 until 2026-07-29. Corrected after a live re-run.
+      The sweep runs at 8 m cells / 1e6 samples, NOT the 5 m / 1e7 stated once in
+      Table IV's coverage row — settings are per row.
+
+  - id: sweep-penalty
+    what: Path-gain penalty from 1.8 GHz to 10 GHz on identical geometry
+    appears_in: ["Table IV"]
+    paper_text: "15.3"
+    derived_from: sweep-medians
+    expression: "abs(v[3] - v[0])"
+    tolerance_db: 0.1
+
+  # ── link transect ─────────────────────────────────────────────────────────────
+  - id: transect-endpoints
+    what: Path gain at the first and last transect receiver (50 m, 1350 m)
+    appears_in: ["Table IV"]
+    paper_text: "-98.9 .. -123.8"
+    produced_by: ulap-scope/ulap_scope/stages/sionna_analysis.py
+    artifact: sionna_out/link_metrics.csv
+    extract:
+      kind: csv_first_last
+      column: path_gain_dB
+    tolerance_db: 0.05
+
+  - id: transect-delay-spikes
+    what: RMS delay spread (ns) at 450 m and 950 m, where a third building-reflected path appears
+    appears_in: ["Table IV"]
+    paper_text: "361, 197"
+    produced_by: ulap-scope/ulap_scope/stages/sionna_analysis.py
+    artifact: sionna_out/link_metrics.csv
+    extract:
+      kind: csv_lookup
+      key_column: distance_m
+      value_column: delay_spread_ns
+      keys: [450, 950]
+    tolerance_ns: 1.0
+
+  # ── cross-machine reproducibility ─────────────────────────────────────────────
+  - id: link-metrics-checksum
+    what: The numeric artefact is byte-identical across every machine tested
+    appears_in: ["§Computational cost", "§How small can the machine be"]
+    paper_text: "08afea6d"
+    artifact: blender/sionna_out/link_metrics.csv
+    extract:
+      kind: md5_prefix
+      length: 8
+    note: >
+      Verified identical on NVIDIA GB10 (aarch64), NVIDIA H200 NVL (x86_64) and a
+      Raspberry Pi 4. The file is written at two decimal places, so this establishes
+      agreement to 0.01 dB -- NOT bit-identical floating point. Do not upgrade the
+      wording to "bit-identical".
+
+  # ── scene provenance ──────────────────────────────────────────────────────────
+  - id: building-count
+    what: Number of building footprints in the Newton scene
+    appears_in: [abstract, "§Towards-6G deterministic propagation methodology"]
+    paper_text: "576"
+    artifact: blender/scene_build/scene_manifest.json
+    extract:
+      kind: json_length
+      path: "buildings"
+
+  - id: terrain-relief
+    what: Terrain elevation range across the study area
+    appears_in: ["§Towards-6G deterministic propagation methodology", "§Comparison"]
+    paper_text: "54.7 .. 110.3"
+    artifact: blender/scene_build/scene_manifest.json
+    extract:
+      kind: json_fields
+      paths: ["terrain.zmin", "terrain.zmax"]
+    tolerance_m: 0.1
+
+  # ── the receiver-plane defect (F8) ────────────────────────────────────────────
+  - id: ground-following-below-ground
+    what: Fraction of cells whose selected receiver plane lies below local ground
+    appears_in: ["§Comparison — limitation of the ground-following construction"]
+    paper_text: "28.97"
+    produced_by: comparison/f8_plane_stack.py
+    artifact: comparison/results/f8.json
+    extract:
+      kind: json_field
+      path: "verdict.underground_cell_fraction.before"
+      scale: 100
+    tolerance_pct: 0.05
+    note: >
+      This claim is the reason the abstract's ridge-shadowing sentence had to be
+      qualified. If a fix lands that changes the plane stack, this number changes and
+      the paper must change with it -- which is exactly what this register is for.
+
+  - id: ground-following-after-fix
+    what: Cells with the receiver below ground after the ceiling-plane fix
+    appears_in: ["§Comparison — limitation of the ground-following construction"]
+    paper_text: "0"
+    produced_by: comparison/f8_plane_stack.py
+    artifact: comparison/results/f8.json
+    extract:
+      kind: json_field
+      path: "verdict.underground_cell_fraction.after"
+      scale: 100
+    tolerance_pct: 0.001
+
+  - id: ridge-shadow-magnitude
+    what: Genuine ridge shadow as a fraction of the map, by independent DTM line-of-sight
+    appears_in: ["abstract", "§Comparison"]
+    paper_text: "0.75"
+    produced_by: comparison/f8_plane_stack.py
+    artifact: comparison/results/f8.json
+    extract:
+      kind: json_field
+      path: "verdict.ridge_shadow_fraction_of_map_from_dtm_geometry"
+      scale: 100
+    tolerance_pct: 0.02
+    note: >
+      This is the number that replaces the abstract's unquantified ridge-shadowing claim.
+      Reproduced identically on aarch64 (GB10) and x86_64 (H200).
+
+  - id: ablation-ground-following-nocov
+    what: No-coverage fraction of the corrected ground-following map
+    appears_in: ["Table — coverage statistics by scene variant"]
+    paper_text: "1.16"
+    produced_by: comparison/c3_ablation.py
+    artifact: comparison/results/c3.json
+    extract:
+      kind: json_field
+      path: "verdict.no_coverage_fraction_terrain_ground"
+      scale: 100
+    tolerance_pct: 0.2
+    note: >
+      Was 28.1 under nearest-plane (discretisation), then 11.0 at 1e7 samples; now 1.16 at the 1e8 default — the remainder was sample starvation, not shadow.
+      If the plane rule changes again this number moves and the table must move with it.
+
+  - id: best-server-change-over-noise
+    what: Serving-cell change fraction versus the Monte-Carlo noise floor
+    appears_in: ["§Comparison — terrain ablation", "§Comparison — ground-following"]
+    paper_text: "22.5"
+    produced_by: comparison/c3_ablation.py
+    artifact: comparison/results/c3.json
+    extract:
+      kind: json_field
+      path: "verdict.change_fraction_over_noise_floor"
+    tolerance_pct: 0.5
+    note: >
+      Quoted in TWO places in the paper. An earlier draft quoted 71x in one and 22.9x in
+      the other, because F8 and C3 measure the noise floor differently. C3's is the
+      conservative one and is now used in both. This entry exists to keep them in step.
+
+# ── claims that are NOT machine-checkable, recorded so their absence is deliberate ──
+unverifiable:
+  - claim: "130,248 buildings island-wide; 19 authoritative layers"
+    why: >
+      Derives from the Barbados Geoportal export, which is not redistributable and is
+      absent from this repository. Checkable only against catalog.json inside the
+      deployment, not here. Do not silently drop it -- it is a real claim with a real
+      source, just not one this repo can verify.
+  - claim: "38.7% coverage, -72.6 dBm median RSS, 10.3 dB median SINR"
+    why: >
+      Produced by the SCOPE application's stochastic planning surface, a different
+      codebase. Traceable there, not here.

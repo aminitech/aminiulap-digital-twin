@@ -1,0 +1,690 @@
+{
+  "study": "C1",
+  "question": "How closely does the shipped analytical model (free-space + two-ray + knife-edge) track deterministic ray tracing on the Newton transect?",
+  "pre_registered_metrics": [
+    "rms_error_db",
+    "mean_signed_bias_db",
+    "path_loss_exponent_n_and_delta",
+    "pearson_r",
+    "compute_cost_ratio"
+  ],
+  "generated_utc": "2026-07-29T13:08:15+00:00",
+  "host": {
+    "node": "spark-5804",
+    "machine": "aarch64",
+    "python": "3.12.3",
+    "executable": "/home/$USER/.claude/jobs/d53ee842/tmp/venv-rt/bin/python"
+  },
+  "config": {
+    "freq_hz": 3500000000.0,
+    "rx_height_m": 1.5,
+    "tx": "Rising Sun",
+    "rt_repeats": 3,
+    "analytical_repeats": 5,
+    "ground_reflection_modes": [
+      "average",
+      "coherent",
+      "none"
+    ],
+    "primary_cell": {
+      "ground_reflection": "average",
+      "gain_convention": "antenna_corrected"
+    },
+    "ulap_work_dir": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork"
+  },
+  "failures": [],
+  "rt_reference": {
+    "path": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/sionna_out/link_metrics.csv",
+    "md5": "08afea6db1da9b0e635fef3650a23c4f",
+    "n_points": 14
+  },
+  "geometry": {
+    "manifest": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/scene_manifest.json",
+    "manifest_md5": "419b775af0d975ffd6ecfaa5861e1f0f",
+    "towers": "/home/$USER/.claude/jobs/d53ee842/tmp/rtwork/scene_build/towers_near.json",
+    "note": "analytical model evaluated on the RT work-dir manifest -- identical geometry to the ray tracer (no cross-scene substitution)",
+    "n_buildings": 576,
+    "terrain_relief_m": 55.52,
+    "tx_xyz_flat": [
+      970.3,
+      -131.1,
+      24.0
+    ]
+  },
+  "antenna_gain_correction_db": {
+    "tx_pattern": "tr38901 (V), orientation [0,0,0]",
+    "rx_pattern": "dipole (V), orientation [0,0,0]",
+    "azimuth_deg": 172.31,
+    "tx_gain_db_by_distance": {
+      "50": -22.0,
+      "150": -22.0,
+      "250": -22.0,
+      "350": -22.0,
+      "450": -22.0,
+      "550": -22.0,
+      "650": -22.0,
+      "750": -22.0,
+      "850": -22.0,
+      "950": -22.0,
+      "1050": -22.0,
+      "1150": -22.0,
+      "1250": -22.0,
+      "1350": -22.0
+    },
+    "rx_gain_db_by_distance": {
+      "50": 0.96,
+      "150": 1.664,
+      "250": 1.726,
+      "350": 1.743,
+      "450": 1.75,
+      "550": 1.754,
+      "650": 1.756,
+      "750": 1.757,
+      "850": 1.758,
+      "950": 1.758,
+      "1050": 1.759,
+      "1150": 1.759,
+      "1250": 1.76,
+      "1350": 1.76
+    },
+    "total_db_by_distance": {
+      "50": -21.04,
+      "150": -20.336,
+      "250": -20.274,
+      "350": -20.257,
+      "450": -20.25,
+      "550": -20.246,
+      "650": -20.244,
+      "750": -20.243,
+      "850": -20.242,
+      "950": -20.242,
+      "1050": -20.241,
+      "1150": -20.241,
+      "1250": -20.24,
+      "1350": -20.24
+    },
+    "note": "the transect leaves the TX element at ~172 deg azimuth, i.e. in its back lobe; tr38901 clamps at -30 dB relative to its 8 dBi peak"
+  },
+  "analytical_terms": {
+    "fspl_db": {
+      "50": 78.109,
+      "150": 86.948,
+      "250": 91.323,
+      "350": 94.228,
+      "450": 96.404,
+      "550": 98.144,
+      "650": 99.593,
+      "750": 100.834,
+      "850": 101.921,
+      "950": 102.886,
+      "1050": 103.755,
+      "1150": 104.545,
+      "1250": 105.269,
+      "1350": 105.937
+    },
+    "two_ray_db": {
+      "50": 0.346,
+      "150": 0.165,
+      "250": 0.711,
+      "350": 1.144,
+      "450": 1.453,
+      "550": 1.678,
+      "650": 1.848,
+      "750": 1.981,
+      "850": 2.087,
+      "950": 2.173,
+      "1050": 2.245,
+      "1150": 2.305,
+      "1250": 2.357,
+      "1350": 2.401
+    },
+    "diffraction_db": {
+      "50": 0.0,
+      "150": 0.0,
+      "250": 0.0,
+      "350": 0.0,
+      "450": 0.0,
+      "550": 0.0,
+      "650": 0.0,
+      "750": 0.0,
+      "850": 0.0,
+      "950": 0.0,
+      "1050": 0.0,
+      "1150": 0.0,
+      "1250": 0.0,
+      "1350": 0.0
+    },
+    "los_flag": {
+      "50": true,
+      "150": true,
+      "250": true,
+      "350": true,
+      "450": true,
+      "550": true,
+      "650": true,
+      "750": true,
+      "850": true,
+      "950": true,
+      "1050": true,
+      "1150": true,
+      "1250": true,
+      "1350": true
+    },
+    "note": "Decomposition of the primary analytical cell. If diffraction_db is 0 at every point, the knife-edge term -- the only term that knows the 576 buildings exist -- contributed nothing, and the agreement with RT is a free-space + ground-reflection result, not a scene result."
+  },
+  "why_the_agreement_is_close": {
+    "rt_num_paths_median": 2.0,
+    "rt_path_gain_is_incoherent_power_sum": true,
+    "diffraction_term_active_points": 0,
+    "statement": "Read this before quoting the RMS. (1) The shipped stage computes RT path gain as an INCOHERENT sum of per-path powers (sum |a_i|^2), not a coherent field sum. (2) The median RT path count on this transect is 2 -- a LoS ray and one ground bounce. An incoherent 2-path sum over a flat ground plane IS the phase-averaged two-ray model, which is exactly what ground_reflection='average' computes. The two methods are therefore evaluating near-identical mathematics on this transect, which is why they agree to ~0.1 dB. That is a real and reportable result, but it is evidence that THIS transect is an easy case, not that ray tracing is redundant in general."
+  },
+  "rt_solve": {
+    "repeats": [
+      {
+        "repeat": 0,
+        "cold": true,
+        "wall_s": 0.0366,
+        "scene_load_wall_s": 0.0691,
+        "mitsuba_variant": "cuda_ad_mono_polarized"
+      },
+      {
+        "repeat": 1,
+        "cold": false,
+        "wall_s": 0.0158,
+        "scene_load_wall_s": 0.0034,
+        "mitsuba_variant": "cuda_ad_mono_polarized"
+      },
+      {
+        "repeat": 2,
+        "cold": false,
+        "wall_s": 0.0157,
+        "scene_load_wall_s": 0.0039,
+        "mitsuba_variant": "cuda_ad_mono_polarized"
+      }
+    ],
+    "reproduction_check": {
+      "max_abs_path_gain_delta_db": 0.0049,
+      "max_abs_delay_spread_delta_ns": 0.005,
+      "num_paths_identical": true,
+      "note": "re-solve of the committed transect; a non-zero delta is the solver's own run-to-run variation, reported not hand-waved"
+    }
+  },
+  "cost": {
+    "rt_solve_wall_s_median": 0.0158,
+    "rt_solve_wall_s_cold": 0.0366,
+    "rt_scene_load_wall_s_median": 0.0039,
+    "rt_setup_plus_solve_wall_s": 0.0197,
+    "mitsuba_variant": "cuda_ad_mono_polarized",
+    "analytical_cold_wall_s": 0.0664,
+    "analytical_warm_wall_s": 0.000742,
+    "cost_ratio_solve_only_warm": 21.3,
+    "cost_ratio_solve_only_cold": 0.24,
+    "cost_ratio_setup_plus_solve_over_analytical_cold": 0.3,
+    "note": "Like-for-like is deliberately awkward here and is reported both ways. Analytical 'cold' includes the one-off rasterisation of the 576 footprints; 'warm' is the 14-point evaluation alone. RT 'solve' is the PathSolver call with the Dr.Jit queue drained (dr.sync_thread); 'setup+solve' adds Mitsuba scene load. Neither RT number includes interpreter start or the Mitsuba XML export that produced the scene. This is a 14-receiver transect -- the smallest RT workload in the pipeline; it is NOT representative of the coverage-map cost, which C3 measures."
+  },
+  "delay_spread": {
+    "analytical_capability": null,
+    "statement": "The analytical model has NO delay domain. free-space + two-ray + knife-edge produce a single scalar path gain per point; there is no CIR, no tap set, no delay spread. This is not a large error -- it is the absence of an output. Every value below is unmatched.",
+    "rt_delay_spread_ns_by_distance": {
+      "50": 1.02,
+      "150": 0.33,
+      "250": 0.35,
+      "350": 0.29,
+      "450": 361.07,
+      "550": 168.32,
+      "650": 0.18,
+      "750": 0.15,
+      "850": 0.14,
+      "950": 196.86,
+      "1050": 3.95,
+      "1150": 0.1,
+      "1250": 0.09,
+      "1350": 0.09
+    },
+    "rt_num_paths_by_distance": {
+      "50": 2,
+      "150": 2,
+      "250": 2,
+      "350": 2,
+      "450": 3,
+      "550": 3,
+      "650": 2,
+      "750": 2,
+      "850": 2,
+      "950": 3,
+      "1050": 3,
+      "1150": 2,
+      "1250": 2,
+      "1350": 2
+    },
+    "spikes_over_50ns": [
+      {
+        "distance_m": 450,
+        "delay_spread_ns": 361.07,
+        "num_paths": 3
+      },
+      {
+        "distance_m": 550,
+        "delay_spread_ns": 168.32,
+        "num_paths": 3
+      },
+      {
+        "distance_m": 950,
+        "delay_spread_ns": 196.86,
+        "num_paths": 3
+      }
+    ],
+    "rt_delay_spread_ns_median": 0.31,
+    "rt_delay_spread_ns_max": 361.07,
+    "analytical_delay_spread_ns_by_distance": {
+      "50": null,
+      "150": null,
+      "250": null,
+      "350": null,
+      "450": null,
+      "550": null,
+      "650": null,
+      "750": null,
+      "850": null,
+      "950": null,
+      "1050": null,
+      "1150": null,
+      "1250": null,
+      "1350": null
+    },
+    "interpretation": "The spikes coincide with a third path appearing (num_paths 2 -> 3): a specular return off distant geometry arriving ~100 m of extra path length late. A planner sizing a cyclic prefix or an equaliser from the analytical model would see nothing at these ranges."
+  },
+  "cells": {
+    "average/raw": {
+      "rms_error_db": 20.25714765891725,
+      "mean_signed_bias_db": 20.25552201867688,
+      "debiased_rms_db": 0.2566301347716219,
+      "max_abs_error_db": 21.11613068500924,
+      "pearson_r": 0.9996807725514237,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 1.7801083486177935,
+      "delta_n": 0.04856121740009156,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 0.1200963828470753,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": 21.116,
+        "150": 20.297,
+        "250": 20.228,
+        "350": 20.215,
+        "450": 20.189,
+        "550": 20.085,
+        "650": 20.216,
+        "750": 20.217,
+        "850": 20.226,
+        "950": 19.887,
+        "1050": 20.22,
+        "1150": 20.23,
+        "1250": 20.228,
+        "1350": 20.224
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0664,
+        "warm_wall_s_median": 0.000742,
+        "warm_wall_s_all": [
+          0.060715,
+          0.000796,
+          0.000742,
+          0.000735,
+          0.000723
+        ]
+      }
+    },
+    "average/antenna_corrected": {
+      "rms_error_db": 0.11007072528977738,
+      "mean_signed_bias_db": -0.05423589518507705,
+      "debiased_rms_db": 0.09578116850034235,
+      "max_abs_error_db": 0.3547085663074654,
+      "pearson_r": 0.9999083978236113,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 1.738799151731101,
+      "delta_n": 0.007252020513399016,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 0.09155342776372236,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": 0.076,
+        "150": -0.038,
+        "250": -0.046,
+        "350": -0.042,
+        "450": -0.061,
+        "550": -0.162,
+        "650": -0.028,
+        "750": -0.026,
+        "850": -0.016,
+        "950": -0.355,
+        "1050": -0.021,
+        "1150": -0.011,
+        "1250": -0.013,
+        "1350": -0.016
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0664,
+        "warm_wall_s_median": 0.000742,
+        "warm_wall_s_all": [
+          0.060715,
+          0.000796,
+          0.000742,
+          0.000735,
+          0.000723
+        ]
+      }
+    },
+    "coherent/raw": {
+      "rms_error_db": 19.625568615883445,
+      "mean_signed_bias_db": 19.034249272671424,
+      "debiased_rms_db": 4.781244411505927,
+      "max_abs_error_db": 22.91704532157746,
+      "pearson_r": 0.8705504815191238,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 2.083586899421124,
+      "delta_n": 0.3520397682034222,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 4.5400527112691575,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": 22.247,
+        "150": 21.662,
+        "250": 21.716,
+        "350": 22.44,
+        "450": 16.233,
+        "550": 22.917,
+        "650": 21.185,
+        "750": 14.964,
+        "850": 5.145,
+        "950": 14.183,
+        "1050": 18.638,
+        "1150": 20.717,
+        "1250": 21.879,
+        "1350": 22.553
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0603,
+        "warm_wall_s_median": 0.000958,
+        "warm_wall_s_all": [
+          0.001346,
+          0.001615,
+          0.000958,
+          0.000795,
+          0.000769
+        ]
+      }
+    },
+    "coherent/antenna_corrected": {
+      "rms_error_db": 4.910203694916288,
+      "mean_signed_bias_db": -1.2755086411905319,
+      "debiased_rms_db": 4.7416429675607015,
+      "max_abs_error_db": 15.09730771906493,
+      "pearson_r": 0.8661436534925695,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 2.0422777025344345,
+      "delta_n": 0.31073057131673254,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 4.546262009795946,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": 1.207,
+        "150": 1.326,
+        "250": 1.442,
+        "350": 2.183,
+        "450": -4.017,
+        "550": 2.671,
+        "650": 0.94,
+        "750": -5.279,
+        "850": -15.097,
+        "950": -6.058,
+        "1050": -1.603,
+        "1150": 0.476,
+        "1250": 1.638,
+        "1350": 2.313
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0603,
+        "warm_wall_s_median": 0.000958,
+        "warm_wall_s_all": [
+          0.001346,
+          0.001615,
+          0.000958,
+          0.000795,
+          0.000769
+        ]
+      }
+    },
+    "none/raw": {
+      "rms_error_db": 18.642072289712893,
+      "mean_signed_bias_db": 18.620338545295773,
+      "debiased_rms_db": 0.8999176148146928,
+      "max_abs_error_db": 20.770604953932036,
+      "pearson_r": 0.9997780515511894,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 1.9586907702429808,
+      "delta_n": 0.2271436390252788,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 0.12470793266480348,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": 20.771,
+        "150": 20.132,
+        "250": 19.517,
+        "350": 19.072,
+        "450": 18.736,
+        "550": 18.406,
+        "650": 18.367,
+        "750": 18.236,
+        "850": 18.139,
+        "950": 17.714,
+        "1050": 17.975,
+        "1150": 17.925,
+        "1250": 17.871,
+        "1350": 17.823
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0602,
+        "warm_wall_s_median": 0.000703,
+        "warm_wall_s_all": [
+          0.000751,
+          0.000719,
+          0.000703,
+          0.000693,
+          0.000683
+        ]
+      }
+    },
+    "none/antenna_corrected": {
+      "rms_error_db": 1.8532906552243664,
+      "mean_signed_bias_db": -1.6894193685661827,
+      "debiased_rms_db": 0.7619373004751784,
+      "max_abs_error_db": 2.527575413737594,
+      "pearson_r": 0.9995125229164301,
+      "n_rt": 1.731547131217702,
+      "n_analytical": 1.91738157335629,
+      "delta_n": 0.18583444213858802,
+      "rt_fit_rms_residual_db": 0.14772696232373886,
+      "analytical_fit_rms_residual_db": 0.2494159993479576,
+      "n_points": 14,
+      "error_db_by_distance": {
+        "50": -0.269,
+        "150": -0.203,
+        "250": -0.757,
+        "350": -1.185,
+        "450": -1.514,
+        "550": -1.84,
+        "650": -1.877,
+        "750": -2.007,
+        "850": -2.103,
+        "950": -2.528,
+        "1050": -2.266,
+        "1150": -2.316,
+        "1250": -2.369,
+        "1350": -2.417
+      },
+      "timing_s": {
+        "cold_wall_s": 0.0602,
+        "warm_wall_s_median": 0.000703,
+        "warm_wall_s_all": [
+          0.000751,
+          0.000719,
+          0.000703,
+          0.000693,
+          0.000683
+        ]
+      }
+    }
+  },
+  "curves": {
+    "distance_m": [
+      50.0,
+      150.0,
+      250.0,
+      350.0,
+      450.0,
+      550.0,
+      650.0,
+      750.0,
+      850.0,
+      950.0,
+      1050.0,
+      1150.0,
+      1250.0,
+      1350.0
+    ],
+    "rt_path_gain_db": [
+      -98.88,
+      -107.08,
+      -110.84,
+      -113.3,
+      -115.14,
+      -116.55,
+      -117.96,
+      -119.07,
+      -120.06,
+      -120.6,
+      -121.73,
+      -122.47,
+      -123.14,
+      -123.76
+    ],
+    "analytical_average_raw_db": [
+      -77.76386931499076,
+      -86.78266981514874,
+      -90.61178308621825,
+      -93.0847253032535,
+      -94.95148361240744,
+      -96.46535349057109,
+      -97.7441138380789,
+      -98.85336915158975,
+      -99.83394262495986,
+      -100.71318482363168,
+      -101.51041214996422,
+      -102.23981852016945,
+      -102.91216220417617,
+      -103.53580380336386
+    ],
+    "analytical_average_antenna_corrected_db": [
+      -98.80380728801322,
+      -107.1183898774046,
+      -110.88590532437743,
+      -113.3417233653873,
+      -115.20141494785666,
+      -116.71170282528789,
+      -117.98840132892363,
+      -119.09636346006143,
+      -120.07607099715224,
+      -120.95470856630746,
+      -121.7514933877572,
+      -122.48056787930031,
+      -123.15265597859023,
+      -123.77609730617148
+    ],
+    "analytical_coherent_raw_db": [
+      -76.63300819979648,
+      -85.41788333866414,
+      -89.12381328228332,
+      -90.85977848878844,
+      -98.9072687226048,
+      -93.63295467842254,
+      -96.77536476523271,
+      -104.10557578733633,
+      -114.91517934687256,
+      -106.41662884392218,
+      -103.0920462419004,
+      -101.75324993918525,
+      -101.26105575279716,
+      -101.20670279479374
+    ],
+    "analytical_coherent_antenna_corrected_db": [
+      -97.67294617281894,
+      -105.75360340092,
+      -109.3979355204425,
+      -111.11677655092222,
+      -119.15720005805402,
+      -113.87930401313933,
+      -117.01965225607744,
+      -124.34857009580801,
+      -135.15730771906493,
+      -126.65815258659796,
+      -123.33312747969337,
+      -121.99399929831611,
+      -121.50154952721122,
+      -121.44699629760136
+    ],
+    "analytical_none_raw_db": [
+      -78.10939504606796,
+      -86.9476024567963,
+      -91.322980429755,
+      -94.22841589576679,
+      -96.40423819731795,
+      -98.14365997518316,
+      -99.59261195097169,
+      -100.83427626922199,
+      -101.92056462441758,
+      -102.88605167106181,
+      -103.75492384192924,
+      -104.54476306727258,
+      -105.26875125526813,
+      -105.93702568482898
+    ],
+    "analytical_none_antenna_corrected_db": [
+      -99.14933301909042,
+      -107.28332251905216,
+      -111.59710266791419,
+      -114.48541395790058,
+      -116.65416953276717,
+      -118.39000930989995,
+      -119.83689944181641,
+      -121.07727057769367,
+      -122.16269299660996,
+      -123.12757541373759,
+      -123.99600507972221,
+      -124.78551242640344,
+      -125.50924502968219,
+      -126.1773191876366
+    ]
+  },
+  "where_the_cheap_model_wins": {
+    "points_within_3dB_of_rt": [
+      50,
+      150,
+      250,
+      350,
+      450,
+      550,
+      650,
+      750,
+      850,
+      950,
+      1050,
+      1150,
+      1250,
+      1350
+    ],
+    "fraction_within_3dB": 1.0,
+    "cost_ratio": 21.3,
+    "statement": "Reported as a finding in its own right: on this transect the analytical model reproduces the ray-traced path-gain trend at a small fraction of the cost. Where it matches, determinism buys confidence, not accuracy."
+  }
+}

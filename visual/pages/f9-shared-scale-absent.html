@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FAILURE — the shared-scale rendering does not exist to photograph</title>
+<!--
+  FAILURE CASE, captured at the same settings as every other shot.
+
+  The F9 "after" state cannot be shown as a picture, because no shared-scale
+  rendering of the two coverage figures exists in blender/sionna_out/. This page
+  proves that rather than asserting it:
+
+    * it fetches the LIVE directory listing of /blender/sionna_out/ from the same
+      static server the other shots use, and prints every entry;
+    * it fetches the audit and quotes its F9 section verbatim, so the claim that
+      the fix has landed IN CODE is sourced;
+    * it states the one check a reader can run themselves — the committed figures'
+      colourbars still disagree (see defect-f9-colour-scale.png in this same run),
+      which is what a pre-fix pair looks like.
+
+  Regenerating the figures would mean running the RT stages. That was out of scope
+  for this harness and is recorded as a gap, not worked around.
+-->
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#151518; --line:#26262b; --ink:#f2f2f4;
+    --muted:#9a9aa4; --accent:#FFC83C; --warn:#ff8f5a; --good:#7ad4a0;
+    --mono: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  body{display:flex;flex-direction:column;padding:14px 18px 10px;overflow:hidden}
+
+  header{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;
+    border-bottom:1px solid var(--line);flex:0 0 auto}
+  header h1{font-size:15px;font-weight:600}
+  header .sub{font-family:var(--mono);font-size:10px;color:var(--muted);
+    letter-spacing:.06em;text-transform:uppercase}
+  header .spacer{flex:1}
+  header .tag{font-family:var(--mono);font-size:9.5px;color:var(--warn);
+    border:1px solid #5a2a20;background:#2a1410;padding:3px 8px;border-radius:4px;letter-spacing:.07em}
+
+  .grid{flex:1 1 auto;display:grid;grid-template-columns:560px 1fr;gap:14px;padding:12px 0 0;
+    min-height:0;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    display:flex;flex-direction:column;overflow:hidden;min-height:0;padding-bottom:4px}
+  .card > h2{font-size:11.5px;font-weight:600;padding:9px 11px 2px}
+  .card > h2 .n{font-family:var(--mono);color:var(--muted);font-weight:400;font-size:10px}
+  .card > .lede{font-size:10.5px;line-height:1.42;color:#b9b9c2;padding:2px 11px 7px}
+  .card > .lede b{color:var(--ink)}
+
+  ul.ls{list-style:none;font-family:var(--mono);font-size:10.5px;padding:0 11px 10px;
+    overflow:hidden;line-height:1.62}
+  ul.ls li{color:#9a9aa4;display:flex;gap:8px}
+  ul.ls li .i{color:#4d4d56;width:20px;text-align:right;flex:0 0 auto}
+  ul.ls li.hit{color:var(--warn)}
+  ul.ls li.hit .i{color:var(--warn)}
+  ul.ls li .note{color:#6f6f79;font-size:9.5px}
+
+  .quote{margin:2px 11px 0;padding:9px 11px;border-left:2px solid var(--accent);
+    background:#131316;font-size:10.5px;line-height:1.5;color:#d6d6dd}
+  .quote .who{display:block;font-family:var(--mono);font-size:9px;color:#6f6f79;
+    padding-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+  .box{margin:10px 11px 0;padding:9px 11px;border:1px solid #5a2a20;background:#20100c;
+    border-radius:6px;font-size:10.5px;line-height:1.5;color:#f0d8cf}
+  .box b{color:var(--warn)}
+  .box.neutral{border-color:#26262b;background:#131316;color:#b9b9c2}
+  .box.neutral b{color:var(--ink)}
+  .fail{margin:10px 11px;padding:9px 11px;border:1px solid #5a2a20;background:#2a1410;
+    border-radius:6px;color:var(--warn);font-family:var(--mono);font-size:10px}
+
+  footer{flex:0 0 auto;padding-top:8px;border-top:1px solid var(--line);margin-top:10px;
+    font-family:var(--mono);font-size:9px;color:var(--muted);display:flex;gap:16px;
+    letter-spacing:.03em;flex-wrap:wrap}
+  footer .k{color:#6f6f79}
+</style>
+</head>
+<body>
+  <header>
+    <h1>FAILURE — the F9 “after” cannot be photographed: no shared-scale rendering exists</h1>
+    <span class="sub">the fix landed in code, not in blender/sionna_out/</span>
+    <span class="spacer"></span>
+    <span class="tag">FAILURE CASE · SAME SETTINGS</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Live listing of <span class="n">/blender/sionna_out/</span> at capture time</h2>
+      <div class="lede">
+        Fetched from the same static server the other shots use, and printed in full —
+        nothing filtered. Highlighted: the only two path-gain terrain figures in the
+        directory. There is no third, shared-scale variant of either.
+      </div>
+      <ul class="ls" id="ls"><li>loading…</li></ul>
+      <div id="err"></div>
+    </div>
+
+    <div class="card">
+      <h2>What is fixed, what is therefore missing, and how to close it</h2>
+      <div class="lede">
+        The audit records the fix as landed <b>in the stages</b>. The committed renders
+        predate it, so the pair a reader would want — the same two figures on one scale —
+        does not exist as an image anywhere in this repo.
+      </div>
+      <div class="quote" id="q"><span class="who">quoted live from docs/audits/2026-07-29-f8-f9-receiver-plane-and-colour-scale.md § F9</span>—</div>
+      <div class="box">
+        <b>Not captured, and not simulated.</b> Producing the shared-scale pair means
+        re-running <span style="font-family:var(--mono)">sionna_coverage.py</span> and
+        <span style="font-family:var(--mono)">sionna_terrain_ground.py</span>. This harness
+        does not run the RT stages — it only photographs what they committed — so the
+        “after” panel of F9 is a <b>gap in this evidence set</b>, recorded here at 1600×900
+        in the same run rather than left out of the manifest.
+      </div>
+      <div class="box neutral">
+        <b>The check a reader can run instead.</b> The pre-fix state is still directly
+        observable: the two committed colourbars occupy identical pixel rows yet carry
+        dB labels that differ by <b>34 px = 2.83 dB</b>. That is shown in
+        <span style="font-family:var(--mono)">defect-f9-colour-scale.png</span>, captured in
+        this same run. When a shared-scale pair does land, that offset must be zero.
+      </div>
+      <div class="box neutral">
+        <b>What the “after” shot must show when it exists.</b> Both figures printing the same
+        <span style="font-family:var(--mono)">vmin</span> /
+        <span style="font-family:var(--mono)">vmax</span> in their own captions; both colourbars
+        ticked identically; and the 34&nbsp;px offset measured here reduced to zero. Anything
+        less is the same defect with a different filename.
+      </div>
+      <div class="box neutral">
+        <b>To turn this into a real screenshot:</b> re-run the coverage stages so
+        <span style="font-family:var(--mono)">blender/sionna_out/</span> carries a
+        shared-scale pair, then point the second panel of
+        <span style="font-family:var(--mono)">visual/pages/defect-f9-colour-scale.html</span>
+        at it. Nothing else in this harness needs to change.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span><span class="k">listing</span> HTTP GET /blender/sionna_out/ · python http.server index, name-sorted</span>
+    <span><span class="k">quote</span> HTTP GET /docs/audits/2026-07-29-f8-f9-receiver-plane-and-colour-scale.md</span>
+    <span><span class="k">this page asserts nothing it did not fetch</span></span>
+  </footer>
+
+<script>
+// No timers, no animation, no Math.random, no wall-clock. Two loopback fetches.
+var TARGETS = ['coverage_pathgain_db_terrain.png',
+               'coverage_pathgain_db_terrain_groundfollow.png'];
+var failures = 0, left = 2;
+
+function done() { if (--left) return;
+  window.__PAGE_FAILURES__ = failures;
+  window.__PAGE_READY__ = true;
+  document.documentElement.setAttribute('data-ready', '1');
+}
+
+fetch('/blender/sionna_out/')
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(function (html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var names = Array.prototype.map.call(doc.querySelectorAll('ul li a'), function (a) {
+      return a.textContent;
+    });
+    if (!names.length) throw new Error('directory index carried no entries');
+    var ul = document.getElementById('ls');
+    ul.innerHTML = '';
+    names.forEach(function (n, i) {
+      var li = document.createElement('li');
+      var hit = TARGETS.indexOf(n) !== -1;
+      if (hit) li.className = 'hit';
+      li.innerHTML = '<span class="i">' + (i + 1) + '</span><span>' + n + '</span>' +
+        (hit ? '<span class="note">← published pair, independent scales</span>' : '');
+      ul.appendChild(li);
+    });
+    var shared = names.filter(function (n) {
+      return /shared|common|joint/i.test(n) && /\.png$/i.test(n);
+    });
+    var li = document.createElement('li');
+    li.style.marginTop = '8px';
+    li.innerHTML = '<span class="i"></span><span style="color:#ff8f5a">' +
+      names.length + ' entries · files matching /shared|common|joint/: ' +
+      (shared.length ? shared.join(', ') : 'NONE') + '</span>';
+    ul.appendChild(li);
+    done();
+  })
+  .catch(function (e) {
+    failures++;
+    document.getElementById('err').innerHTML =
+      '<div class="fail">DIRECTORY LISTING UNAVAILABLE — ' + String(e) + '</div>';
+    document.getElementById('ls').innerHTML = '';
+    done();
+  });
+
+fetch('/docs/audits/2026-07-29-f8-f9-receiver-plane-and-colour-scale.md')
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(function (md) {
+    var i = md.indexOf('## F9');
+    if (i < 0) throw new Error('no "## F9" section in the audit');
+    var body = md.slice(i).split('\n').slice(1).join('\n');
+    var paras = body.split('\n\n').map(function (p) { return p.trim(); })
+                    .filter(function (p) { return p && p[0] !== '#'; });
+    var q = document.getElementById('q');
+    // the placeholder em-dash must go, or it prefixes the quotation
+    Array.prototype.slice.call(q.childNodes).forEach(function (n) {
+      if (n.nodeType === 3) q.removeChild(n);
+    });
+    // first two paragraphs of § F9, markdown emphasis stripped, verbatim otherwise
+    var text = paras.slice(0, 2).join('\n\n')
+      .replace(/`/g, '').replace(/\*\*/g, '').replace(/\n/g, ' ');
+    q.appendChild(document.createTextNode(text));
+    done();
+  })
+  .catch(function (e) {
+    failures++;
+    document.getElementById('q').appendChild(
+      document.createTextNode('AUDIT QUOTE UNAVAILABLE — ' + String(e)));
+    done();
+  });
+</script>
+</body>
+</html>
