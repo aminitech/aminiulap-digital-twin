@@ -24,6 +24,15 @@ TILE_URL = ("https://server.arcgisonline.com/ArcGIS/rest/services/"
             "World_Imagery/MapServer/tile/{z}/{y}/{x}")
 MERC = 20037508.342789244
 
+def _run_gdal(cmd):
+    """Run a GDAL CLI with actionable context on failure instead of a raw traceback."""
+    try:
+        return subprocess.run(cmd, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        raise SystemExit(f"fetch_basemap: {cmd[0]} failed (rc={e.returncode}) on "
+                         f"{' '.join(cmd[1:])}\nstderr: {(e.stderr or '').strip()[-800:]}")
+
+
 def _gdal(tool):
     """Resolve a GDAL CLI tool from $ULAP_GDAL_BIN or PATH (portable across OSes)."""
     override = os.environ.get("ULAP_GDAL_BIN")
@@ -91,18 +100,25 @@ lrx = tile_merc_x(xt1+1, ZOOM); lry = tile_merc_y(yt1+1, ZOOM)
 # ---- 4. georeference (3857) then warp to 21292 ----
 tif3857 = f"{BUILD}/_mosaic_3857.tif"
 out_tif = f"{BUILD}/GOOGLE_SAT_BNG.tif"
-subprocess.run([_gdal("gdal_translate"),"-q","-a_srs","EPSG:3857",
-                "-a_ullr",str(ulx),str(uly),str(lrx),str(lry),mos_png,tif3857],check=True)
-subprocess.run([_gdal("gdalwarp"),"-q","-t_srs","EPSG:21292","-r","cubic",
-                "-overwrite","-dstalpha",tif3857,out_tif],check=True)
-info = json.loads(subprocess.check_output([_gdal("gdalinfo"),"-json",out_tif]))
+_run_gdal([_gdal("gdal_translate"),"-q","-a_srs","EPSG:3857",
+           "-a_ullr",str(ulx),str(uly),str(lrx),str(lry),mos_png,tif3857])
+_run_gdal([_gdal("gdalwarp"),"-q","-t_srs","EPSG:21292","-r","cubic",
+           "-overwrite","-dstalpha",tif3857,out_tif])
+info = json.loads(_run_gdal([_gdal("gdalinfo"),"-json",out_tif]).stdout)
 cc = info["cornerCoordinates"]; W,H = info["size"]
 bxs=[cc["upperLeft"][0],cc["lowerRight"][0]]; bys=[cc["upperLeft"][1],cc["lowerRight"][1]]
 mani["basemap"] = {"tif":out_tif,"px_w":W,"px_h":H,
                    "minx":min(bxs)-OX,"maxx":max(bxs)-OX,
                    "miny":min(bys)-OY,"maxy":max(bys)-OY,"full_extent":True}
-with open(f"{BUILD}/scene_manifest.json","w") as _mf:
+# same guarded write as preprocess_scene: temp file, validate, .bak, atomic replace
+_mani_path = f"{BUILD}/scene_manifest.json"
+_tmp_path = _mani_path + ".tmp"
+with open(_tmp_path, "w") as _mf:
     json.dump(mani, _mf)
+with open(_tmp_path) as _mf:
+    json.load(_mf)
+shutil.copy2(_mani_path, _mani_path + ".bak")
+os.replace(_tmp_path, _mani_path)
 print(f"wrote {out_tif}  ({W}x{H})  local bounds "
       f"x[{mani['basemap']['minx']:.0f},{mani['basemap']['maxx']:.0f}] "
       f"y[{mani['basemap']['miny']:.0f},{mani['basemap']['maxy']:.0f}]")

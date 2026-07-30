@@ -92,9 +92,23 @@ for _,row in a.iterrows():
                      "ground_z":round(float(gz),2),
                      "structure":str(row.get("Structure",""))})
 
-with open(f"{BUILD}/scene_manifest.json","w") as _mf:
+# A corrupt manifest silently poisons every downstream stage, so the write is
+# guarded three ways: refuse obviously-empty results, keep the previous manifest
+# as .bak, and land the new one atomically (temp file + os.replace) so a crash
+# mid-write can never leave a half-written manifest behind.
+if not buildings or not antennas:
+    raise SystemExit(f"refusing to write manifest: buildings={len(buildings)} "
+                     f"antennas={len(antennas)} — upstream data looks broken")
+_mani_path = f"{BUILD}/scene_manifest.json"
+_tmp_path = _mani_path + ".tmp"
+with open(_tmp_path, "w") as _mf:
     json.dump({"epsg":EPSG,"origin":[OX,OY],"basemap":basemap,"terrain":terrain,
                "buildings":buildings,"antennas":antennas}, _mf)
+with open(_tmp_path) as _mf:
+    json.load(_mf)
+if os.path.exists(_mani_path):
+    shutil.copy2(_mani_path, _mani_path + ".bak")
+os.replace(_tmp_path, _mani_path)
 print(f"buildings:{len(buildings)}  terrain DTM {terrain['zmin']}..{terrain['zmax']} m  "
       f"({terrain['zmax']-terrain['zmin']:.1f} m relief)")
 for an in antennas:
