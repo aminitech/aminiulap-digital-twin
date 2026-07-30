@@ -181,10 +181,14 @@ Method and the rules these obey are pre-registered in
 taken, so results could not be chosen after the fact. Failures are published rather than
 dropped; several findings in these directories run against the project's own claims.
 
-You do **not** need the Barbados data for any of this: the exported Mitsuba scenes are
-committed, so every ray-tracing stage runs with no Blender and no licence-restricted
-layer. Set `ULAP_WORK_DIR` to a copy of `blender/` containing `scene_build/`,
-`mitsuba_scene/` and `mitsuba_scene_terrain/`.
+You do **not** need the Barbados data for any of this. The Barbados Mitsuba scenes
+derive from licence-restricted Geoportal data and are **not distributed**; what ships
+instead is the **open-data scene** at `examples/data/open_scene_mitsuba/` (OpenStreetMap
++ open elevation, ODbL — see `NOTICE`), which every ray-tracing stage accepts, with no
+Blender required. `benchmarks/run.sh` falls back to it automatically and says so. Build
+one for any location with `python examples/data/fetch_open_scene.py --lon <lon> --lat
+<lat>`. The Barbados numbers themselves remain reproducible only with the restricted
+data — `DATA.md` documents a verification path for holders of it.
 
 ## Architecture
 
