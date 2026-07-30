@@ -9,7 +9,7 @@ authors:
   - given-names: "George M."
     family-names: Gichuru
     affiliation: "Amini Labs"
-repository-code: "https://github.com/aminitech/amini-ulap-digital-twin"
+repository-code: "https://github.com/aminitech/aminiulap-digital-twin"
 abstract: >-
   An end-to-end pipeline for building geospatially accurate digital twins and
   running 6G radio propagation studies over them. Clips authoritative
@@ -28,7 +28,8 @@ keywords:
   - geospatial
   - small island developing states
 license: Apache-2.0
-version: 0.1.0
+version: 1.0.0
+date-released: "2026-07-30"
 
 # ---------------------------------------------------------------------------
 # Release archiving (ULAP-15)
