@@ -323,6 +323,34 @@ layer, its source and its status. To reproduce the *method* on data you can
 obtain freely, use the open-data path below or
 `examples/data/fetch_open_scene.py`.
 
+## Reproducing the paper
+
+Papers that cite `main` cite a moving target. The S-CDT paper's numbers come from the
+tree tagged **`v1.0-paper2`** — reproduce against that tag, not against whatever `main`
+has become since:
+
+```sh
+git clone --branch v1.0-paper2 --depth 1 https://github.com/aminitech/aminiulap-digital-twin.git
+cd aminiulap-digital-twin
+python3 -m venv venv && ./venv/bin/pip install -r examples/requirements.txt
+(cd examples  && ../venv/bin/python -m pytest -q)     # expect: 78+ passed
+(cd ulap-scope && ../venv/bin/python -m pytest -q)    # expect: all passed
+./venv/bin/pip install -r claims/requirements.txt
+./venv/bin/python claims/verify_claims.py             # the paper vs its artefacts
+```
+
+What to expect, measured at this tag on three machines (NVIDIA GB10, an H200 host,
+and a Raspberry Pi 4): every test suite passes; the claims gate reports **0 failures**
+on every machine; and a from-scratch re-run of the ray-tracing producers on a second
+architecture reproduced the abstract's sweep medians to the digit and an identical
+`link_metrics.csv` checksum (`08afea6d…`). What the open release can and cannot
+reproduce is stated in `docs/VALIDATION.md` — the Barbados numbers need the
+licence-restricted data (`DATA.md` documents the verification path for holders);
+everything else runs from the shipped open-data scene.
+
+Once the Zenodo archive exists, cite the **version DOI** (see `CITATION.cff`), which
+resolves to this exact tree forever.
+
 ## Reproduction path
 
 From a clean clone to a figure, with no access to any non-public data:
