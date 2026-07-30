@@ -115,8 +115,10 @@ with open(_tmp_path, "w") as _mf:
                "buildings":buildings,"antennas":antennas}, _mf)
 with open(_tmp_path) as _mf:
     json.load(_mf)
-if os.path.exists(_mani_path):
+try:
     shutil.copy2(_mani_path, _mani_path + ".bak")
+except FileNotFoundError:
+    pass  # first run: nothing to back up
 os.replace(_tmp_path, _mani_path)
 print(f"buildings:{len(buildings)}  terrain DTM {terrain['zmin']}..{terrain['zmax']} m  "
       f"({terrain['zmax']-terrain['zmin']:.1f} m relief)")

@@ -117,7 +117,10 @@ with open(_tmp_path, "w") as _mf:
     json.dump(mani, _mf)
 with open(_tmp_path) as _mf:
     json.load(_mf)
-shutil.copy2(_mani_path, _mani_path + ".bak")
+try:
+    shutil.copy2(_mani_path, _mani_path + ".bak")
+except FileNotFoundError:
+    pass  # first run, or manifest removed since the read: nothing to back up
 os.replace(_tmp_path, _mani_path)
 print(f"wrote {out_tif}  ({W}x{H})  local bounds "
       f"x[{mani['basemap']['minx']:.0f},{mani['basemap']['maxx']:.0f}] "
