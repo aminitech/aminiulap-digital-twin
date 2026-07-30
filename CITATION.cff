@@ -41,13 +41,9 @@ date-released: "2026-07-30"
 # DOI in a paper; a reader must be able to get the exact tree the numbers came
 # from.
 #
-# Uncomment and fill from the Zenodo record:
-#
-# doi: 10.5281/zenodo.XXXXXXX        # version DOI for this release
-# identifiers:
-#   - type: doi
-#     value: 10.5281/zenodo.XXXXXXX  # concept DOI — resolves to latest version
-#     description: "Concept DOI (all versions)"
+# Version DOI for v1.0-paper2, reserved on Zenodo (deposition 21708211).
+# The record publishes when the repository goes public; the DOI is stable now.
+doi: 10.5281/zenodo.21708211
 #
 # The accompanying paper is not yet announced on arXiv. Once it is, replace the
 # placeholder below with the real eprint id and DOI, and mirror the change in
