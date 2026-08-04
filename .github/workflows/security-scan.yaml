@@ -42,7 +42,7 @@ jobs:
     # Pinned to an immutable commit SHA (the release is recorded in the trailing
     # comment on the uses: line) so the gating logic cannot change under this
     # repo without a deliberate, reviewed bump.
-    uses: aminitech/.github/.github/workflows/reusable-security-scan.yaml@88792611945f47723ca96deb85470e0e2f63fa1d # v1.5.0
+    uses: aminitech/.github/.github/workflows/reusable-security-scan.yaml@bda682cdde7e41911ac9e8f1e17ae6a26fae5511 # v1.6.2
     permissions:
       contents: read
       pull-requests: write
