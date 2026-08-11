@@ -1,29 +1,36 @@
-# Security Scan
+# Security Scan (public-safe)
 #
-# Runs Semgrep (SAST -> Semgrep Cloud) and, on pull requests, an AI Security
-# Review that consolidates the Semgrep SARIF + a Trivy/Grype dependency scan +
-# a security-persona review of the diff, posts inline + summary comments and a
-# Check Run, and gates the merge on Critical/High findings.
+# WHY THIS FILE IS NOT THE SHARED REUSABLE WORKFLOW
+# -------------------------------------------------
+# This repository is PUBLIC. The org's shared scan lives in aminitech/.github,
+# which is INTERNAL. GitHub does not let a public repository call a reusable
+# workflow from an internal one, so every run of the previous version failed at
+# the workflow-resolution stage -- 0 seconds, no jobs, before any step existed:
 #
-# Secrets (passed explicitly, not `secrets: inherit`): SEMGREP_APP_TOKEN,
-# AWS_BEARER_TOKEN_BEDROCK.
-# Data flow: the AI review sends the PR diff to Amini's OWN AWS Bedrock account
-# (us-west-2); content stays inside Amini's AWS boundary, not a third-party SaaS.
-# Secrets are scrubbed from the diff with gitleaks before it is sent.
+#     failed to parse workflow: error parsing called workflow
+#     "aminitech/.github/.github/workflows/reusable-security-scan.yaml@<sha>"
+#     : workflow was not found
 #
-# FAILURE SEMANTICS (when a block is expected):
-#  - Semgrep and the Trivy/Grype scanners are non-fatal; their errors never block.
-#  - The AI review is FAIL-CLOSED: if a review is expected but the model backend
-#    returns no successful passes (e.g. Bedrock outage or a bad token) the job
-#    fails and blocks the merge rather than silently passing. Slow calls retry
-#    (adaptive, up to 4) behind a 300s read timeout.
-#  - The gate blocks only on Critical/High findings (gate-threshold); dependency
-#    findings with no upstream fix are reported but do not block.
-# OVERRIDE (gate stuck on infra, not a real finding): an admin can merge past the
-# required check, or temporarily set `run-ai-review: false` (semgrep-only) or
-# `gate-threshold: none` (advisory) via a quick PR, then revert.
+# That is why bumping the pin (v1.5.0 -> v1.6.2) never helped: the pin was never
+# the problem. The break dates from the repo being made public for the
+# open-source scrub, not from any change to the scan.
 #
-# Make "Security Scan / ai-security-review" a required check to block merges.
+# Two further reasons a verbatim copy of the internal workflow would not work
+# here:
+#   1. It requires SEMGREP_APP_TOKEN and AWS_BEARER_TOKEN_BEDROCK. This repo has
+#      no repository secrets, and its AI-review gate is FAIL-CLOSED -- so a
+#      verbatim copy would block every pull request instead of scanning it.
+#   2. GitHub does not expose secrets to pull requests from FORKS. Since this
+#      repo is public specifically so third parties can reproduce the results,
+#      a secret-dependent gate would block exactly the contributors it exists
+#      to serve.
+#
+# So this is a deliberately secret-free scan: Semgrep (SAST) + Trivy
+# (dependency/filesystem CVEs). It runs identically for maintainers and for
+# fork pull requests. The internal AI-security-review gate stays internal-only
+# and is NOT reproduced here -- publishing Amini's gating logic in a public repo
+# would disclose it as surely as making aminitech/.github public would.
+
 name: Security Scan
 
 on:
@@ -37,19 +44,98 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  scan:
-    # Pinned to an immutable commit SHA (the release is recorded in the trailing
-    # comment on the uses: line) so the gating logic cannot change under this
-    # repo without a deliberate, reviewed bump.
-    uses: aminitech/.github/.github/workflows/reusable-security-scan.yaml@bda682cdde7e41911ac9e8f1e17ae6a26fae5511 # v1.6.2
+  semgrep:
+    name: semgrep (SAST)
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
-      checks: write
-    with:
-      gate-threshold: high
-    # Least privilege: pass only the secrets the scan needs.
-    secrets:
-      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-      AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.AWS_BEARER_TOKEN_BEDROCK }}
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Semgrep
+        run: pip install --disable-pip-version-check semgrep
+
+      # `--config auto` uses the free community rule packs. No SEMGREP_APP_TOKEN,
+      # so this works on fork pull requests too. Findings are reported as SARIF;
+      # the step is non-fatal here and the gate below decides what blocks.
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config auto \
+            --sarif --output semgrep.sarif \
+            --metrics off \
+            --no-error \
+            .
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Gate on ERROR-severity findings
+        run: |
+          python - <<'PY'
+          import json, sys, pathlib
+          p = pathlib.Path("semgrep.sarif")
+          if not p.exists():
+              print("no SARIF produced; nothing to gate on")
+              sys.exit(0)
+          sarif = json.loads(p.read_text())
+          blocking = []
+          for run in sarif.get("runs", []):
+              rules = {r.get("id"): r for r in run.get("tool", {}).get("driver", {}).get("rules", [])}
+              for res in run.get("results", []):
+                  lvl = res.get("level") or rules.get(res.get("ruleId"), {}).get("defaultConfiguration", {}).get("level")
+                  if lvl == "error":
+                      loc = res.get("locations", [{}])[0].get("physicalLocation", {})
+                      f = loc.get("artifactLocation", {}).get("uri", "?")
+                      ln = loc.get("region", {}).get("startLine", "?")
+                      blocking.append(f"{f}:{ln}  {res.get('ruleId')}")
+          if blocking:
+              print(f"{len(blocking)} ERROR-severity Semgrep finding(s):")
+              for b in blocking:
+                  print("  -", b)
+              sys.exit(1)
+          print("no ERROR-severity Semgrep findings")
+          PY
+
+      - name: Upload Semgrep SARIF artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: semgrep-sarif
+          path: semgrep.sarif
+          if-no-files-found: ignore
+
+  dependencies:
+    name: trivy (dependencies)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      # Blocks on CRITICAL/HIGH that have a fix available. Unfixed findings are
+      # reported but do not block -- matching the internal scan's posture, where
+      # a dependency finding with no upstream fix is information, not a gate.
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          format: table
