@@ -65,13 +65,20 @@ jobs:
       - name: Install Semgrep
         run: pip install --disable-pip-version-check semgrep
 
-      # `--config auto` uses the free community rule packs. No SEMGREP_APP_TOKEN,
-      # so this works on fork pull requests too. Findings are reported as SARIF;
-      # the step is non-fatal here and the gate below decides what blocks.
+      # Explicit registry rulesets, NOT `--config auto`: auto asks the Semgrep
+      # service to choose rules for this repo and therefore refuses to run with
+      # `--metrics off` ("Cannot create auto config when metrics are off").
+      # Naming the packs keeps telemetry off AND makes the rule set deterministic,
+      # so a scan result changes only when this file changes. No
+      # SEMGREP_APP_TOKEN is needed, so this works on fork pull requests too.
+      # Findings are reported as SARIF; the step is non-fatal and the gate below
+      # decides what blocks.
       - name: Run Semgrep
         run: |
           semgrep scan \
-            --config auto \
+            --config p/security-audit \
+            --config p/secrets \
+            --config p/ci \
             --sarif --output semgrep.sarif \
             --metrics off \
             --no-error \
@@ -131,7 +138,7 @@ jobs:
       # reported but do not block -- matching the internal scan's posture, where
       # a dependency finding with no upstream fix is information, not a gate.
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
