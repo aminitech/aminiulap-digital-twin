@@ -3,4 +3,5 @@
 sionna-rt==2.0.1        # pulls mitsuba==3.8.0, drjit==1.3.1
 matplotlib>=3.8
 numpy>=1.26
+defusedxml>=0.7.1       # safe scene.xml parsing (stages/sionna_mmwave_sinr.py)
 # Runs on CPU via Mitsuba's llvm backend; CUDA optional.
