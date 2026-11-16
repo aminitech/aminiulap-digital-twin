@@ -16,6 +16,8 @@
   title.textContent = s.ok ? 'twin-web → twin-api → Postgres' : 'Data not loaded';
   el.appendChild(title);
   if (s.ok) {
+    // The viewer's HTML says 576 (the LiDAR set); show the count of the scene actually served.
+    ['m-bld', 'bcount'].forEach(id => { const n = document.getElementById(id); if (n) n.textContent = String(s.buildings); });
     el.appendChild(line('buildings', s.buildings + ' · towers ' + s.towers));
     el.appendChild(line('fetched in', s.fetch_ms + ' ms'));
     if (s.provenance) el.appendChild(line('data', s.provenance));

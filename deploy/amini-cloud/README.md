@@ -1,8 +1,9 @@
 # The Ulap twin on Amini Cloud: frontend, backend and database
 
-A three-tier deployment of the twin viewer, used to test Amini Cloud
-`v1.0.0-alpha.rc1` end to end (CLOUD-1154). Each tier is a separate app in one
-Amini Cloud project:
+A three-tier deployment of the twin viewer on Amini Cloud. It was first used to
+test `v1.0.0-alpha.rc1` end to end (CLOUD-1154), and is checked again on
+`v1.0.0-alpha.rc5.8` for the alpha UAT (CLOUD-1448). Each tier is a separate app
+in one Amini Cloud project:
 
 ```
 browser ──https──▶ twin-web ──http (private)──▶ twin-api ──postgres──▶ twin-db
@@ -34,7 +35,8 @@ python deploy/amini-cloud/make_seed.py   # rebuild seed.json
 
 ## Deploy it
 
-In one project (for example `qa-rc1`):
+In one project named after this repository, `aminiulap-digital-twin`, so the
+twin's apps sit apart from other teams' work:
 
 1. **Databases**, **New database**: name it `twin-db`.
 2. **Apps**, **Deploy a repo**: this repository and branch, folder
@@ -46,6 +48,13 @@ In one project (for example `qa-rc1`):
    sets for an app named `twin-api` in the same project. Set `TWIN_API_URL` to
    override it.
 4. Open twin-web's outside address, then `scene.html`.
+
+Keep twin-web and twin-api on the same host. An app's private name
+(`twin-api`) resolves only on its own host; the app's Connect panel warns when
+the project's apps are on different hosts.
+
+When the database runs with TLS, Amini Cloud also sets `PGSSLMODE=require` on
+twin-api, which psycopg honours with no change here.
 
 Both apps build from their own Dockerfile (pinned `python:3.13.9-slim`), run as
 a non-root user and listen on `$PORT` (default 8080) on all addresses.
@@ -77,8 +86,9 @@ open http://localhost:8080/scene.html
 
 ## Limits
 
-- The viewer's header still says 576 buildings (it is fixed in the HTML); the
-  open scene has 585, as the badge shows.
+- The viewer's HTML says 576 buildings (the LiDAR set). When it is served by
+  twin-web, `twin-status.js` replaces the count with the 585 actually served.
+  The welcome toast in `app.js` still says 576.
 - `POST /api/views` takes no identity and stores only the page name and time.
   Amini Cloud's outside address needs a signed-in user, so it is not open to the
   internet; do not deploy it anywhere that is.
