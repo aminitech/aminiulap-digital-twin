@@ -2,9 +2,6 @@
 
 ## ADDED Requirements
 
-This change introduces the `study-cli` capability in full, adopted as
-`openspec/specs/study-cli/spec.md`.
-
 ### Requirement: Interactive study wizard
 
 The CLI SHALL provide an `init` command that interactively prompts for: study
