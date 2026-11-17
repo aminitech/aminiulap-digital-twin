@@ -1,0 +1,15 @@
+# === START STANDARD CONFIG ===
+version: 2
+updates:
+  # Monthly and grouped: action bumps used to arrive as one PR per action per week,
+  # each running the repo's full CI. Security advisories are not affected, since
+  # Dependabot security updates ignore the schedule.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+# === END STANDARD CONFIG ===
