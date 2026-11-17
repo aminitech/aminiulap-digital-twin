@@ -54,9 +54,15 @@ def make_concrete_xml():
     """Write a concrete-only variant of scene.xml (ground retagged to itu_concrete,
     the itu_medium_dry_ground BSDF removed) so mmWave frequencies are valid for
     every surface. ITU concrete is defined 1-100 GHz; medium_dry_ground only <=10."""
-    import xml.etree.ElementTree as ET
+    # defusedxml, not xml.etree: this repository is a REPRODUCTION artifact, so a
+    # third party may point the pipeline at a scene.xml they received rather than
+    # one this pipeline generated. Stdlib ElementTree expands external entities
+    # (XXE -> local file read / SSRF) and nested entities (billion laughs).
+    # defusedxml.parse returns an ordinary ElementTree, so tree.write() below is
+    # unchanged.
+    from defusedxml.ElementTree import parse as xml_parse
     out = os.path.join(os.path.dirname(SCENE), "scene_concrete.xml")
-    tree = ET.parse(SCENE); root = tree.getroot()
+    tree = xml_parse(SCENE); root = tree.getroot()
     for bsdf in list(root.findall("bsdf")):
         if bsdf.get("id") == "mat-itu_medium_dry_ground":
             root.remove(bsdf)
