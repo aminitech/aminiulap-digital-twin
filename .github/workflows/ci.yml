@@ -7,11 +7,13 @@ name: ulap-scope CI
 # `ulap-scope/`. If `ulap-scope` is itself the repo root, set
 # `defaults.run.working-directory` to `.` and drop the `paths:` prefix.
 
+# Pull requests run it whatever they touch: `test (3.x)` is a required check
+# on main, and a required check that a path filter skips never reports, so
+# the PR waits forever. Pushes to branches keep the path filter.
 on:
   push:
     paths: ["ulap-scope/**", ".github/workflows/ci.yml"]
   pull_request:
-    paths: ["ulap-scope/**", ".github/workflows/ci.yml"]
   workflow_dispatch:
 
 defaults:
