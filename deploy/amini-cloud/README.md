@@ -46,7 +46,10 @@ twin's apps sit apart from other teams' work:
 3. **Deploy a repo** again: folder `ulap-twin-ui`, port `8080`, name the app
    `twin-web`. It finds twin-api through `APP_URL_TWIN_API`, which Amini Cloud
    sets for an app named `twin-api` in the same project. Set `TWIN_API_URL` to
-   override it.
+   override it. Wait until twin-api is **Running** first: Amini Cloud sets
+   `APP_URL_TWIN_API` only on deploys that start after twin-api exists, and a
+   pause and resume keeps the old variables. If twin-web logs
+   `"twin_api": "http://127.0.0.1:8081"`, redeploy it.
 4. Open twin-web's outside address, then `scene.html`.
 
 Keep twin-web and twin-api on the same host. An app's private name
@@ -66,6 +69,8 @@ a non-root user and listen on `$PORT` (default 8080) on all addresses.
 | `/healthz` | `{"status":"ok"}` |
 | `/readyz` | `{"twin_api":"ready"}`, or 503 when twin-api or Postgres is down |
 | `/api/stats` | 2 towers, 585 buildings, 14 link metrics, the page-view count |
+
+Checked on lab-cloud rc5.8 on 17 Nov 2026, in project `aminiulap-digital-twin` (organisation ULAP): all four pass, on managed Postgres 16.16.
 | `/scene.html` | the 3-D scene and the badge "twin-web → twin-api → Postgres" |
 
 When twin-api is unreachable the viewer loads with no buildings and the badge
