@@ -12,4 +12,9 @@ updates:
       github-actions:
         patterns:
           - "*"
+    # The Security Scan workflow is bumped centrally, together with the scan
+    # runner group's list of allowed refs: a ref missing from that list leaves the
+    # repository's scans queued (onprem-infra terraform/network/runner-scan).
+    ignore:
+      - dependency-name: "aminitech/.github/.github/workflows/reusable-security-scan.yaml"
 # === END STANDARD CONFIG ===
